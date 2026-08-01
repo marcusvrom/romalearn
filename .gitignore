@@ -1,0 +1,27 @@
+node_modules/
+dist/
+coverage/
+.angular/
+.nx/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment — never commit real secrets
+.env
+.env.*
+!.env.example
+
+# Local runtime data
+infra/data/
+tmp/
+*.tsbuildinfo
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Test artifacts
+test-results/
+playwright-report/
+apps/api/storage-local/

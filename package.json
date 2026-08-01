@@ -1,0 +1,42 @@
+{
+  "name": "romalearn",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter \"./packages/**\" build && pnpm --filter @romalearn/api build && pnpm --filter @romalearn/web build",
+    "build:api": "pnpm --filter @romalearn/api build",
+    "build:web": "pnpm --filter @romalearn/web build",
+    "dev": "pnpm --parallel --filter @romalearn/api --filter @romalearn/web dev",
+    "dev:api": "pnpm --filter @romalearn/api dev",
+    "dev:web": "pnpm --filter @romalearn/web dev",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write \"**/*.{ts,html,scss,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,html,scss,json,md}\"",
+    "test": "pnpm -r test",
+    "test:api": "pnpm --filter @romalearn/api test",
+    "test:e2e": "pnpm --filter @romalearn/api test:e2e",
+    "migration:run": "pnpm --filter @romalearn/api migration:run",
+    "migration:revert": "pnpm --filter @romalearn/api migration:revert",
+    "seed": "pnpm --filter @romalearn/api seed",
+    "infra:up": "docker compose -f infra/docker-compose.yml up -d",
+    "infra:down": "docker compose -f infra/docker-compose.yml down",
+    "infra:reset": "docker compose -f infra/docker-compose.yml down -v"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.20.0",
+    "prettier": "3.4.2",
+    "typescript": "5.8.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "argon2",
+      "esbuild",
+      "unrs-resolver"
+    ]
+  }
+}

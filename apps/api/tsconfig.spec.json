@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Os testes vivem fora de `src`, então a raiz sobe um nível.
+    "rootDir": ".",
+    "types": ["jest", "node", "multer", "express"]
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
