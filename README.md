@@ -105,9 +105,10 @@ STORAGE_DRIVER=local     # arquivos em apps/api/storage-local, com URLs assinada
 
 ## Migrations e seed
 
-Os comandos acima compilam sozinhos o pacote `@romalearn/contracts`, do qual a
-API e o front-end dependem. Se preferir compilá-lo isoladamente:
-`pnpm contracts`.
+Os comandos acima cuidam sozinhos de dois passos que costumam ser esquecidos
+depois de um `git pull`: instalam as dependências quando o lockfile mudou e
+compilam o pacote `@romalearn/contracts`, do qual a API e o front-end dependem.
+Para rodar só isso: `pnpm preparar`.
 
 ```bash
 pnpm migration:run       # aplica as migrations pendentes
