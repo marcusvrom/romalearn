@@ -56,7 +56,7 @@ Recursos implementados:
 - compatibilidade com SSR;
 - controles acessíveis por teclado e áreas de status;
 - remoção de scripts, iframes, código e elementos ocultos da narração;
-- analytics sem dados pessoais.
+- analytics de início, velocidade e conclusão, sem dados pessoais.
 
 Evoluções planejadas:
 
