@@ -10,6 +10,14 @@
     <link rel="preconnect" href="/" />
 
     <!--
+      A fonte dos títulos é buscada antes do CSS pedir por ela. Sem isto o
+      navegador só descobre que precisa dela depois de baixar e interpretar a
+      folha de estilo, e o título troca de fonte na frente do aluno.
+      Só o recorte latino: quem lê português nunca precisa do outro arquivo.
+    -->
+    <link rel="preload" href="fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+
+    <!--
       Pinta o tema antes da primeira renderização.
 
       O HTML vem do servidor sem tema — o servidor não sabe o que este aluno

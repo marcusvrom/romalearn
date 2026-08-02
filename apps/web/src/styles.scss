@@ -4,5 +4,6 @@
  * Só importa os tokens e a base do design system — todo o resto vive nos
  * componentes. Trocar a identidade visual é trocar `tokens.scss`.
  */
+@use 'fonts';
 @use 'tokens';
 @use 'base';

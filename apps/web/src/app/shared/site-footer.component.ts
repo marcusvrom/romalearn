@@ -2,17 +2,18 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { WEB_ROUTES } from '@romalearn/contracts';
 import { PLATFORM_CONFIG } from '../core/platform.config';
+import { LogoComponent } from './logo.component';
 
 @Component({
   selector: 'rl-site-footer',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, LogoComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <footer class="footer">
       <div class="rl-container grid">
         <div>
-          <p class="brand">{{ config.name }}</p>
+          <p class="brand"><rl-logo [size]="22" /> {{ config.name }}</p>
           <p class="rl-small rl-muted">{{ config.tagline }}</p>
           <p class="rl-small rl-muted">
             Materiais didáticos em português, com linguagem simples e prática guiada.
@@ -83,6 +84,11 @@ import { PLATFORM_CONFIG } from '../core/platform.config';
       }
 
       .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--rl-space-2);
+        font-family: var(--rl-font-display);
+        letter-spacing: -0.02em;
         font-weight: var(--rl-weight-bold);
         font-size: var(--rl-text-lg);
         margin-bottom: var(--rl-space-2);

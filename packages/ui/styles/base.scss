@@ -46,8 +46,12 @@ h2,
 h3,
 h4 {
   margin: 0 0 var(--rl-space-4);
+  font-family: var(--rl-font-display);
   line-height: var(--rl-leading-tight);
   font-weight: var(--rl-weight-bold);
+  // A Sora é larga por natureza; fechar um pouco o espaçamento nos tamanhos
+  // grandes evita que o título pareça esparramado.
+  letter-spacing: -0.015em;
   color: var(--rl-text);
   text-wrap: balance;
 }

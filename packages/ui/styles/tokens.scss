@@ -155,8 +155,18 @@
   --rl-hairline: rgba(20, 26, 35, 0.06);
 
   // ----- Tipografia -------------------------------------------------
-  --rl-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
+
+  // Corpo de texto: a fonte do sistema. Ela já está no aparelho, aparece sem
+  // download nenhum e é a que o aluno lê o dia inteiro em todo o resto — a
+  // mais confortável para páginas longas de capítulo. ('Inter' aparecia aqui
+  // sem nunca ser carregada; era uma promessa que o navegador ignorava.)
+  --rl-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+
+  // Títulos e logotipo. É onde a marca fala, e onde vale pagar o download de
+  // 25 KB da Sora; o corpo do texto continua sem custo nenhum.
+  --rl-font-display: 'Sora', var(--rl-font-sans);
+
   --rl-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 
   // Escala fluida: confortável no celular, sem quebrar no desktop.

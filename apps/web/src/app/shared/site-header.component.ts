@@ -14,6 +14,7 @@ import { WEB_ROUTES } from '@romalearn/contracts';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../core/auth.service';
 import { PLATFORM_CONFIG } from '../core/platform.config';
+import { LogoComponent } from './logo.component';
 import { ThemeToggleComponent } from './theme-toggle.component';
 
 /**
@@ -27,13 +28,13 @@ import { ThemeToggleComponent } from './theme-toggle.component';
 @Component({
   selector: 'rl-site-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, ThemeToggleComponent],
+  imports: [RouterLink, RouterLinkActive, LogoComponent, ThemeToggleComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="header">
       <div class="rl-container bar">
         <a class="brand" [routerLink]="routes.home" [attr.aria-label]="config.name + ' — início'">
-          <span class="mark" aria-hidden="true">RL</span>
+          <span class="mark"><rl-logo [size]="24" /></span>
           <span class="name">{{ config.name }}</span>
         </a>
 
@@ -180,8 +181,14 @@ import { ThemeToggleComponent } from './theme-toggle.component';
         border-radius: var(--rl-radius-md);
         background: linear-gradient(135deg, var(--rl-brand-600), var(--rl-accent-600));
         color: #fff;
-        font-size: var(--rl-text-sm);
-        letter-spacing: 0.02em;
+      }
+
+      /* O logotipo usa a fonte dos títulos: é assinatura, não texto corrido. */
+      .name {
+        font-family: var(--rl-font-display);
+        font-size: var(--rl-text-lg);
+        font-weight: var(--rl-weight-bold);
+        letter-spacing: -0.02em;
       }
 
       .toggle {

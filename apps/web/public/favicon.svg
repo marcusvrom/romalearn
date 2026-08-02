@@ -1,20 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="RomaLearn">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="RomaLearn">
+  <title>RomaLearn</title>
+  <!--
+    Versão do arco para a aba do navegador.
+
+    Na aba a marca aparece a 16px, e o desenho vazado se perde contra fundos
+    claros ou escuros. Aqui ele é invertido: ladrilho cheio com o arco em
+    branco. A silhueta fica sólida e o ícone continua reconhecível ao lado de
+    dezenas de outras abas.
+  -->
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2543ea" />
-      <stop offset="100%" stop-color="#12a58b" />
+    <linearGradient id="rl-tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2543ea" />
+      <stop offset="1" stop-color="#0d8571" />
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="14" fill="url(#g)" />
-  <text
-    x="32"
-    y="42"
-    text-anchor="middle"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="26"
-    font-weight="bold"
-    fill="#ffffff"
-  >
-    RL
-  </text>
+
+  <rect width="32" height="32" rx="7" fill="url(#rl-tile)" />
+
+  <g fill="#fff" transform="translate(2.67 2.67) scale(0.8333)">
+    <path fill-rule="evenodd" d="M4 27V17a12 12 0 0 1 24 0v10h-4V17a8 8 0 0 0-16 0v10z" />
+    <rect x="9.5" y="22" width="3" height="5" rx="1.1" />
+    <rect x="14.5" y="18.5" width="3" height="8.5" rx="1.1" />
+    <rect x="19.5" y="15" width="3" height="12" rx="1.1" />
+  </g>
 </svg>

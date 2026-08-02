@@ -2,17 +2,18 @@ import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core
 import { RouterLink } from '@angular/router';
 import { WEB_ROUTES } from '@romalearn/contracts';
 import { PLATFORM_CONFIG } from '../../core/platform.config';
+import { LogoComponent } from '../../shared/logo.component';
 
 /** Moldura comum das telas de conta, para manter tudo consistente. */
 @Component({
   selector: 'rl-auth-shell',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, LogoComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="wrapper">
       <div class="panel">
-        <a class="brand" [routerLink]="routes.home">{{ config.name }}</a>
+        <a class="brand" [routerLink]="routes.home"><rl-logo [size]="22" /> {{ config.name }}</a>
         <h1>{{ heading }}</h1>
         @if (subheading) {
           <p class="rl-muted">{{ subheading }}</p>
@@ -53,6 +54,11 @@ import { PLATFORM_CONFIG } from '../../core/platform.config';
       }
 
       .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--rl-space-2);
+        font-family: var(--rl-font-display);
+        letter-spacing: -0.02em;
         font-weight: var(--rl-weight-bold);
         text-decoration: none;
         color: var(--rl-brand-link);
