@@ -50,33 +50,55 @@ Recursos implementados:
 - reprodução e pausa;
 - navegação entre trechos narráveis;
 - velocidade entre 0,75x e 2x;
-- seleção de voz em português;
+- velocidade inicial de 1,75x para novos usuários;
+- preservação da preferência já salva para usuários existentes;
+- perfis Calmo, Natural, Focado e Revisão;
+- perfil Focado em 1,75x destacado como recomendado;
+- seleção automática da melhor voz em português brasileiro disponível;
+- seleção manual de voz;
+- pausas editoriais entre título, parágrafos curtos e avisos;
+- normalização de siglas e termos técnicos comuns;
 - posição salva por aula;
 - preferências persistidas no aparelho;
 - compatibilidade com SSR;
 - controles acessíveis por teclado e áreas de status;
 - foco visível e respeito a `prefers-reduced-motion` no player;
 - remoção de scripts, iframes, código e elementos ocultos da narração;
-- analytics de início, velocidade e conclusão, sem dados pessoais.
+- analytics de início, perfil, velocidade e conclusão, sem dados pessoais.
+
+### Decisão sobre velocidade padrão
+
+O perfil inicial é **Focado, em 1,75x**. Durante testes manuais, esse ritmo apresentou uma fala mais contínua e confortável nas vozes disponíveis no aparelho, reduzindo a percepção de pausas artificiais.
+
+A decisão não remove a autonomia do aluno:
+
+- a velocidade pode ser alterada antes ou durante a reprodução;
+- qualquer escolha fica salva localmente;
+- preferências existentes não são sobrescritas;
+- o analytics deve confirmar se 1,75x também apresenta boa retenção para outros alunos.
 
 Evoluções planejadas:
 
 1. campo editorial `narrationText` para adaptar aulas técnicas;
-2. sincronização da posição entre aparelhos;
+2. sincronização da posição e preferências entre aparelhos;
 3. continuidade automática entre aulas;
-4. áudio pré-gerado com Amazon Polly e armazenado no S3;
+4. áudio pré-gerado com Amazon Polly e armazenado no S3 ou R2;
 5. reprodução em segundo plano e fila de aulas;
 6. resumos em áudio por módulo;
-7. destaque sincronizado do trecho narrado.
+7. destaque sincronizado do trecho narrado;
+8. dicionário editorial de pronúncia administrável;
+9. testes com usuários para comparar compreensão e abandono por perfil.
 
 ### Validação necessária antes do merge
 
 - executar `pnpm lint` e `pnpm build:web`;
 - testar Chrome, Edge, Safari/iOS e Android;
-- confirmar carregamento das vozes em cada sistema;
+- confirmar carregamento e ordenação das vozes em cada sistema;
 - validar teclado, VoiceOver, TalkBack e NVDA;
-- testar pausa, troca de velocidade e retomada após recarregar a página;
-- verificar contraste do player nos temas claro e escuro.
+- testar pausa, troca de perfil e retomada após recarregar a página;
+- verificar se preferências anteriores continuam preservadas;
+- verificar contraste do player nos temas claro e escuro;
+- comparar 1,5x, 1,75x e 2x com alunos iniciantes.
 
 ## Eventos de produto
 
@@ -90,7 +112,7 @@ Eventos prioritários:
 - retomada de curso;
 - início e conclusão de aula;
 - início do modo áudio;
-- mudança de velocidade da narração;
+- mudança de perfil ou velocidade da narração;
 - conclusão da narração;
 - envio de atividade;
 - envio de questionário;
