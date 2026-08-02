@@ -31,6 +31,24 @@ superfície — `--rl-brand-link`, `--rl-success-text`, `--rl-warn-text`,
 `--rl-danger-text`, `--rl-surface-sunken` —, e são eles que os componentes
 usam.
 
+### O contraste é medido, não estimado
+
+Os papéis de texto foram calibrados com a fórmula de contraste da WCAG, não a
+olho. A escolha anterior tinha um caso que **reprovava** (texto de apoio sobre
+cabeçalho de tabela, 4,09:1) e vários passando raspando. Hoje o pior par dos
+dois temas está em 6,26:1 — acima de AA em texto normal, com folga para telas
+ruins e ambientes claros.
+
+Duas armadilhas que a medição revelou e que valem para qualquer cor nova:
+
+- **Verde-azulado como texto miúdo.** O tom 600 da cor de apoio serve de fundo
+  e de detalhe grande, mas como ✓ de lista fica em 3,9:1. Daí existir
+  `--rl-accent-text`, mais escuro no claro e mais claro no escuro.
+- **Degradê em texto.** O fecho do título usava as pontas da escala que
+  funcionam sobre branco; sobre o fundo escuro o começo do degradê caía para
+  2,55:1. As pontas viraram tokens (`--rl-gradient-title-from/to`) que trocam
+  com o tema.
+
 ### O tema é pintado antes da primeira renderização
 
 O HTML sai do servidor sem tema: o servidor não sabe o que este aluno

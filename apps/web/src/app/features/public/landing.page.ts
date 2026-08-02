@@ -48,6 +48,100 @@ export class LandingPage implements OnInit {
   /** Depoimentos reais entram aqui; enquanto vazio, a seção não é exibida. */
   readonly testimonials = signal<{ name: string; role: string; quote: string }[]>([]);
 
+  /**
+   * O que o aluno termina com as mãos.
+   *
+   * Cada item corresponde ao projeto final de um módulo, e os subitens saem
+   * dos critérios da rubrica que o corrige — não é promessa de marketing, é a
+   * lista do que a correção efetivamente observa.
+   */
+  readonly buildOutcomes = [
+    {
+      icon: '🗂️',
+      source: 'Módulo 1 — Computador e Windows',
+      title: 'Um escritório digital organizado',
+      text: 'A estrutura de pastas e nomes que faz você achar qualquer arquivo em segundos, meses depois.',
+      parts: [
+        'Pastas e nomes com padrão',
+        'Salvamento e exportação em PDF',
+        'Backup e segurança básica',
+      ],
+    },
+    {
+      icon: '📄',
+      source: 'Módulo 2 — Word',
+      title: 'Um documento profissional de verdade',
+      text: 'Não um texto solto: um documento com estrutura, sumário que se atualiza e revisão feita.',
+      parts: [
+        'Estilos, sumário e layout',
+        'Revisão e acessibilidade',
+        'Modelo reutilizável e mala direta',
+      ],
+    },
+    {
+      icon: '📊',
+      source: 'Módulo 3 — Excel',
+      title: 'Uma planilha de controle que se atualiza sozinha',
+      text: 'Com fórmulas que recalculam, dados protegidos contra digitação errada e um resumo que responde perguntas.',
+      parts: [
+        'Fórmulas, filtros e Tabela Dinâmica',
+        'Gráficos e indicadores',
+        'Validação, proteção e entrega em XLSX e PDF',
+      ],
+    },
+    {
+      icon: '🎤',
+      source: 'Módulo 4 — PowerPoint',
+      title: 'Uma apresentação que sustenta uma reunião',
+      text: 'Com começo, meio e fim, padrão visual consistente e legibilidade para quem está no fundo da sala.',
+      parts: [
+        'Narrativa e estrutura',
+        'Slide Mestre e padronização',
+        'Dados no slide e acessibilidade',
+      ],
+    },
+    {
+      icon: '🤖',
+      source: 'Módulo 5 — Inteligência artificial',
+      title: 'Um jeito responsável de usar IA no trabalho',
+      text: 'Saber o que pode entrar no prompt, o que nunca pode, e como conferir o que a ferramenta devolveu.',
+      parts: [
+        'Onde a IA ajuda e onde atrapalha',
+        'Dados que não podem ser expostos',
+        'Conferência antes de entregar',
+      ],
+    },
+    {
+      icon: '🧭',
+      source: 'Módulo gratuito — Carreira digital',
+      title: 'Seu miniportfólio e seu plano de 30 dias',
+      text: 'O mapa do que você já sabe fazer, as evidências que comprovam e o próximo passo escrito.',
+      parts: [
+        'Mapa de habilidades e evidências',
+        'Perfil e presença profissional',
+        'Plano de evolução de 30 dias',
+      ],
+    },
+  ];
+
+  /**
+   * Setores citados no material como exemplo de onde essas competências
+   * aparecem. A lista vem do Módulo gratuito, capítulo 1 — não é uma promessa
+   * de contratação, e o texto ao lado deixa isso explícito.
+   */
+  readonly workSectors = [
+    { icon: '🏢', name: 'Escritório', example: 'Documentos, relatórios e controles internos' },
+    { icon: '🛒', name: 'Comércio', example: 'Estoque, pedidos e conferência de despesas' },
+    { icon: '🏫', name: 'Escola', example: 'Listas, presença e comunicados' },
+    { icon: '🏥', name: 'Saúde', example: 'Agendamentos, cadastros e planilhas de acompanhamento' },
+    { icon: '💬', name: 'Atendimento', example: 'Registros, respostas padronizadas e histórico' },
+    {
+      icon: '📦',
+      name: 'Logística e estoque',
+      example: 'Contagens, recontagem por amostra e prazos',
+    },
+  ];
+
   readonly benefits = [
     {
       icon: '🧭',

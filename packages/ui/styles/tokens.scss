@@ -26,8 +26,8 @@
   --rl-border-strong: #3b4759;
 
   --rl-text: var(--rl-neutral-50);
-  --rl-text-muted: var(--rl-neutral-300);
-  --rl-text-subtle: var(--rl-neutral-400);
+  --rl-text-muted: var(--rl-neutral-200);
+  --rl-text-subtle: var(--rl-neutral-300);
 
   --rl-brand-50: #1b2440;
   --rl-brand-100: #22305a;
@@ -40,7 +40,11 @@
   --rl-success-text: #4ade80;
   --rl-warn-text: #fbbf24;
   --rl-danger-text: #fca5a5;
+  --rl-accent-text: var(--rl-accent-400);
   --rl-surface-sunken: #202836;
+
+  --rl-gradient-title-from: var(--rl-brand-300);
+  --rl-gradient-title-to: var(--rl-accent-400);
 
   --rl-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --rl-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
@@ -108,8 +112,12 @@
   --rl-border-strong: var(--rl-neutral-300);
 
   --rl-text: var(--rl-neutral-900);
-  --rl-text-muted: var(--rl-neutral-600);
-  --rl-text-subtle: var(--rl-neutral-500);
+  // Um degrau mais escuro do que a leitura "natural" da escala. O texto de
+  // apoio carrega quase toda a landing e as descrições de curso; no tom
+  // anterior ele passava raspando no mínimo da WCAG sobre as superfícies mais
+  // fundas (4,09:1 no cabeçalho de tabela) e cansava antes disso.
+  --rl-text-muted: var(--rl-neutral-700);
+  --rl-text-subtle: var(--rl-neutral-600);
   --rl-text-on-brand: var(--rl-neutral-0);
 
   // Tom da marca usado sobre superfície (links, rótulos). Separado da escala
@@ -124,6 +132,17 @@
   --rl-success-text: var(--rl-success-700);
   --rl-warn-text: var(--rl-warn-700);
   --rl-danger-text: var(--rl-danger-700);
+
+  // Verde-azulado da marca em versão legível. O tom 600 da escala serve de
+  // fundo e de detalhe grande, mas como texto miúdo — os ✓ das listas — fica
+  // em 3,9:1 sobre as superfícies fundas. Este tom passa em qualquer uma.
+  --rl-accent-text: #096052;
+
+  // Degradê do fecho do título. Precisa ser token, e não valor fixo no
+  // componente: as pontas da escala que funcionam sobre branco somem no
+  // escuro (o tom 600 da marca fica em 2,55:1 sobre o fundo escuro).
+  --rl-gradient-title-from: var(--rl-brand-700);
+  --rl-gradient-title-to: var(--rl-accent-text);
 
   // Faixa mais funda que a superfície: cabeçalho de tabela, trilho de
   // progresso, etiqueta neutra.

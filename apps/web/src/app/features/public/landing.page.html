@@ -32,17 +32,71 @@
         <li>Certificado com validação pública</li>
       </ul>
     </div>
+  </div>
+</section>
 
-    <aside class="hero__card" aria-label="Resumo da trilha">
-      <h2>O que você vai construir</h2>
-      <ol class="hero__list">
-        <li><strong>Mapa de habilidades</strong> — onde você está hoje</li>
-        <li><strong>Miniportfólio</strong> — evidências do que sabe fazer</li>
-        <li><strong>Perfil profissional</strong> — título e seção “Sobre”</li>
-        <li><strong>Rotina administrativa</strong> — documentos, planilhas e apresentações</li>
-        <li><strong>Plano de 30 dias</strong> — próximos passos realistas</li>
-      </ol>
-    </aside>
+<!-- ------------------------------------------------------------------ -->
+<!-- O que você vai construir                                            -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section build" id="o-que-voce-constroi">
+  <div class="rl-container">
+    <div class="section-head build__head" rlReveal>
+      <p class="rl-eyebrow">O que você vai construir</p>
+      <h2>No fim, você tem trabalho pronto para mostrar — não só um certificado</h2>
+      <p class="rl-lead">
+        Cada módulo termina em um projeto avaliado por critérios. O que sai de lá são arquivos e materiais de verdade,
+        feitos com dados fictícios, que você pode abrir numa entrevista ou usar como modelo no primeiro dia de trabalho.
+      </p>
+    </div>
+
+    <ul class="builds">
+      @for (item of buildOutcomes; track item.title; let i = $index) {
+      <li class="build-card" [rlReveal]="i * 70">
+        <span class="build-card__icon" aria-hidden="true">{{ item.icon }}</span>
+        <p class="build-card__source">{{ item.source }}</p>
+        <h3>{{ item.title }}</h3>
+        <p class="rl-small build-card__text">{{ item.text }}</p>
+        <ul class="build-card__parts">
+          @for (part of item.parts; track part) {
+          <li>{{ part }}</li>
+          }
+        </ul>
+      </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Onde essas competências são usadas                                  -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section rl-section--muted" id="onde-se-usa">
+  <div class="rl-container">
+    <div class="section-head" rlReveal>
+      <p class="rl-eyebrow">Onde isso é usado</p>
+      <h2>As mesmas ferramentas aparecem em quase toda rotina de trabalho</h2>
+      <p class="rl-lead">
+        Documentos, planilhas, apresentações e sistemas online não são exclusividade da área de tecnologia. Estes são os
+        setores que o próprio material cita como exemplo de onde essas competências entram no dia a dia.
+      </p>
+    </div>
+
+    <ul class="sectors" rlReveal>
+      @for (sector of workSectors; track sector.name) {
+      <li class="sector">
+        <span class="sector__icon" aria-hidden="true">{{ sector.icon }}</span>
+        <div>
+          <h3>{{ sector.name }}</h3>
+          <p class="rl-small rl-muted">{{ sector.example }}</p>
+        </div>
+      </li>
+      }
+    </ul>
+
+    <p class="rl-small honesty" rlReveal>
+      Uma observação honesta: a trilha melhora seu preparo e as evidências do que você sabe fazer. Ela não garante
+      emprego, salário nem aprovação em processo seletivo — e ninguém que prometa isso está sendo sincero com você.
+    </p>
   </div>
 </section>
 

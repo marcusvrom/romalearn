@@ -190,7 +190,7 @@ import { SeoService } from '../../core/seo.service';
           content: '✓';
           position: absolute;
           left: 0;
-          color: var(--rl-accent-600);
+          color: var(--rl-accent-text);
           font-weight: var(--rl-weight-bold);
         }
       }

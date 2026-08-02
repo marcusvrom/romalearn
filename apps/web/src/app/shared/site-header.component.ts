@@ -178,7 +178,7 @@ import { ThemeToggleComponent } from './theme-toggle.component';
         width: 34px;
         height: 34px;
         border-radius: var(--rl-radius-md);
-        background: linear-gradient(135deg, var(--rl-brand-600), var(--rl-accent-500));
+        background: linear-gradient(135deg, var(--rl-brand-600), var(--rl-accent-600));
         color: #fff;
         font-size: var(--rl-text-sm);
         letter-spacing: 0.02em;

@@ -50,11 +50,41 @@
   }
 }
 
+// O painel lateral virou a seção "O que você vai construir": ele tinha peso
+// de rodapé de cartão e carregava a promessa mais forte da página. Sem ele o
+// topo fica em uma coluna só, e o título ganha a largura que merece.
 .hero__inner {
   position: relative;
   display: grid;
   gap: var(--rl-space-10);
   align-items: start;
+}
+
+// Com uma coluna só, o texto encostado à esquerda deixava metade da tela
+// vazia. Centralizado, o topo fica equilibrado sobre a malha — que também é
+// simétrica — e o título passa a ocupar o eixo da página.
+.hero__content {
+  text-align: center;
+  justify-items: center;
+}
+
+// A medida de leitura vale para os textos, não para a faixa inteira: presa ao
+// bloco todo, ela apertava a linha dos botões e os empilhava.
+.hero__content h1 {
+  max-width: 22ch;
+  margin-inline: auto;
+}
+
+.hero__content .rl-lead {
+  margin-inline: auto;
+}
+
+// Sem o painel ao lado, o título pode crescer: ele é a primeira coisa que o
+// aluno lê e agora tem espaço para isso.
+@media (min-width: 720px) {
+  .hero__content h1 {
+    font-size: clamp(var(--rl-text-4xl), 5.5vw, 3.5rem);
+  }
 }
 
 /*
@@ -63,7 +93,7 @@
  * fica ou sai.
  */
 .hero__highlight {
-  background: linear-gradient(115deg, var(--rl-brand-600), var(--rl-accent-500));
+  background: linear-gradient(115deg, var(--rl-gradient-title-from), var(--rl-gradient-title-to));
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -76,14 +106,7 @@
 @supports not ((background-clip: text) or (-webkit-background-clip: text)) {
   .hero__highlight {
     background: none;
-    color: var(--rl-brand-700);
-  }
-}
-
-@media (min-width: 960px) {
-  .hero__inner {
-    grid-template-columns: 1.5fr 1fr;
-    gap: var(--rl-space-16);
+    color: var(--rl-gradient-title-from);
   }
 }
 
@@ -96,6 +119,12 @@
   flex-wrap: wrap;
   gap: var(--rl-space-3);
   margin: var(--rl-space-8) 0 var(--rl-space-6);
+}
+
+// No topo os botões e a lista de garantias acompanham o texto centralizado.
+.hero__content .hero__actions,
+.hero__content .hero__points {
+  justify-content: center;
 }
 
 .hero__actions--center {
@@ -114,61 +143,9 @@
 
   li::before {
     content: '✓';
-    color: var(--rl-accent-600);
+    color: var(--rl-accent-text);
     font-weight: var(--rl-weight-bold);
     margin-right: var(--rl-space-2);
-  }
-}
-
-.hero__card {
-  position: relative;
-  // Translúcido para deixar a malha animada passar por trás sem embaralhar
-  // o texto. O `blur` devolve o contraste que a transparência tira.
-  background: color-mix(in srgb, var(--rl-surface-raised) 82%, transparent);
-  backdrop-filter: blur(14px);
-  border: 1px solid var(--rl-border);
-  border-radius: var(--rl-radius-xl);
-  padding: var(--rl-space-8);
-  box-shadow: var(--rl-shadow-lg), var(--rl-glow);
-
-  h2 {
-    font-size: var(--rl-text-lg);
-    margin-bottom: var(--rl-space-5);
-  }
-}
-
-// Fio de luz na borda superior, o detalhe que dá acabamento ao cartão.
-.hero__card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(
-    140deg,
-    color-mix(in srgb, var(--rl-brand-400) 55%, transparent),
-    transparent 45%
-  );
-  // Pinta só a moldura: a máscara subtrai o miolo do degradê.
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-.hero__list {
-  margin: 0;
-  padding-left: var(--rl-space-5);
-  font-size: var(--rl-text-sm);
-  color: var(--rl-text-muted);
-
-  li + li {
-    margin-top: var(--rl-space-3);
-  }
-
-  strong {
-    color: var(--rl-text);
   }
 }
 
@@ -179,6 +156,187 @@
 .section-head {
   max-width: 62ch;
   margin-bottom: var(--rl-space-10);
+}
+
+// ---------------------------------------------------------------------------
+// O que você vai construir
+// ---------------------------------------------------------------------------
+
+.build {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+// Continua a luz do topo por baixo desta seção, para que ela leia como parte
+// da abertura da página e não como mais um bloco de lista.
+.build::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: 50%;
+  z-index: -1;
+  width: min(1100px, 130vw);
+  aspect-ratio: 2;
+  translate: -50% 0;
+  background: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--rl-brand-500) 12%, transparent),
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+.builds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--rl-space-5);
+}
+
+@media (min-width: 720px) {
+  .builds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1040px) {
+  .builds {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.build-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--rl-space-6);
+  border: 1px solid var(--rl-border);
+  border-radius: var(--rl-radius-lg);
+  background: var(--rl-surface-raised);
+  box-shadow: var(--rl-shadow-sm);
+  transition:
+    transform var(--rl-transition-base) var(--rl-ease-out),
+    box-shadow var(--rl-transition-base),
+    border-color var(--rl-transition-base);
+}
+
+.build-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--rl-brand-300);
+  box-shadow: var(--rl-shadow-lg);
+}
+
+.build-card__icon {
+  font-size: 1.75rem;
+  line-height: 1;
+  margin-bottom: var(--rl-space-4);
+}
+
+.build-card__source {
+  margin: 0 0 var(--rl-space-2);
+  font-size: var(--rl-text-xs);
+  font-weight: var(--rl-weight-semibold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--rl-brand-link);
+}
+
+.build-card h3 {
+  font-size: var(--rl-text-lg);
+  margin-bottom: var(--rl-space-3);
+}
+
+.build-card__text {
+  color: var(--rl-text-muted);
+  margin-bottom: var(--rl-space-4);
+}
+
+// Empurra a lista para a base para que os cartões da linha fiquem alinhados
+// mesmo com descrições de tamanhos diferentes.
+.build-card__parts {
+  list-style: none;
+  margin: auto 0 0;
+  padding-top: var(--rl-space-4);
+  border-top: 1px solid var(--rl-border);
+  font-size: var(--rl-text-sm);
+  color: var(--rl-text-muted);
+
+  li {
+    position: relative;
+    padding-left: var(--rl-space-5);
+  }
+
+  li + li {
+    margin-top: var(--rl-space-2);
+  }
+
+  li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--rl-accent-text);
+    font-weight: var(--rl-weight-bold);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Onde essas competências são usadas
+// ---------------------------------------------------------------------------
+
+.sectors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--rl-space-4);
+}
+
+@media (min-width: 640px) {
+  .sectors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1040px) {
+  .sectors {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.sector {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rl-space-4);
+  padding: var(--rl-space-5);
+  border: 1px solid var(--rl-border);
+  border-radius: var(--rl-radius-lg);
+  background: var(--rl-surface-raised);
+
+  h3 {
+    font-size: var(--rl-text-base);
+    margin-bottom: var(--rl-space-1);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.sector__icon {
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+// O aviso de que a trilha não garante emprego. Fica visível de propósito, e
+// não escondido num rodapé: a promessa que não fazemos é parte do argumento.
+.honesty {
+  max-width: 72ch;
+  margin: var(--rl-space-8) 0 0;
+  padding: var(--rl-space-4) var(--rl-space-5);
+  border-left: 3px solid var(--rl-border-strong);
+  color: var(--rl-text-muted);
 }
 
 .checks {
@@ -197,7 +355,7 @@
     content: '✓';
     position: absolute;
     left: 0;
-    color: var(--rl-accent-600);
+    color: var(--rl-accent-text);
     font-weight: var(--rl-weight-bold);
   }
 }
@@ -339,7 +497,7 @@
   color: var(--rl-text);
 
   span {
-    color: var(--rl-accent-600);
+    color: var(--rl-accent-text);
   }
 }
 
@@ -429,7 +587,7 @@
 }
 
 .yes {
-  color: var(--rl-accent-600);
+  color: var(--rl-accent-text);
   font-weight: var(--rl-weight-bold);
   font-size: var(--rl-text-lg);
 }
