@@ -35,7 +35,20 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((error) => {
+main().catch((error: unknown) => {
+  // A falha mais comum em máquina nova é o banco não estar no ar. Dizer isso
+  // em português poupa uma busca pelo significado de ECONNREFUSED.
+  if (error instanceof Error && 'code' in error && error.code === 'ECONNREFUSED') {
+    console.error(
+      '\nNão foi possível conectar ao PostgreSQL.\n\n' +
+        'Confira se o banco está no ar e se o .env aponta para ele:\n' +
+        '  • com Docker:  pnpm infra:up\n' +
+        '  • sem Docker:  inicie seu PostgreSQL local\n\n' +
+        'Depois rode o seed novamente.\n',
+    );
+    process.exit(1);
+  }
+
   console.error('Falha ao executar o seed:', error);
   process.exit(1);
 });

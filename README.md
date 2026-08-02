@@ -77,13 +77,10 @@ cp .env.example .env
 # 3. Infraestrutura local (PostgreSQL, MinIO e Mailpit)
 pnpm infra:up
 
-# 4. Contratos compartilhados (a API e o front dependem deles)
-pnpm --filter @romalearn/contracts build
-
-# 5. Banco: migrations + dados iniciais
+# 4. Banco: migrations + dados iniciais
 pnpm seed
 
-# 6. Aplicações (API na 3333, front-end na 4200)
+# 5. Aplicações (API na 3333, front-end na 4200)
 pnpm dev
 ```
 
@@ -107,6 +104,10 @@ STORAGE_DRIVER=local     # arquivos em apps/api/storage-local, com URLs assinada
 ```
 
 ## Migrations e seed
+
+Os comandos acima compilam sozinhos o pacote `@romalearn/contracts`, do qual a
+API e o front-end dependem. Se preferir compilá-lo isoladamente:
+`pnpm contracts`.
 
 ```bash
 pnpm migration:run       # aplica as migrations pendentes

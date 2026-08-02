@@ -112,8 +112,7 @@ Espere ver `romalearn-postgres`, `romalearn-minio` e `romalearn-mailpit` como `U
 ### 2.4 Preparar o banco e os dados de teste
 
 ```bash
-pnpm --filter @romalearn/contracts build   # tipos compartilhados
-pnpm seed:all                              # migrations + cursos + contas de teste
+pnpm seed:all    # migrations + cursos + contas de teste
 ```
 
 O `seed:all` faz duas coisas:
@@ -454,7 +453,7 @@ cabeçalho e no rodapé. Depois volte para _RomaLearn_.
 | `pnpm: command not found`              | Corepack desativado          | `corepack enable`                                    |
 | Catálogo vazio no site                 | Seed não rodou               | `pnpm seed:all`                                      |
 | `Catálogo vazio` ao rodar `seed:demo`  | Faltou o `pnpm seed` antes   | `pnpm seed && pnpm seed:demo`                        |
-| Erro de tipo em `@romalearn/contracts` | Contratos não compilados     | `pnpm --filter @romalearn/contracts build`           |
+| Erro de tipo em `@romalearn/contracts` | Contratos desatualizados     | `pnpm contracts`                                     |
 | E-mails não aparecem                   | Driver errado                | Confirme `MAIL_DRIVER=smtp` e a porta 1025 no `.env` |
 | Porta 4200 ou 3333 ocupada             | Outro processo               | Mude `API_PORT` no `.env` ou encerre o processo      |
 | Webhook responde `unknown_payment`     | `paymentId` errado           | Copie exatamente da tela ou do banco                 |
