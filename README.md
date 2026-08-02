@@ -27,10 +27,11 @@ cinco módulos pagos (Windows, Word, Excel, PowerPoint e IA para processos admin
 | Matrícula gratuita                                            | Funcionando                                                   |
 | Checkout, pagamento e webhooks                                | Funcionando com gateway simulado; adapter Mercado Pago pronto |
 | Área do aluno, player, progresso e questionários              | Funcionando                                                   |
+| Atividades práticas com rubrica e correção automática         | Funcionando (regras locais ou provedor de IA)                 |
 | Certificados em PDF e validação pública                       | Funcionando                                                   |
 | Painel administrativo                                         | Funcionando                                                   |
 | E-mails transacionais                                         | Funcionando (console/SMTP)                                    |
-| Testes automatizados                                          | 35 unitários + 64 end-to-end                                  |
+| Testes automatizados                                          | 55 unitários + 68 end-to-end                                  |
 
 ## Arquitetura
 
@@ -203,6 +204,7 @@ Arquivos privados são sempre servidos por URL assinada e temporária.
 - [`docs/payments.md`](docs/payments.md) — fluxo de pagamento e webhooks
 - [`docs/testing.md`](docs/testing.md) — estratégia e execução dos testes
 - [`docs/content.md`](docs/content.md) — como cadastrar cursos pelo painel
+- [`docs/atividades-corrigidas.md`](docs/atividades-corrigidas.md) — rubricas e correção das atividades
 - [`docs/security.md`](docs/security.md) — segurança e privacidade (LGPD)
 
 ## Licença e marcas

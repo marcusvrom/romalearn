@@ -2,6 +2,9 @@ import { CourseLevel, LessonType, MaterialKind, QuestionType } from '@romalearn/
 import { ActivityRubric, EbookReference, LessonContent } from './content/content-types';
 import { enrichSections } from './content/apply-content';
 import { MODULE_01_ENRICHMENT } from './content/modulo-01-windows';
+import { MODULE_02_ENRICHMENT } from './content/modulo-02-word';
+import { MODULE_03_ENRICHMENT } from './content/modulo-03-excel';
+import { MODULE_04_ENRICHMENT } from './content/modulo-04-powerpoint';
 import { FREE_MODULE_SECTIONS } from './content/modulo-gratuito';
 
 /**
@@ -404,166 +407,176 @@ const MODULE_02: SeedCourse = {
   isFree: false,
   order: 2,
   ebookTitle: 'Módulo 2 — Microsoft Word para Administração (Edição 2026)',
-  sections: [
-    {
-      title: 'Parte 1 — Word Iniciante',
-      summary: 'Do primeiro documento à entrega em PDF, com hábitos seguros e formatação clara.',
-      lessons: [
-        {
-          title: 'Capítulo 1 — Primeiros passos, edição e salvamento seguro',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Conheça a interface do Word, edite com segurança e proteja o arquivo original.',
-          topics: ['O Word como bancada de documentos', 'Fluxo seguro para iniciar um documento'],
-        },
-        {
-          title: 'Capítulo 2 — Formatação profissional de textos e listas',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Transforme texto bruto em um documento claro, legível e visualmente consistente.',
-          topics: ['Formatação e sinalização', 'Listas e espaçamento'],
-        },
-        {
-          title: 'Capítulo 3 — Tabelas, imagens, página e exportação em PDF',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Insira elementos úteis, organize a página e prepare uma saída pronta para leitura ou impressão.',
-          topics: ['Elementos que organizam informação', 'Exportação revisada em PDF'],
-        },
-      ],
-    },
-    {
-      title: 'Parte 2 — Word Intermediário',
-      summary:
-        'Ao concluir esta parte: estruturar documentos com estilos, navegação e sumário; controlar ' +
-        'seções, cabeçalhos, tabelas e imagens; revisar em equipe com acessibilidade.',
-      lessons: [
-        {
-          title: 'Capítulo 4 — Estilos, hierarquia, navegação e sumário',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Estruture documentos longos para que sejam consistentes, navegáveis e fáceis de atualizar.',
-          topics: ['Estilo é regra, não pintura', 'Sumário automático'],
-        },
-        {
-          title: 'Capítulo 5 — Seções, cabeçalhos, tabelas e imagens',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Controle partes diferentes do mesmo documento sem desorganizar o restante do arquivo.',
-          topics: ['Página versus seção', 'Cabeçalhos e rodapés por seção'],
-        },
-        {
-          title: 'Capítulo 6 — Revisão, colaboração e acessibilidade',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Revise em equipe com rastreabilidade e entregue documentos utilizáveis por públicos diversos.',
-          topics: ['Três camadas de colaboração', 'Verificação de acessibilidade'],
-        },
-      ],
-    },
-    {
-      title: 'Parte 3 — Word Avançado',
-      summary:
-        'Ao concluir esta parte: criar modelos e elementos dinâmicos reutilizáveis e gerar ' +
-        'comunicações em lote com controle.',
-      lessons: [
-        {
-          title: 'Capítulo 7 — Modelos, blocos, campos e referências',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Reutilize estruturas aprovadas e mantenha informações dinâmicas atualizadas.',
-          topics: ['Reutilizar sem duplicar erros', 'Campos e referências cruzadas'],
-        },
-        {
-          title: 'Capítulo 8 — Mala direta e documentos em lote',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Combine um modelo com uma fonte de dados para gerar documentos personalizados com controle.',
-          topics: ['Modelo, dados e resultado', 'Conferência antes do envio em lote'],
-        },
-        {
-          title: 'Capítulo 9 — Formulários, proteção e finalização',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Crie documentos preenchíveis, compare versões e faça uma inspeção completa antes da entrega.',
-          topics: ['Formulário estruturado', 'Inspeção final e proteção'],
-        },
-      ],
-    },
-    {
-      title: 'Projeto final e conclusão',
-      summary: 'Integre os três níveis em uma rotina administrativa completa.',
-      lessons: [
-        {
-          title: 'Projeto final integrado',
-          type: LessonType.PRACTICAL_ACTIVITY,
-          estimatedMinutes: 60,
-          activityInstructions:
-            'Produza um documento administrativo completo com dados fictícios: aplique estilos e sumário, ' +
-            'configure seções com cabeçalho e rodapé, registre uma rodada de revisão, verifique a ' +
-            'acessibilidade e exporte a versão final em PDF.',
-        },
-        {
-          title: 'Questionário de conclusão',
-          type: LessonType.QUIZ,
-          estimatedMinutes: 10,
-          passingScore: 70,
-          questions: [
-            {
-              statement:
-                'Ao editar um documento existente, qual é o passo recomendado para preservar o original?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'Se você partiu de um arquivo existente, use "Salvar uma Cópia" antes de editar para preservar o original.',
-              options: [
-                { text: 'Usar "Salvar uma Cópia" antes de começar a editar.', isCorrect: true },
-                { text: 'Editar direto e salvar por cima ao final.', isCorrect: false },
-                { text: 'Renomear o arquivo depois de salvar as alterações.', isCorrect: false },
-                { text: 'Trabalhar sempre com o documento fechado.', isCorrect: false },
-              ],
-            },
-            {
-              statement: 'Qual é a diferença entre quebra de página e quebra de seção?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'A quebra de página apenas inicia outra página; a quebra de seção cria uma nova zona de configuração.',
-              options: [
-                {
-                  text: 'A quebra de página inicia outra página; a de seção cria uma nova zona de configuração.',
-                  isCorrect: true,
-                },
-                { text: 'São exatamente a mesma coisa.', isCorrect: false },
-                {
-                  text: 'A quebra de seção só funciona em documentos protegidos.',
-                  isCorrect: false,
-                },
-                { text: 'A quebra de página muda o cabeçalho automaticamente.', isCorrect: false },
-              ],
-            },
-            {
-              statement: 'O que o e-book recomenda confirmar antes de automatizar documentos?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'Antes de automatizar, confirme que domina estilos, seções, revisão e acessibilidade.',
-              options: [
-                { text: 'Domínio de estilos, seções, revisão e acessibilidade.', isCorrect: true },
-                { text: 'Ter a versão mais recente do Word.', isCorrect: false },
-                { text: 'Saber programar macros.', isCorrect: false },
-                { text: 'Ter concluído todos os outros módulos da trilha.', isCorrect: false },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
+  sections: enrichSections(
+    [
+      {
+        title: 'Parte 1 — Word Iniciante',
+        summary: 'Do primeiro documento à entrega em PDF, com hábitos seguros e formatação clara.',
+        lessons: [
+          {
+            title: 'Capítulo 1 — Primeiros passos, edição e salvamento seguro',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Conheça a interface do Word, edite com segurança e proteja o arquivo original.',
+            topics: ['O Word como bancada de documentos', 'Fluxo seguro para iniciar um documento'],
+          },
+          {
+            title: 'Capítulo 2 — Formatação profissional de textos e listas',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Transforme texto bruto em um documento claro, legível e visualmente consistente.',
+            topics: ['Formatação e sinalização', 'Listas e espaçamento'],
+          },
+          {
+            title: 'Capítulo 3 — Tabelas, imagens, página e exportação em PDF',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Insira elementos úteis, organize a página e prepare uma saída pronta para leitura ou impressão.',
+            topics: ['Elementos que organizam informação', 'Exportação revisada em PDF'],
+          },
+        ],
+      },
+      {
+        title: 'Parte 2 — Word Intermediário',
+        summary:
+          'Ao concluir esta parte: estruturar documentos com estilos, navegação e sumário; controlar ' +
+          'seções, cabeçalhos, tabelas e imagens; revisar em equipe com acessibilidade.',
+        lessons: [
+          {
+            title: 'Capítulo 4 — Estilos, hierarquia, navegação e sumário',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Estruture documentos longos para que sejam consistentes, navegáveis e fáceis de atualizar.',
+            topics: ['Estilo é regra, não pintura', 'Sumário automático'],
+          },
+          {
+            title: 'Capítulo 5 — Seções, cabeçalhos, tabelas e imagens',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Controle partes diferentes do mesmo documento sem desorganizar o restante do arquivo.',
+            topics: ['Página versus seção', 'Cabeçalhos e rodapés por seção'],
+          },
+          {
+            title: 'Capítulo 6 — Revisão, colaboração e acessibilidade',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Revise em equipe com rastreabilidade e entregue documentos utilizáveis por públicos diversos.',
+            topics: ['Três camadas de colaboração', 'Verificação de acessibilidade'],
+          },
+        ],
+      },
+      {
+        title: 'Parte 3 — Word Avançado',
+        summary:
+          'Ao concluir esta parte: criar modelos e elementos dinâmicos reutilizáveis e gerar ' +
+          'comunicações em lote com controle.',
+        lessons: [
+          {
+            title: 'Capítulo 7 — Modelos, blocos, campos e referências',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary: 'Reutilize estruturas aprovadas e mantenha informações dinâmicas atualizadas.',
+            topics: ['Reutilizar sem duplicar erros', 'Campos e referências cruzadas'],
+          },
+          {
+            title: 'Capítulo 8 — Mala direta e documentos em lote',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Combine um modelo com uma fonte de dados para gerar documentos personalizados com controle.',
+            topics: ['Modelo, dados e resultado', 'Conferência antes do envio em lote'],
+          },
+          {
+            title: 'Capítulo 9 — Formulários, proteção e finalização',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Crie documentos preenchíveis, compare versões e faça uma inspeção completa antes da entrega.',
+            topics: ['Formulário estruturado', 'Inspeção final e proteção'],
+          },
+        ],
+      },
+      {
+        title: 'Projeto final e conclusão',
+        summary: 'Integre os três níveis em uma rotina administrativa completa.',
+        lessons: [
+          {
+            title: 'Projeto final integrado',
+            type: LessonType.PRACTICAL_ACTIVITY,
+            estimatedMinutes: 60,
+            activityInstructions:
+              'Produza um documento administrativo completo com dados fictícios: aplique estilos e sumário, ' +
+              'configure seções com cabeçalho e rodapé, registre uma rodada de revisão, verifique a ' +
+              'acessibilidade e exporte a versão final em PDF.',
+          },
+          {
+            title: 'Questionário de conclusão',
+            type: LessonType.QUIZ,
+            estimatedMinutes: 10,
+            passingScore: 70,
+            questions: [
+              {
+                statement:
+                  'Ao editar um documento existente, qual é o passo recomendado para preservar o original?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'Se você partiu de um arquivo existente, use "Salvar uma Cópia" antes de editar para preservar o original.',
+                options: [
+                  { text: 'Usar "Salvar uma Cópia" antes de começar a editar.', isCorrect: true },
+                  { text: 'Editar direto e salvar por cima ao final.', isCorrect: false },
+                  { text: 'Renomear o arquivo depois de salvar as alterações.', isCorrect: false },
+                  { text: 'Trabalhar sempre com o documento fechado.', isCorrect: false },
+                ],
+              },
+              {
+                statement: 'Qual é a diferença entre quebra de página e quebra de seção?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'A quebra de página apenas inicia outra página; a quebra de seção cria uma nova zona de configuração.',
+                options: [
+                  {
+                    text: 'A quebra de página inicia outra página; a de seção cria uma nova zona de configuração.',
+                    isCorrect: true,
+                  },
+                  { text: 'São exatamente a mesma coisa.', isCorrect: false },
+                  {
+                    text: 'A quebra de seção só funciona em documentos protegidos.',
+                    isCorrect: false,
+                  },
+                  {
+                    text: 'A quebra de página muda o cabeçalho automaticamente.',
+                    isCorrect: false,
+                  },
+                ],
+              },
+              {
+                statement: 'O que o e-book recomenda confirmar antes de automatizar documentos?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'Antes de automatizar, confirme que domina estilos, seções, revisão e acessibilidade.',
+                options: [
+                  {
+                    text: 'Domínio de estilos, seções, revisão e acessibilidade.',
+                    isCorrect: true,
+                  },
+                  { text: 'Ter a versão mais recente do Word.', isCorrect: false },
+                  { text: 'Saber programar macros.', isCorrect: false },
+                  { text: 'Ter concluído todos os outros módulos da trilha.', isCorrect: false },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    MODULE_02_ENRICHMENT,
+  ),
 };
 
 const MODULE_03: SeedCourse = {
@@ -602,161 +615,165 @@ const MODULE_03: SeedCourse = {
   isFree: false,
   order: 3,
   ebookTitle: 'Módulo 3 — Microsoft Excel para Administração (Edição 2026)',
-  sections: [
-    {
-      title: 'Parte 1 — Excel Iniciante',
-      summary: 'Da planilha vazia a uma lista organizada, calculada e pronta para ser entregue.',
-      lessons: [
-        {
-          title: 'Capítulo 1 — O Excel como caderno inteligente',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Conheça a tela do Excel e aprenda a registrar informações sem medo de errar.',
-          topics: ['Antes de começar: o que o Excel faz', 'As peças da tela'],
-        },
-        {
-          title: 'Capítulo 2 — Formatação e contas que se atualizam',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Dê significado aos números e crie fórmulas simples que recalculam sozinhas.',
-          topics: ['Valor e aparência', 'Primeiras fórmulas'],
-        },
-        {
-          title: 'Capítulo 3 — Tabelas, classificação, filtros e PDF',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Organize listas, encontre o que importa e prepare uma entrega sem colunas cortadas.',
-          topics: ['Transforme a lista em Tabela', 'Classificação, filtros e exportação'],
-        },
-      ],
-    },
-    {
-      title: 'Parte 2 — Excel Intermediário',
-      summary:
-        'Ao concluir esta parte: preparar bases limpas, criar alertas compreensíveis e usar ' +
-        'referências e funções por critérios.',
-      lessons: [
-        {
-          title: 'Capítulo 4 — Dados limpos e alertas visuais',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Prepare uma base confiável e use regras visuais para encontrar prazos e problemas.',
-          topics: ['Uma boa análise começa antes da fórmula', 'Formatação condicional'],
-        },
-        {
-          title: 'Capítulo 5 — Referências e funções por critérios',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Faça somas, contagens e decisões com regras claras e fórmulas copiáveis.',
-          topics: ['Referências que mudam e referências que ficam', 'Funções por critério'],
-        },
-        {
-          title: 'Capítulo 6 — Gráficos e indicadores que contam uma história',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Transforme resultados em mensagens visuais claras para reuniões e relatórios.',
-          topics: ['Comece pela pergunta', 'Escolha do tipo de gráfico'],
-        },
-      ],
-    },
-    {
-      title: 'Parte 3 — Excel Avançado',
-      summary:
-        'Ao concluir esta parte: buscar informações entre tabelas, criar listas dinâmicas e resumir ' +
-        'bases com Tabelas Dinâmicas.',
-      lessons: [
-        {
-          title: 'Capítulo 7 — Buscas e listas que se atualizam',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Relacione cadastros por código e crie listas que mudam conforme um critério.',
-          topics: ['O que é uma chave de busca', 'Listas dinâmicas'],
-        },
-        {
-          title: 'Capítulo 8 — Tabelas Dinâmicas e segmentações',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Resuma muitas linhas arrastando campos e filtre a análise com botões.',
-          topics: ['O que a Tabela Dinâmica faz', 'Segmentações de dados'],
-        },
-        {
-          title: 'Capítulo 9 — Validação, proteção e revisão final',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Controle entradas, reduza alterações acidentais e revise o arquivo antes de compartilhar.',
-          topics: ['Três tipos de controle', 'Revisão antes de compartilhar'],
-        },
-      ],
-    },
-    {
-      title: 'Projeto final e conclusão',
-      summary: 'Junte os três níveis em uma única rotina de controle.',
-      lessons: [
-        {
-          title: 'Projeto final integrado',
-          type: LessonType.PRACTICAL_ACTIVITY,
-          estimatedMinutes: 60,
-          activityInstructions:
-            'Monte um controle administrativo completo com dados fictícios: base limpa, tabela, fórmulas ' +
-            'por critério, formatação condicional, um gráfico que responda a uma pergunta, uma Tabela ' +
-            'Dinâmica e a revisão final antes de compartilhar.',
-        },
-        {
-          title: 'Guia de consulta rápida e referências oficiais',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 10,
-          summary: 'Consulte funções, atalhos e as fontes oficiais citadas no e-book.',
-          topics: ['Guia de consulta rápida', 'Referências oficiais'],
-        },
-        {
-          title: 'Questionário de conclusão',
-          type: LessonType.QUIZ,
-          estimatedMinutes: 10,
-          passingScore: 70,
-          questions: [
-            {
-              statement: 'O que é uma célula em uma planilha?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation: 'A célula é o encontro de uma coluna com uma linha, como C7.',
-              options: [
-                { text: 'O encontro de uma coluna com uma linha.', isCorrect: true },
-                { text: 'O arquivo inteiro do Excel.', isCorrect: false },
-                { text: 'Uma aba dentro do arquivo.', isCorrect: false },
-                { text: 'Um grupo de células.', isCorrect: false },
-              ],
-            },
-            {
-              statement: 'O que pode acontecer ao salvar uma planilha no formato .csv?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'Um arquivo .csv guarda dados simples, mas pode perder fórmulas, cores e várias planilhas.',
-              options: [
-                { text: 'Pode perder fórmulas, cores e várias planilhas.', isCorrect: true },
-                { text: 'Nada muda em relação ao .xlsx.', isCorrect: false },
-                { text: 'As fórmulas passam a recalcular mais rápido.', isCorrect: false },
-                { text: 'O arquivo passa a aceitar Tabelas Dinâmicas.', isCorrect: false },
-              ],
-            },
-            {
-              statement: 'Quais cuidados o e-book recomenda antes de compartilhar uma planilha?',
-              type: QuestionType.MULTIPLE_CHOICE,
-              explanation:
-                'Antes de compartilhar, confira fórmulas, filtros, totais, permissões e a versão do arquivo.',
-              options: [
-                { text: 'Conferir fórmulas e totais.', isCorrect: true },
-                { text: 'Conferir filtros aplicados.', isCorrect: true },
-                { text: 'Conferir permissões e a versão do arquivo.', isCorrect: true },
-                { text: 'Apagar a base original para reduzir o tamanho.', isCorrect: false },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
+  sections: enrichSections(
+    [
+      {
+        title: 'Parte 1 — Excel Iniciante',
+        summary: 'Da planilha vazia a uma lista organizada, calculada e pronta para ser entregue.',
+        lessons: [
+          {
+            title: 'Capítulo 1 — O Excel como caderno inteligente',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary: 'Conheça a tela do Excel e aprenda a registrar informações sem medo de errar.',
+            topics: ['Antes de começar: o que o Excel faz', 'As peças da tela'],
+          },
+          {
+            title: 'Capítulo 2 — Formatação e contas que se atualizam',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary: 'Dê significado aos números e crie fórmulas simples que recalculam sozinhas.',
+            topics: ['Valor e aparência', 'Primeiras fórmulas'],
+          },
+          {
+            title: 'Capítulo 3 — Tabelas, classificação, filtros e PDF',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Organize listas, encontre o que importa e prepare uma entrega sem colunas cortadas.',
+            topics: ['Transforme a lista em Tabela', 'Classificação, filtros e exportação'],
+          },
+        ],
+      },
+      {
+        title: 'Parte 2 — Excel Intermediário',
+        summary:
+          'Ao concluir esta parte: preparar bases limpas, criar alertas compreensíveis e usar ' +
+          'referências e funções por critérios.',
+        lessons: [
+          {
+            title: 'Capítulo 4 — Dados limpos e alertas visuais',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Prepare uma base confiável e use regras visuais para encontrar prazos e problemas.',
+            topics: ['Uma boa análise começa antes da fórmula', 'Formatação condicional'],
+          },
+          {
+            title: 'Capítulo 5 — Referências e funções por critérios',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary: 'Faça somas, contagens e decisões com regras claras e fórmulas copiáveis.',
+            topics: ['Referências que mudam e referências que ficam', 'Funções por critério'],
+          },
+          {
+            title: 'Capítulo 6 — Gráficos e indicadores que contam uma história',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Transforme resultados em mensagens visuais claras para reuniões e relatórios.',
+            topics: ['Comece pela pergunta', 'Escolha do tipo de gráfico'],
+          },
+        ],
+      },
+      {
+        title: 'Parte 3 — Excel Avançado',
+        summary:
+          'Ao concluir esta parte: buscar informações entre tabelas, criar listas dinâmicas e resumir ' +
+          'bases com Tabelas Dinâmicas.',
+        lessons: [
+          {
+            title: 'Capítulo 7 — Buscas e listas que se atualizam',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary: 'Relacione cadastros por código e crie listas que mudam conforme um critério.',
+            topics: ['O que é uma chave de busca', 'Listas dinâmicas'],
+          },
+          {
+            title: 'Capítulo 8 — Tabelas Dinâmicas e segmentações',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary: 'Resuma muitas linhas arrastando campos e filtre a análise com botões.',
+            topics: ['O que a Tabela Dinâmica faz', 'Segmentações de dados'],
+          },
+          {
+            title: 'Capítulo 9 — Validação, proteção e revisão final',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Controle entradas, reduza alterações acidentais e revise o arquivo antes de compartilhar.',
+            topics: ['Três tipos de controle', 'Revisão antes de compartilhar'],
+          },
+        ],
+      },
+      {
+        title: 'Projeto final e conclusão',
+        summary: 'Junte os três níveis em uma única rotina de controle.',
+        lessons: [
+          {
+            title: 'Projeto final integrado',
+            type: LessonType.PRACTICAL_ACTIVITY,
+            estimatedMinutes: 60,
+            activityInstructions:
+              'Monte um controle administrativo completo com dados fictícios: base limpa, tabela, fórmulas ' +
+              'por critério, formatação condicional, um gráfico que responda a uma pergunta, uma Tabela ' +
+              'Dinâmica e a revisão final antes de compartilhar.',
+          },
+          {
+            title: 'Guia de consulta rápida e referências oficiais',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 10,
+            summary: 'Consulte funções, atalhos e as fontes oficiais citadas no e-book.',
+            topics: ['Guia de consulta rápida', 'Referências oficiais'],
+          },
+          {
+            title: 'Questionário de conclusão',
+            type: LessonType.QUIZ,
+            estimatedMinutes: 10,
+            passingScore: 70,
+            questions: [
+              {
+                statement: 'O que é uma célula em uma planilha?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation: 'A célula é o encontro de uma coluna com uma linha, como C7.',
+                options: [
+                  { text: 'O encontro de uma coluna com uma linha.', isCorrect: true },
+                  { text: 'O arquivo inteiro do Excel.', isCorrect: false },
+                  { text: 'Uma aba dentro do arquivo.', isCorrect: false },
+                  { text: 'Um grupo de células.', isCorrect: false },
+                ],
+              },
+              {
+                statement: 'O que pode acontecer ao salvar uma planilha no formato .csv?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'Um arquivo .csv guarda dados simples, mas pode perder fórmulas, cores e várias planilhas.',
+                options: [
+                  { text: 'Pode perder fórmulas, cores e várias planilhas.', isCorrect: true },
+                  { text: 'Nada muda em relação ao .xlsx.', isCorrect: false },
+                  { text: 'As fórmulas passam a recalcular mais rápido.', isCorrect: false },
+                  { text: 'O arquivo passa a aceitar Tabelas Dinâmicas.', isCorrect: false },
+                ],
+              },
+              {
+                statement: 'Quais cuidados o e-book recomenda antes de compartilhar uma planilha?',
+                type: QuestionType.MULTIPLE_CHOICE,
+                explanation:
+                  'Antes de compartilhar, confira fórmulas, filtros, totais, permissões e a versão do arquivo.',
+                options: [
+                  { text: 'Conferir fórmulas e totais.', isCorrect: true },
+                  { text: 'Conferir filtros aplicados.', isCorrect: true },
+                  { text: 'Conferir permissões e a versão do arquivo.', isCorrect: true },
+                  { text: 'Apagar a base original para reduzir o tamanho.', isCorrect: false },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    MODULE_03_ENRICHMENT,
+  ),
 };
 
 const MODULE_04: SeedCourse = {
@@ -795,168 +812,176 @@ const MODULE_04: SeedCourse = {
   isFree: false,
   order: 4,
   ebookTitle: 'Módulo 4 — Microsoft PowerPoint para Administração (Edição 2026)',
-  sections: [
-    {
-      title: 'Parte 1 — PowerPoint Iniciante',
-      summary: 'Da apresentação vazia a uma entrega visual curta e revisada.',
-      lessons: [
-        {
-          title: 'Capítulo 1 — A apresentação como história em cartões',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Conheça a tela do PowerPoint e monte uma apresentação curta sem medo de errar.',
-          topics: ['Antes de começar: o que o PowerPoint faz', 'As peças da tela'],
-        },
-        {
-          title: 'Capítulo 2 — Texto, temas e uma aparência fácil de ler',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Transforme texto em uma mensagem visual simples, legível e consistente.',
-          topics: ['A mensagem vem antes da aparência', 'Temas, contraste e consistência'],
-        },
-        {
-          title: 'Capítulo 3 — Imagens, formas, processos, dados e PDF',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Escolha elementos visuais que explicam a mensagem e prepare uma entrega revisada.',
-          topics: ['Escolha o elemento pelo problema', 'Exportação em PDF'],
-        },
-      ],
-    },
-    {
-      title: 'Parte 2 — PowerPoint Intermediário',
-      summary:
-        'Ao concluir esta parte: planejar uma história orientada ao público e à decisão e organizar ' +
-        'objetos, dados e multimídia.',
-      lessons: [
-        {
-          title: 'Capítulo 4 — Público, objetivo, roteiro e narrativa',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Organize slides em uma história que ajude o público a compreender e decidir.',
-          topics: ['Comece pelo público', 'Objetivo, roteiro e narrativa'],
-        },
-        {
-          title: 'Capítulo 5 — Composição, alinhamento, camadas e multimídia',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary: 'Organize objetos, processos, dados, áudio e vídeo com equilíbrio e propósito.',
-          topics: ['Crie ordem com alinhamento e espaço', 'Camadas e multimídia'],
-        },
-        {
-          title: 'Capítulo 6 — Movimento, notas, ensaio e apresentação',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Use movimento para orientar a atenção e apresente com notas, tempo e acessibilidade.',
-          topics: ['Transição e animação são coisas diferentes', 'Notas, ensaio e acessibilidade'],
-        },
-      ],
-    },
-    {
-      title: 'Parte 3 — PowerPoint Avançado',
-      summary:
-        'Ao concluir esta parte: criar mestres, layouts e modelos reutilizáveis e controlar dados ' +
-        'vinculados, versões e distribuição.',
-      lessons: [
-        {
-          title: 'Capítulo 7 — Slide Mestre, layouts e modelos reutilizáveis',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Crie uma base visual reutilizável para reduzir retrabalho e diferenças entre arquivos.',
-          topics: ['Mestre, layout, tema e modelo', 'Padronização visual'],
-        },
-        {
-          title: 'Capítulo 8 — Dados do Excel, reutilização e versões',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Traga dados e slides de outras fontes com escolhas claras de atualização e controle.',
-          topics: ['Imagem, incorporação ou vínculo', 'Controle de versões'],
-        },
-        {
-          title: 'Capítulo 9 — Gravação, inspeção, segurança e distribuição',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Grave, teste e prepare os formatos finais sem expor informações ou enviar a versão errada.',
-          topics: ['Grave primeiro uma amostra', 'Inspeção e distribuição segura'],
-        },
-      ],
-    },
-    {
-      title: 'Projeto final e conclusão',
-      summary: 'Junte os três níveis em uma única rotina de apresentação.',
-      lessons: [
-        {
-          title: 'Projeto final integrado',
-          type: LessonType.PRACTICAL_ACTIVITY,
-          estimatedMinutes: 60,
-          activityInstructions:
-            'Monte uma apresentação administrativa curta com dados fictícios: defina público e objetivo, ' +
-            'escreva o roteiro, aplique um Slide Mestre, inclua um gráfico vindo do Excel, escreva as ' +
-            'notas do apresentador, faça a inspeção final e exporte em PDF.',
-        },
-        {
-          title: 'Guia de consulta rápida e referências oficiais',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 10,
-          summary: 'Consulte recursos, atalhos e as fontes oficiais citadas no e-book.',
-          topics: ['Guia de consulta rápida', 'Referências oficiais'],
-        },
-        {
-          title: 'Questionário de conclusão',
-          type: LessonType.QUIZ,
-          estimatedMinutes: 10,
-          passingScore: 70,
-          questions: [
-            {
-              statement: 'Qual é a diferença entre transição e animação?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'Transição é abrir a porta para outra sala; animação é mover algo dentro da mesma sala.',
-              options: [
-                {
-                  text: 'A transição acontece entre slides; a animação, dentro de um slide.',
-                  isCorrect: true,
-                },
-                { text: 'São dois nomes para o mesmo recurso.', isCorrect: false },
-                { text: 'A animação só funciona com vídeos.', isCorrect: false },
-                { text: 'A transição só funciona no modo de edição.', isCorrect: false },
-              ],
-            },
-            {
-              statement: 'O que fazer quando um slide tem duas ideias grandes?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'Um slide não é uma página de Word: se houver duas ideias grandes, separe-as em dois slides.',
-              options: [
-                { text: 'Separar em dois slides.', isCorrect: true },
-                { text: 'Reduzir a fonte para caber tudo.', isCorrect: false },
-                { text: 'Transformar o slide em um documento de texto.', isCorrect: false },
-                { text: 'Adicionar uma animação para dividir a atenção.', isCorrect: false },
-              ],
-            },
-            {
-              statement:
-                'Quando há muitas categorias para comparar, qual tipo de gráfico o e-book recomenda?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'Pizza com muitas categorias fica difícil de ler. Para várias categorias, prefira barras ordenadas.',
-              options: [
-                { text: 'Barras ordenadas.', isCorrect: true },
-                { text: 'Gráfico de pizza.', isCorrect: false },
-                { text: 'Gráfico de dispersão.', isCorrect: false },
-                { text: 'Nenhum gráfico: só texto.', isCorrect: false },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
+  sections: enrichSections(
+    [
+      {
+        title: 'Parte 1 — PowerPoint Iniciante',
+        summary: 'Da apresentação vazia a uma entrega visual curta e revisada.',
+        lessons: [
+          {
+            title: 'Capítulo 1 — A apresentação como história em cartões',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Conheça a tela do PowerPoint e monte uma apresentação curta sem medo de errar.',
+            topics: ['Antes de começar: o que o PowerPoint faz', 'As peças da tela'],
+          },
+          {
+            title: 'Capítulo 2 — Texto, temas e uma aparência fácil de ler',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary: 'Transforme texto em uma mensagem visual simples, legível e consistente.',
+            topics: ['A mensagem vem antes da aparência', 'Temas, contraste e consistência'],
+          },
+          {
+            title: 'Capítulo 3 — Imagens, formas, processos, dados e PDF',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Escolha elementos visuais que explicam a mensagem e prepare uma entrega revisada.',
+            topics: ['Escolha o elemento pelo problema', 'Exportação em PDF'],
+          },
+        ],
+      },
+      {
+        title: 'Parte 2 — PowerPoint Intermediário',
+        summary:
+          'Ao concluir esta parte: planejar uma história orientada ao público e à decisão e organizar ' +
+          'objetos, dados e multimídia.',
+        lessons: [
+          {
+            title: 'Capítulo 4 — Público, objetivo, roteiro e narrativa',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary: 'Organize slides em uma história que ajude o público a compreender e decidir.',
+            topics: ['Comece pelo público', 'Objetivo, roteiro e narrativa'],
+          },
+          {
+            title: 'Capítulo 5 — Composição, alinhamento, camadas e multimídia',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Organize objetos, processos, dados, áudio e vídeo com equilíbrio e propósito.',
+            topics: ['Crie ordem com alinhamento e espaço', 'Camadas e multimídia'],
+          },
+          {
+            title: 'Capítulo 6 — Movimento, notas, ensaio e apresentação',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Use movimento para orientar a atenção e apresente com notas, tempo e acessibilidade.',
+            topics: [
+              'Transição e animação são coisas diferentes',
+              'Notas, ensaio e acessibilidade',
+            ],
+          },
+        ],
+      },
+      {
+        title: 'Parte 3 — PowerPoint Avançado',
+        summary:
+          'Ao concluir esta parte: criar mestres, layouts e modelos reutilizáveis e controlar dados ' +
+          'vinculados, versões e distribuição.',
+        lessons: [
+          {
+            title: 'Capítulo 7 — Slide Mestre, layouts e modelos reutilizáveis',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Crie uma base visual reutilizável para reduzir retrabalho e diferenças entre arquivos.',
+            topics: ['Mestre, layout, tema e modelo', 'Padronização visual'],
+          },
+          {
+            title: 'Capítulo 8 — Dados do Excel, reutilização e versões',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Traga dados e slides de outras fontes com escolhas claras de atualização e controle.',
+            topics: ['Imagem, incorporação ou vínculo', 'Controle de versões'],
+          },
+          {
+            title: 'Capítulo 9 — Gravação, inspeção, segurança e distribuição',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 25,
+            summary:
+              'Grave, teste e prepare os formatos finais sem expor informações ou enviar a versão errada.',
+            topics: ['Grave primeiro uma amostra', 'Inspeção e distribuição segura'],
+          },
+        ],
+      },
+      {
+        title: 'Projeto final e conclusão',
+        summary: 'Junte os três níveis em uma única rotina de apresentação.',
+        lessons: [
+          {
+            title: 'Projeto final integrado',
+            type: LessonType.PRACTICAL_ACTIVITY,
+            estimatedMinutes: 60,
+            activityInstructions:
+              'Monte uma apresentação administrativa curta com dados fictícios: defina público e objetivo, ' +
+              'escreva o roteiro, aplique um Slide Mestre, inclua um gráfico vindo do Excel, escreva as ' +
+              'notas do apresentador, faça a inspeção final e exporte em PDF.',
+          },
+          {
+            title: 'Guia de consulta rápida e referências oficiais',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 10,
+            summary: 'Consulte recursos, atalhos e as fontes oficiais citadas no e-book.',
+            topics: ['Guia de consulta rápida', 'Referências oficiais'],
+          },
+          {
+            title: 'Questionário de conclusão',
+            type: LessonType.QUIZ,
+            estimatedMinutes: 10,
+            passingScore: 70,
+            questions: [
+              {
+                statement: 'Qual é a diferença entre transição e animação?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'Transição é abrir a porta para outra sala; animação é mover algo dentro da mesma sala.',
+                options: [
+                  {
+                    text: 'A transição acontece entre slides; a animação, dentro de um slide.',
+                    isCorrect: true,
+                  },
+                  { text: 'São dois nomes para o mesmo recurso.', isCorrect: false },
+                  { text: 'A animação só funciona com vídeos.', isCorrect: false },
+                  { text: 'A transição só funciona no modo de edição.', isCorrect: false },
+                ],
+              },
+              {
+                statement: 'O que fazer quando um slide tem duas ideias grandes?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'Um slide não é uma página de Word: se houver duas ideias grandes, separe-as em dois slides.',
+                options: [
+                  { text: 'Separar em dois slides.', isCorrect: true },
+                  { text: 'Reduzir a fonte para caber tudo.', isCorrect: false },
+                  { text: 'Transformar o slide em um documento de texto.', isCorrect: false },
+                  { text: 'Adicionar uma animação para dividir a atenção.', isCorrect: false },
+                ],
+              },
+              {
+                statement:
+                  'Quando há muitas categorias para comparar, qual tipo de gráfico o e-book recomenda?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'Pizza com muitas categorias fica difícil de ler. Para várias categorias, prefira barras ordenadas.',
+                options: [
+                  { text: 'Barras ordenadas.', isCorrect: true },
+                  { text: 'Gráfico de pizza.', isCorrect: false },
+                  { text: 'Gráfico de dispersão.', isCorrect: false },
+                  { text: 'Nenhum gráfico: só texto.', isCorrect: false },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    MODULE_04_ENRICHMENT,
+  ),
 };
 
 /**
