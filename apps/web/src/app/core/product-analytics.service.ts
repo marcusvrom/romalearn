@@ -10,6 +10,9 @@ export type ProductEventName =
   | 'continue_learning_clicked'
   | 'lesson_started'
   | 'lesson_completed'
+  | 'lesson_audio_started'
+  | 'lesson_audio_rate_changed'
+  | 'lesson_audio_completed'
   | 'activity_submitted'
   | 'quiz_submitted'
   | 'course_completed'
@@ -46,9 +49,7 @@ export class ProductAnalyticsService {
     );
   }
 
-  private clean(
-    properties: ProductEvent['properties'],
-  ): ProductEvent['properties'] {
+  private clean(properties: ProductEvent['properties']): ProductEvent['properties'] {
     if (!properties) return undefined;
 
     return Object.fromEntries(
