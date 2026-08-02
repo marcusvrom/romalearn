@@ -41,6 +41,33 @@ A plataforma não promete emprego. Ela ajuda o aluno a construir evidências ver
 
 O aluno deve poder navegar por metas como “primeiro emprego”, “rotina administrativa”, “começar a programar” ou “trabalhar com backend”, e não depender apenas do nome de tecnologias.
 
+## Modo áudio das aulas
+
+A primeira versão usa a Web Speech API e as vozes disponíveis no aparelho do aluno. O recurso funciona como uma alternativa de consumo do conteúdo, sem substituir leitores de tela do sistema operacional e sem alterar sozinho a conclusão da aula.
+
+Recursos implementados:
+
+- reprodução e pausa;
+- navegação entre trechos narráveis;
+- velocidade entre 0,75x e 2x;
+- seleção de voz em português;
+- posição salva por aula;
+- preferências persistidas no aparelho;
+- compatibilidade com SSR;
+- controles acessíveis por teclado e áreas de status;
+- remoção de scripts, iframes, código e elementos ocultos da narração;
+- analytics sem dados pessoais.
+
+Evoluções planejadas:
+
+1. campo editorial `narrationText` para adaptar aulas técnicas;
+2. sincronização da posição entre aparelhos;
+3. continuidade automática entre aulas;
+4. áudio pré-gerado com Amazon Polly e armazenado no S3;
+5. reprodução em segundo plano e fila de aulas;
+6. resumos em áudio por módulo;
+7. destaque sincronizado do trecho narrado.
+
 ## Eventos de produto
 
 `ProductAnalyticsService` define eventos sem dados pessoais e desacopla a aplicação de um fornecedor específico. O navegador emite `romalearn:product-event`, que poderá ser conectado a uma solução de analytics após definição de consentimento e política de privacidade.
@@ -52,6 +79,9 @@ Eventos prioritários:
 - início de checkout;
 - retomada de curso;
 - início e conclusão de aula;
+- início do modo áudio;
+- mudança de velocidade da narração;
+- conclusão da narração;
 - envio de atividade;
 - envio de questionário;
 - conclusão de curso;
@@ -67,6 +97,7 @@ Eventos prioritários:
 6. Resolver a melhor oferta no backend em vez de usar a primeira oferta do array.
 7. Adicionar metas semanais opcionais e lembretes configuráveis.
 8. Criar testes de componentes para dashboard, curso, checkout e player.
+9. Criar preferências globais de acessibilidade: fonte, contraste e redução de movimento.
 
 ## Critérios para novos cursos de programação
 
@@ -80,6 +111,7 @@ Cada curso técnico deve conter:
 - rubrica objetiva;
 - instruções de Git e GitHub quando aplicável;
 - orientação sobre portfólio;
+- conteúdo narrável adaptado, sem leitura mecânica de código;
 - acessibilidade e linguagem adequada ao nível;
 - ligação clara com o próximo curso da jornada.
 

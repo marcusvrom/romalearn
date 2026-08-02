@@ -10,15 +10,20 @@ export type ProductEventName =
   | 'continue_learning_clicked'
   | 'lesson_started'
   | 'lesson_completed'
+  | 'lesson_audio_started'
+  | 'lesson_audio_rate_changed'
+  | 'lesson_audio_completed'
   | 'activity_submitted'
   | 'quiz_submitted'
   | 'course_completed'
   | 'ebook_opened'
   | 'ebook_downloaded';
 
+export type ProductEventProperties = Record<string, string | number | boolean | null>;
+
 export interface ProductEvent {
   name: ProductEventName;
-  properties?: Record<string, string | number | boolean | null>;
+  properties?: ProductEventProperties;
 }
 
 /**
@@ -33,8 +38,15 @@ export class ProductAnalyticsService {
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
 
-  track(event: ProductEvent): void {
+  track(event: ProductEvent): void;
+  track(name: ProductEventName, properties?: ProductEventProperties): void;
+  track(eventOrName: ProductEvent | ProductEventName, properties?: ProductEventProperties): void {
     if (!isPlatformBrowser(this.platformId)) return;
+
+    const event: ProductEvent =
+      typeof eventOrName === 'string'
+        ? { name: eventOrName, properties }
+        : eventOrName;
 
     this.document.defaultView?.dispatchEvent(
       new CustomEvent<ProductEvent>('romalearn:product-event', {
@@ -46,9 +58,7 @@ export class ProductAnalyticsService {
     );
   }
 
-  private clean(
-    properties: ProductEvent['properties'],
-  ): ProductEvent['properties'] {
+  private clean(properties: ProductEvent['properties']): ProductEvent['properties'] {
     if (!properties) return undefined;
 
     return Object.fromEntries(
