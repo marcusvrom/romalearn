@@ -61,7 +61,6 @@ export class LessonPage implements OnInit, OnDestroy {
   readonly error = signal<string | null>(null);
   readonly feedback = signal<{ tone: 'error' | 'success'; message: string } | null>(null);
   readonly completing = signal(false);
-  readonly courseSlug = signal('');
 
   activityNotes = '';
   readonly submission = signal<ActivitySubmissionDto | null>(null);
@@ -72,14 +71,14 @@ export class LessonPage implements OnInit, OnDestroy {
   readonly quizResult = signal<QuizAttemptResultDto | null>(null);
   readonly submittingQuiz = signal(false);
 
+  courseSlug = '';
   private heartbeat: ReturnType<typeof setInterval> | null = null;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       const lessonSlug = params.get('lessonSlug');
-      const courseSlug = this.route.parent?.snapshot.paramMap.get('courseSlug') ?? '';
-      this.courseSlug.set(courseSlug);
-      if (lessonSlug && courseSlug) this.load(courseSlug, lessonSlug);
+      this.courseSlug = this.route.parent?.snapshot.paramMap.get('courseSlug') ?? '';
+      if (lessonSlug && this.courseSlug) this.load(this.courseSlug, lessonSlug);
     });
   }
 
@@ -164,7 +163,7 @@ export class LessonPage implements OnInit, OnDestroy {
       next: (result) => {
         this.completing.set(false);
         this.lesson.set({ ...lesson, progress: result.progress });
-        this.store.refresh(this.courseSlug());
+        this.store.refresh(this.courseSlug);
 
         this.feedback.set({
           tone: 'success',
@@ -177,7 +176,7 @@ export class LessonPage implements OnInit, OnDestroy {
         const next = this.store.slugForLesson(lesson.nextLessonId);
         if (next) {
           setTimeout(
-            () => void this.router.navigateByUrl(WEB_ROUTES.playerLesson(this.courseSlug(), next)),
+            () => void this.router.navigateByUrl(WEB_ROUTES.playerLesson(this.courseSlug, next)),
             900,
           );
         }
@@ -270,10 +269,10 @@ export class LessonPage implements OnInit, OnDestroy {
       next: (result) => {
         this.submittingQuiz.set(false);
         this.quizResult.set(result);
-        this.store.refresh(this.courseSlug());
+        this.store.refresh(this.courseSlug);
 
         if (result.passed) {
-          this.learning.lesson(this.courseSlug(), lesson.slug).subscribe({
+          this.learning.lesson(this.courseSlug, lesson.slug).subscribe({
             next: (refreshed) => this.lesson.set(refreshed),
             error: () => undefined,
           });
@@ -298,7 +297,7 @@ export class LessonPage implements OnInit, OnDestroy {
   navigate(direction: 'previous' | 'next'): void {
     const { previous, next } = this.store.neighbourSlugs(this.lesson());
     const slug = direction === 'previous' ? previous : next;
-    if (slug) void this.router.navigateByUrl(WEB_ROUTES.playerLesson(this.courseSlug(), slug));
+    if (slug) void this.router.navigateByUrl(WEB_ROUTES.playerLesson(this.courseSlug, slug));
   }
 
   hasNeighbour(direction: 'previous' | 'next'): boolean {
