@@ -111,6 +111,8 @@ STORAGE_DRIVER=local     # arquivos em apps/api/storage-local, com URLs assinada
 pnpm migration:run       # aplica as migrations pendentes
 pnpm migration:revert    # desfaz a última migration
 pnpm seed                # aplica migrations pendentes e popula os dados iniciais
+pnpm seed:demo           # cria as contas de teste manual (fora de produção)
+pnpm seed:all            # os dois acima, em sequência
 ```
 
 O seed é **idempotente**: pode ser executado quantas vezes for necessário. Ele cria o
@@ -130,8 +132,16 @@ Válidas **apenas** no ambiente de desenvolvimento, criadas pelo seed a partir d
 | Administrador         | `admin@romalearn.local` | `Admin@123456` |
 | Aluno de demonstração | `aluno@romalearn.local` | `Aluno@123456` |
 
-Em produção, o seed não cria o aluno de demonstração e avisa para criar o administrador
+O comando `pnpm seed:demo` acrescenta 11 contas para teste manual — aluno recém-cadastrado, em
+progresso, concluinte com certificado, certificado revogado, comprador da trilha, pagamento
+pendente e recusado, conta suspensa, gestor de conteúdo e suporte. Todas usam a senha
+`Senha@123456` e são criadas pelos fluxos reais da aplicação, não por inserções diretas no banco.
+
+Em produção, nenhuma conta de demonstração é criada e o seed avisa para cadastrar o administrador
 manualmente com uma senha forte.
+
+Roteiro passo a passo de todos os cenários, incluindo a instalação em uma máquina nova:
+[`docs/roteiro-de-testes.md`](docs/roteiro-de-testes.md).
 
 ## Testes
 
@@ -186,6 +196,7 @@ Arquivos privados são sempre servidos por URL assinada e temporária.
 
 ## Documentação adicional
 
+- [`docs/roteiro-de-testes.md`](docs/roteiro-de-testes.md) — **setup em máquina nova e roteiro de testes manuais**
 - [`docs/architecture.md`](docs/architecture.md) — visão geral, módulos e entidades
 - [`docs/decisions/`](docs/decisions/) — decisões técnicas registradas (ADRs)
 - [`docs/operations.md`](docs/operations.md) — implantação, backup e observabilidade
