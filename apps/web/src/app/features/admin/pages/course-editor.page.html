@@ -1,0 +1,189 @@
+<nav class="breadcrumb">
+  <a routerLink="/admin/cursos">← Voltar para cursos</a>
+</nav>
+
+@if (loading()) {
+<rl-loading label="Carregando curso…" />
+} @if (!loading() && course(); as course) {
+<header class="head">
+  <div>
+    <h1>{{ course.title }}</h1>
+    <p class="rl-small rl-muted">
+      {{ course.slug }} ·
+      <span
+        class="rl-badge"
+        [class.rl-badge--free]="course.status === status.PUBLISHED"
+        [class.rl-badge--warn]="course.status === status.DRAFT"
+      >
+        {{ course.status === status.PUBLISHED ? 'Publicado' : 'Rascunho' }}
+      </span>
+    </p>
+  </div>
+
+  @if (course.status === status.PUBLISHED) {
+  <button type="button" class="rl-button rl-button--secondary" (click)="unpublish()">Despublicar</button>
+  } @else {
+  <button type="button" class="rl-button rl-button--primary" (click)="publish()">Publicar curso</button>
+  }
+</header>
+
+@if (feedback(); as message) {
+<rl-alert [tone]="message.tone">{{ message.message }}</rl-alert>
+}
+
+<!-- Dados do curso -->
+<section class="rl-card block">
+  <h2>Informações do curso</h2>
+
+  <div class="rl-field">
+    <label class="rl-label" for="titulo">Título</label>
+    <input id="titulo" class="rl-input" [(ngModel)]="courseForm.title" name="titulo" />
+  </div>
+
+  <div class="rl-field">
+    <label class="rl-label" for="resumo">Descrição curta</label>
+    <input id="resumo" class="rl-input" [(ngModel)]="courseForm.shortDescription" name="resumo" />
+  </div>
+
+  <div class="rl-field">
+    <label class="rl-label" for="descricao">Descrição completa</label>
+    <textarea id="descricao" class="rl-textarea" [(ngModel)]="courseForm.fullDescription" name="descricao"></textarea>
+    <span class="rl-hint">Separe os parágrafos com uma linha em branco.</span>
+  </div>
+
+  <div class="rl-field">
+    <label class="rl-label" for="carga">Carga horária (horas)</label>
+    <input id="carga" type="number" min="0" class="rl-input" [(ngModel)]="courseForm.workloadHours" name="carga" />
+    <span class="rl-hint">Valor impresso no certificado.</span>
+  </div>
+
+  <button type="button" class="rl-button rl-button--primary" [disabled]="saving()" (click)="saveCourse()">
+    {{ saving() ? 'Salvando…' : 'Salvar informações' }}
+  </button>
+</section>
+
+<!-- Estrutura -->
+<section class="block">
+  <h2>Conteúdo</h2>
+
+  @for (group of grouped(); track group.section.id; let sectionIndex = $index) {
+  <article class="rl-card section">
+    <header class="section__head">
+      <div>
+        <h3>{{ group.section.title }}</h3>
+        @if (group.section.summary) {
+        <p class="rl-small rl-muted">{{ group.section.summary }}</p>
+        }
+      </div>
+
+      <div class="section__actions">
+        <button
+          type="button"
+          class="icon-button"
+          aria-label="Mover parte para cima"
+          [disabled]="sectionIndex === 0"
+          (click)="moveSection(sectionIndex, -1)"
+        >
+          ↑
+        </button>
+        <button
+          type="button"
+          class="icon-button"
+          aria-label="Mover parte para baixo"
+          [disabled]="sectionIndex === grouped().length - 1"
+          (click)="moveSection(sectionIndex, 1)"
+        >
+          ↓
+        </button>
+        <button
+          type="button"
+          class="rl-button rl-button--secondary rl-button--small"
+          (click)="removeSection(group.section)"
+        >
+          Remover
+        </button>
+      </div>
+    </header>
+
+    <ul class="lessons">
+      @for (lesson of group.lessons; track lesson.id; let lessonIndex = $index) {
+      <li class="lesson">
+        <span class="lesson__title">{{ lesson.title }}</span>
+        <span class="rl-badge">{{ typeLabel[lesson.type] }}</span>
+        <span class="rl-small rl-muted">{{ lesson.estimatedMinutes }} min</span>
+
+        <div class="lesson__actions">
+          <button
+            type="button"
+            class="icon-button"
+            aria-label="Mover aula para cima"
+            [disabled]="lessonIndex === 0"
+            (click)="moveLesson(group.section.id, lessonIndex, -1)"
+          >
+            ↑
+          </button>
+          <button
+            type="button"
+            class="icon-button"
+            aria-label="Mover aula para baixo"
+            [disabled]="lessonIndex === group.lessons.length - 1"
+            (click)="moveLesson(group.section.id, lessonIndex, 1)"
+          >
+            ↓
+          </button>
+          <button type="button" class="icon-button" aria-label="Remover aula" (click)="removeLesson(lesson)">✕</button>
+        </div>
+      </li>
+      } @empty {
+      <li class="rl-small rl-muted empty">Nenhuma aula nesta parte ainda.</li>
+      }
+    </ul>
+
+    <!-- Nova aula -->
+    @if (newLesson[group.section.id]; as draft) {
+    <div class="new-lesson">
+      <input
+        class="rl-input"
+        placeholder="Título da aula"
+        [(ngModel)]="draft.title"
+        [name]="'aula-' + group.section.id"
+        aria-label="Título da nova aula"
+      />
+      <select class="rl-select" [(ngModel)]="draft.type" [name]="'tipo-' + group.section.id" aria-label="Tipo da aula">
+        @for (type of lessonTypes; track type) {
+        <option [value]="type">{{ typeLabel[type] }}</option>
+        }
+      </select>
+      <input
+        class="rl-input minutes"
+        type="number"
+        min="1"
+        [(ngModel)]="draft.estimatedMinutes"
+        [name]="'min-' + group.section.id"
+        aria-label="Duração estimada em minutos"
+      />
+      <button type="button" class="rl-button rl-button--secondary" (click)="addLesson(group.section.id)">
+        Adicionar aula
+      </button>
+    </div>
+    }
+  </article>
+  } @empty {
+  <p class="rl-muted">Este curso ainda não tem partes. Crie a primeira abaixo.</p>
+  }
+
+  <!-- Nova parte -->
+  <div class="rl-card new-section">
+    <h3>Nova parte</h3>
+    <div class="rl-field">
+      <label class="rl-label" for="parte-titulo">Título da parte</label>
+      <input id="parte-titulo" class="rl-input" [(ngModel)]="newSection.title" name="parte-titulo" />
+    </div>
+    <div class="rl-field">
+      <label class="rl-label" for="parte-resumo">Resumo (opcional)</label>
+      <input id="parte-resumo" class="rl-input" [(ngModel)]="newSection.summary" name="parte-resumo" />
+    </div>
+    <button type="button" class="rl-button rl-button--primary" (click)="addSection()">Adicionar parte</button>
+  </div>
+</section>
+}

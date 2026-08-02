@@ -1,0 +1,229 @@
+@if (loading()) {
+<rl-loading label="Carregando a aula…" />
+} @if (!loading() && error(); as message) {
+<rl-alert tone="error" title="Não foi possível abrir a aula">{{ message }}</rl-alert>
+} @if (!loading() && !error() && lesson(); as lesson) {
+<article class="lesson">
+  <header class="lesson__head">
+    <div class="lesson__meta">
+      <span class="rl-badge">{{ typeLabel[lesson.type] }}</span>
+      <span class="rl-small rl-muted">{{ formatMinutes(lesson.estimatedMinutes) }}</span>
+      @if (lesson.progress.status === completedStatus) {
+      <span class="rl-badge rl-badge--free">Concluída</span>
+      }
+    </div>
+    <h1>{{ lesson.title }}</h1>
+  </header>
+
+  @if (feedback(); as message) {
+  <rl-alert [tone]="message.tone">{{ message.message }}</rl-alert>
+  }
+
+  <!-- Vídeo -->
+  @if (lesson.type === lessonTypes.VIDEO && lesson.videoUrl) {
+  <div class="video">
+    <video controls preload="metadata" [src]="lesson.videoUrl" (timeupdate)="onVideoProgress($event)">
+      Seu navegador não consegue exibir este vídeo.
+    </video>
+  </div>
+  }
+
+  <!-- PDF / download -->
+  @if ((lesson.type === lessonTypes.PDF || lesson.type === lessonTypes.DOWNLOAD) && lesson.fileUrl) {
+  <div class="rl-card file">
+    <p><strong>Arquivo desta aula</strong></p>
+    <a class="rl-button rl-button--primary" [href]="lesson.fileUrl" target="_blank" rel="noopener">
+      {{ lesson.type === lessonTypes.PDF ? 'Abrir o PDF' : 'Baixar o arquivo' }}
+    </a>
+  </div>
+  }
+
+  <!-- Conteúdo em texto (HTML sanitizado pelo backend) -->
+  @if (safeContent(); as content) {
+  <div class="rl-prose" [innerHTML]="content"></div>
+  }
+
+  <!-- Atividade prática -->
+  @if (lesson.type === lessonTypes.PRACTICAL_ACTIVITY) {
+  <section class="rl-card activity">
+    <h2>Envie sua atividade</h2>
+    <p class="rl-small rl-muted">
+      Conte com suas palavras o que você fez, o que funcionou e o que ainda ficou com dúvida. Use apenas dados fictícios
+      ou autorizados.
+    </p>
+
+    <label class="rl-label" for="relato">Seu relato</label>
+    <textarea
+      id="relato"
+      class="rl-textarea"
+      [(ngModel)]="activityNotes"
+      name="relato"
+      placeholder="Ex.: criei a pasta de estudos, salvei o documento com nome descritivo e gerei o PDF…"
+    ></textarea>
+
+    <button
+      type="button"
+      class="rl-button rl-button--secondary"
+      [disabled]="activitySaved()"
+      (click)="submitActivity()"
+    >
+      {{ activitySaved() ? 'Atividade enviada ✓' : 'Enviar atividade' }}
+    </button>
+  </section>
+  }
+
+  <!-- Questionário -->
+  @if (lesson.quiz; as quiz) {
+  <section class="quiz">
+    <header class="quiz__head">
+      <h2>{{ quiz.title }}</h2>
+      @if (quiz.description) {
+      <p class="rl-small rl-muted">{{ quiz.description }}</p>
+      }
+      <p class="rl-small rl-muted">
+        Nota mínima: {{ quiz.passingScore }}% @if (quiz.maxAttempts) { · Tentativas: {{ quiz.attemptsUsed }} de {{
+        quiz.maxAttempts }} } @else { · Tentativas ilimitadas } @if (quiz.bestScore !== null) { · Melhor nota: {{
+        quiz.bestScore }}% }
+      </p>
+    </header>
+
+    @if (quizResult(); as result) {
+    <!-- Resultado da tentativa -->
+    <div class="result" [class.result--passed]="result.passed">
+      <p class="result__score">{{ result.score }}%</p>
+      <p class="result__label">
+        {{ result.passed ? 'Aprovado! Você alcançou a nota mínima.' : 'Ainda não foi desta vez. Revise o conteúdo e
+        tente novamente.' }}
+      </p>
+      @if (!result.passed) {
+      <button type="button" class="rl-button rl-button--secondary" (click)="retryQuiz()">Tentar de novo</button>
+      }
+    </div>
+
+    @if (result.questions.length > 0) {
+    <div class="feedback">
+      @for (question of quiz.questions; track question.id) { @if (feedbackFor(question.id); as item) {
+      <div class="feedback__item" [class.feedback__item--wrong]="!item.correct">
+        <p class="feedback__statement">
+          <span aria-hidden="true">{{ item.correct ? '✓' : '✕' }}</span>
+          {{ question.statement }}
+        </p>
+        <ul class="feedback__options">
+          @for (option of question.options; track option.id) {
+          <li
+            [class.is-correct]="item.correctOptionIds.includes(option.id)"
+            [class.is-selected]="item.selectedOptionIds.includes(option.id)"
+          >
+            {{ option.text }} @if (item.correctOptionIds.includes(option.id)) {
+            <span class="rl-badge rl-badge--free">Correta</span>
+            }
+          </li>
+          }
+        </ul>
+        @if (item.explanation) {
+        <p class="feedback__explanation">{{ item.explanation }}</p>
+        }
+      </div>
+      } }
+    </div>
+    } } @else {
+    <!-- Formulário do questionário -->
+    <form class="quiz__form" (ngSubmit)="submitQuiz()">
+      @for (question of quiz.questions; track question.id; let index = $index) {
+      <fieldset class="question">
+        <legend>
+          <span class="question__number">{{ index + 1 }}.</span>
+          {{ question.statement }}
+        </legend>
+        @if (question.type === 'MULTIPLE_CHOICE') {
+        <p class="rl-small rl-muted">Pode haver mais de uma resposta correta.</p>
+        }
+
+        <ul class="options">
+          @for (option of question.options; track option.id) {
+          <li>
+            <label class="option" [class.option--checked]="isSelected(question.id, option.id)">
+              <input
+                [type]="question.type === 'MULTIPLE_CHOICE' ? 'checkbox' : 'radio'"
+                [name]="'questao-' + question.id"
+                [checked]="isSelected(question.id, option.id)"
+                (change)="toggleOption(question.id, option.id, question.type === 'MULTIPLE_CHOICE')"
+              />
+              <span>{{ option.text }}</span>
+            </label>
+          </li>
+          }
+        </ul>
+      </fieldset>
+      }
+
+      <button type="submit" class="rl-button rl-button--primary" [disabled]="submittingQuiz()">
+        {{ submittingQuiz() ? 'Enviando…' : 'Enviar respostas' }}
+      </button>
+    </form>
+    }
+  </section>
+  }
+
+  <!-- Materiais de apoio -->
+  @if (lesson.materials.length > 0) {
+  <section class="materials">
+    <h2>Materiais de apoio</h2>
+    <ul>
+      @for (material of lesson.materials; track material.id) {
+      <li class="rl-card material">
+        <div>
+          <p class="material__title">{{ material.title }}</p>
+          @if (material.description) {
+          <p class="rl-small rl-muted">{{ material.description }}</p>
+          }
+        </div>
+        <a class="rl-button rl-button--secondary rl-button--small" [href]="material.url" target="_blank" rel="noopener">
+          Abrir
+        </a>
+      </li>
+      }
+    </ul>
+  </section>
+  }
+
+  <!-- Conclusão e navegação -->
+  <footer class="actions">
+    <button
+      type="button"
+      class="rl-button rl-button--secondary"
+      [disabled]="!hasNeighbour('previous')"
+      (click)="navigate('previous')"
+    >
+      ← Aula anterior
+    </button>
+
+    @if (lesson.progress.status === completedStatus) {
+    <span class="actions__done">✓ Aula concluída</span>
+    } @else {
+    <button type="button" class="rl-button rl-button--primary" [disabled]="completing()" (click)="complete()">
+      {{ completing() ? 'Registrando…' : 'Marcar como concluída' }}
+    </button>
+    }
+
+    <button
+      type="button"
+      class="rl-button rl-button--secondary"
+      [disabled]="!hasNeighbour('next')"
+      (click)="navigate('next')"
+    >
+      Próxima aula →
+    </button>
+  </footer>
+
+  @if (lesson.progress.status !== completedStatus) {
+  <p class="actions__hint rl-small rl-muted">
+    @switch (lesson.completionRule) { @case ('MINIMUM_TIME') { Esta aula é concluída depois de um tempo mínimo de
+    leitura. Continue por aqui e o progresso é salvo sozinho. } @case ('VIDEO_WATCH_RATIO') { Esta aula é concluída
+    depois que você assistir à maior parte do vídeo. } @case ('QUIZ_PASSED') { Esta aula é concluída quando você
+    alcançar a nota mínima no questionário. } @case ('ACTIVITY_SUBMITTED') { Esta aula é concluída depois que você
+    enviar a atividade prática acima. } @default { Marque a aula como concluída quando terminar. } }
+  </p>
+  }
+</article>
+}

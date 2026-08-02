@@ -202,6 +202,7 @@ export class CatalogService {
       shortDescription: program.shortDescription,
       fullDescription: program.fullDescription,
       coverImageUrl: program.coverImageUrl,
+      objectives: program.objectives ?? [],
       status: program.status,
       totalWorkloadHours: courses.reduce((sum, course) => sum + course.workloadHours, 0),
       courses,

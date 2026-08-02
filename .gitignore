@@ -25,3 +25,4 @@ tmp/
 test-results/
 playwright-report/
 apps/api/storage-local/
+apps/api/.tmp-test-storage/

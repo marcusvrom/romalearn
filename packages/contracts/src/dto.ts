@@ -148,6 +148,7 @@ export interface ProgramSummaryDto {
   shortDescription: string;
   fullDescription: string;
   coverImageUrl: string | null;
+  objectives: string[];
   status: PublicationStatus;
   totalWorkloadHours: number;
   courses: CourseSummaryDto[];
