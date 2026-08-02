@@ -1,5 +1,7 @@
 import { CourseLevel, LessonType, MaterialKind, QuestionType } from '@romalearn/contracts';
 import { ActivityRubric, EbookReference, LessonContent } from './content/content-types';
+import { enrichSections } from './content/apply-content';
+import { MODULE_01_ENRICHMENT } from './content/modulo-01-windows';
 import { FREE_MODULE_SECTIONS } from './content/modulo-gratuito';
 
 /**
@@ -158,202 +160,208 @@ const MODULE_01: SeedCourse = {
   isFree: false,
   order: 1,
   ebookTitle: 'Módulo 1 — Introdução à Computação e ao Windows (Edição 2026)',
-  sections: [
-    {
-      title: 'Parte 1 — Conhecendo o computador',
-      summary:
-        'Uma apresentação tranquila das partes do computador e dos principais espaços do Windows. ' +
-        'Ao terminar esta parte: reconhecer hardware, software e Windows; usar mouse, teclado e ' +
-        'recursos básicos de acessibilidade; abrir programas e organizar janelas.',
-      lessons: [
-        {
-          title: 'Capítulo 1 — O computador como escritório digital',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary:
-            'Entenda o que o computador faz e aprenda a diferenciar equipamento, programa e Windows.',
-          topics: ['O que um computador faz', 'Hardware, software e Windows'],
-        },
-        {
-          title: 'Capítulo 2 — Mouse, teclado e interação sem medo',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary: 'Aprenda os movimentos e as teclas que ajudam a conversar com o computador.',
-          topics: ['O mouse é como um dedo na tela', 'Teclas essenciais e acessibilidade'],
-        },
-        {
-          title: 'Capítulo 3 — Conhecendo o Windows e suas janelas',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary:
-            'Use a Área de Trabalho, o Menu Iniciar e a barra de tarefas para abrir e organizar programas.',
-          topics: ['Os espaços principais do Windows', 'Abrir, alternar e organizar janelas'],
-        },
-      ],
-    },
-    {
-      title: 'Parte 2 — Cuidando dos arquivos',
-      summary:
-        'Ao terminar esta parte: diferenciar arquivos, pastas, caminhos e extensões; copiar, mover, ' +
-        'renomear e restaurar itens com segurança.',
-      lessons: [
-        {
-          title: 'Capítulo 4 — Arquivos, pastas e tipos de documento',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary:
-            'Descubra onde os documentos ficam e o que partes como .docx, .xlsx e .pdf significam.',
-          topics: ['Documento, gaveta e endereço', 'Extensões mais comuns'],
-        },
-        {
-          title: 'Capítulo 5 — Organizando itens no Explorador de Arquivos',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary:
-            'Crie pastas e aprenda a copiar, mover, renomear, excluir e restaurar itens com segurança.',
-          topics: ['Abra e navegue pelo Explorador', 'Copiar, mover e restaurar'],
-        },
-        {
-          title: 'Capítulo 6 — Pastas e nomes que todos entendem',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 15,
-          summary:
-            'Monte uma organização simples para encontrar o documento certo sem depender da memória.',
-          topics: ['As três perguntas de uma boa organização', 'Padrões de nome e versão'],
-        },
-        {
-          title: 'Capítulo 7 — Salvar, baixar, anexar, compartilhar e criar PDF',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary: 'Leve arquivos de um lugar para outro e confira tudo antes de enviar.',
-          topics: ['Palavras que parecem iguais, mas não são', 'Conferência antes do envio'],
-        },
-        {
-          title: 'Prática — Organize e envie um documento',
-          type: LessonType.PRACTICAL_ACTIVITY,
-          estimatedMinutes: 25,
-          activityInstructions:
-            'Crie uma pasta de estudos, salve um documento com nome descritivo, gere uma versão em PDF ' +
-            'e escreva o passo a passo que você seguiu. ' +
-            CONFIRM_ACTIVITY,
-        },
-      ],
-    },
-    {
-      title: 'Parte 3 — Rapidez, recuperação e segurança',
-      summary:
-        'Ao terminar esta parte: pesquisar e usar atalhos essenciais; diferenciar nuvem, ' +
-        'sincronização e backup; adotar hábitos de segurança digital.',
-      lessons: [
-        {
-          title: 'Capítulo 8 — Pesquisa e atalhos que economizam tempo',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary:
-            'Encontre arquivos e aprenda poucos atalhos por vez, sempre entendendo o que eles fazem.',
-          topics: ['Encontre um arquivo', 'Atalhos essenciais'],
-        },
-        {
-          title: 'Capítulo 9 — Nuvem, backup e recuperação',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary:
-            'Entenda onde os arquivos ficam e o que fazer quando algo parece ter desaparecido.',
-          topics: ['Onde um arquivo pode ficar', 'Backup e recuperação'],
-        },
-        {
-          title: 'Capítulo 10 — Segurança digital para todos',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary: 'Proteja sua conta, seus documentos e outras pessoas com hábitos simples.',
-          topics: ['Três cuidados com a informação', 'Senhas, golpes e privacidade'],
-        },
-      ],
-    },
-    {
-      title: 'Projeto final e conclusão',
-      summary: 'Junte tudo em um pequeno escritório digital e verifique sua compreensão.',
-      lessons: [
-        {
-          title: 'Projeto final — Organize um pequeno escritório',
-          type: LessonType.PRACTICAL_ACTIVITY,
-          estimatedMinutes: 45,
-          activityInstructions:
-            'Monte a estrutura de pastas de um pequeno escritório usando arquivos fictícios. Aplique um ' +
-            'padrão de nomes, salve uma versão em PDF, simule uma recuperação da Lixeira e escreva o que ' +
-            'você faria para manter um backup.',
-        },
-        {
-          title: 'Guia rápido, glossário e referências oficiais',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 10,
-          summary: 'Consulte atalhos, termos novos e as fontes oficiais citadas no e-book.',
-          topics: ['Guia rápido e glossário', 'Referências oficiais'],
-        },
-        {
-          title: 'Questionário de conclusão',
-          type: LessonType.QUIZ,
-          estimatedMinutes: 10,
-          passingScore: 70,
-          questions: [
-            {
-              statement: 'Qual é a diferença entre hardware e software?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'O hardware é como os móveis e equipamentos de um escritório; os programas (software) ' +
-                'são o que faz o trabalho acontecer.',
-              options: [
-                {
-                  text: 'Hardware é a parte física do equipamento; software são os programas.',
-                  isCorrect: true,
-                },
-                { text: 'Hardware são os programas; software é a parte física.', isCorrect: false },
-                { text: 'São dois nomes para a mesma coisa.', isCorrect: false },
-                { text: 'Hardware só existe em computadores de mesa.', isCorrect: false },
-              ],
-            },
-            {
-              statement: 'Na analogia usada no e-book, o que representa o caminho de um arquivo?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'O arquivo é a folha, a pasta é a gaveta e o caminho é o endereço que leva até ela.',
-              options: [
-                { text: 'A folha guardada.', isCorrect: false },
-                { text: 'A gaveta onde a folha fica.', isCorrect: false },
-                { text: 'O endereço que leva até a gaveta.', isCorrect: true },
-                { text: 'O nome do programa que abre o arquivo.', isCorrect: false },
-              ],
-            },
-            {
-              statement: 'Quais são as quatro etapas que quase toda tarefa do computador segue?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'A informação entra, o programa processa, o conteúdo é armazenado e o resultado é entregue.',
-              options: [
-                { text: 'Entrada, processamento, armazenamento e saída.', isCorrect: true },
-                { text: 'Ligar, digitar, imprimir e desligar.', isCorrect: false },
-                { text: 'Abrir, salvar, fechar e apagar.', isCorrect: false },
-                { text: 'Comprar, instalar, atualizar e descartar.', isCorrect: false },
-              ],
-            },
-            {
-              statement:
-                'O que fazer quando o computador parece estar demorando para responder a um clique?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'O e-book orienta: se o computador estiver demorando, não clique muitas vezes — aguarde alguns segundos.',
-              options: [
-                { text: 'Clicar várias vezes até algo acontecer.', isCorrect: false },
-                { text: 'Aguardar alguns segundos antes de clicar de novo.', isCorrect: true },
-                { text: 'Desligar o computador imediatamente pelo botão.', isCorrect: false },
-                { text: 'Reinstalar o programa.', isCorrect: false },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
+  sections: enrichSections(
+    [
+      {
+        title: 'Parte 1 — Conhecendo o computador',
+        summary:
+          'Uma apresentação tranquila das partes do computador e dos principais espaços do Windows. ' +
+          'Ao terminar esta parte: reconhecer hardware, software e Windows; usar mouse, teclado e ' +
+          'recursos básicos de acessibilidade; abrir programas e organizar janelas.',
+        lessons: [
+          {
+            title: 'Capítulo 1 — O computador como escritório digital',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 20,
+            summary:
+              'Entenda o que o computador faz e aprenda a diferenciar equipamento, programa e Windows.',
+            topics: ['O que um computador faz', 'Hardware, software e Windows'],
+          },
+          {
+            title: 'Capítulo 2 — Mouse, teclado e interação sem medo',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 20,
+            summary: 'Aprenda os movimentos e as teclas que ajudam a conversar com o computador.',
+            topics: ['O mouse é como um dedo na tela', 'Teclas essenciais e acessibilidade'],
+          },
+          {
+            title: 'Capítulo 3 — Conhecendo o Windows e suas janelas',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 20,
+            summary:
+              'Use a Área de Trabalho, o Menu Iniciar e a barra de tarefas para abrir e organizar programas.',
+            topics: ['Os espaços principais do Windows', 'Abrir, alternar e organizar janelas'],
+          },
+        ],
+      },
+      {
+        title: 'Parte 2 — Cuidando dos arquivos',
+        summary:
+          'Ao terminar esta parte: diferenciar arquivos, pastas, caminhos e extensões; copiar, mover, ' +
+          'renomear e restaurar itens com segurança.',
+        lessons: [
+          {
+            title: 'Capítulo 4 — Arquivos, pastas e tipos de documento',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 20,
+            summary:
+              'Descubra onde os documentos ficam e o que partes como .docx, .xlsx e .pdf significam.',
+            topics: ['Documento, gaveta e endereço', 'Extensões mais comuns'],
+          },
+          {
+            title: 'Capítulo 5 — Organizando itens no Explorador de Arquivos',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 20,
+            summary:
+              'Crie pastas e aprenda a copiar, mover, renomear, excluir e restaurar itens com segurança.',
+            topics: ['Abra e navegue pelo Explorador', 'Copiar, mover e restaurar'],
+          },
+          {
+            title: 'Capítulo 6 — Pastas e nomes que todos entendem',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 15,
+            summary:
+              'Monte uma organização simples para encontrar o documento certo sem depender da memória.',
+            topics: ['As três perguntas de uma boa organização', 'Padrões de nome e versão'],
+          },
+          {
+            title: 'Capítulo 7 — Salvar, baixar, anexar, compartilhar e criar PDF',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 20,
+            summary: 'Leve arquivos de um lugar para outro e confira tudo antes de enviar.',
+            topics: ['Palavras que parecem iguais, mas não são', 'Conferência antes do envio'],
+          },
+          {
+            title: 'Prática — Organize e envie um documento',
+            type: LessonType.PRACTICAL_ACTIVITY,
+            estimatedMinutes: 25,
+            activityInstructions:
+              'Crie uma pasta de estudos, salve um documento com nome descritivo, gere uma versão em PDF ' +
+              'e escreva o passo a passo que você seguiu. ' +
+              CONFIRM_ACTIVITY,
+          },
+        ],
+      },
+      {
+        title: 'Parte 3 — Rapidez, recuperação e segurança',
+        summary:
+          'Ao terminar esta parte: pesquisar e usar atalhos essenciais; diferenciar nuvem, ' +
+          'sincronização e backup; adotar hábitos de segurança digital.',
+        lessons: [
+          {
+            title: 'Capítulo 8 — Pesquisa e atalhos que economizam tempo',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 20,
+            summary:
+              'Encontre arquivos e aprenda poucos atalhos por vez, sempre entendendo o que eles fazem.',
+            topics: ['Encontre um arquivo', 'Atalhos essenciais'],
+          },
+          {
+            title: 'Capítulo 9 — Nuvem, backup e recuperação',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 20,
+            summary:
+              'Entenda onde os arquivos ficam e o que fazer quando algo parece ter desaparecido.',
+            topics: ['Onde um arquivo pode ficar', 'Backup e recuperação'],
+          },
+          {
+            title: 'Capítulo 10 — Segurança digital para todos',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 20,
+            summary: 'Proteja sua conta, seus documentos e outras pessoas com hábitos simples.',
+            topics: ['Três cuidados com a informação', 'Senhas, golpes e privacidade'],
+          },
+        ],
+      },
+      {
+        title: 'Projeto final e conclusão',
+        summary: 'Junte tudo em um pequeno escritório digital e verifique sua compreensão.',
+        lessons: [
+          {
+            title: 'Projeto final — Organize um pequeno escritório',
+            type: LessonType.PRACTICAL_ACTIVITY,
+            estimatedMinutes: 45,
+            activityInstructions:
+              'Monte a estrutura de pastas de um pequeno escritório usando arquivos fictícios. Aplique um ' +
+              'padrão de nomes, salve uma versão em PDF, simule uma recuperação da Lixeira e escreva o que ' +
+              'você faria para manter um backup.',
+          },
+          {
+            title: 'Guia rápido, glossário e referências oficiais',
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: 10,
+            summary: 'Consulte atalhos, termos novos e as fontes oficiais citadas no e-book.',
+            topics: ['Guia rápido e glossário', 'Referências oficiais'],
+          },
+          {
+            title: 'Questionário de conclusão',
+            type: LessonType.QUIZ,
+            estimatedMinutes: 10,
+            passingScore: 70,
+            questions: [
+              {
+                statement: 'Qual é a diferença entre hardware e software?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'O hardware é como os móveis e equipamentos de um escritório; os programas (software) ' +
+                  'são o que faz o trabalho acontecer.',
+                options: [
+                  {
+                    text: 'Hardware é a parte física do equipamento; software são os programas.',
+                    isCorrect: true,
+                  },
+                  {
+                    text: 'Hardware são os programas; software é a parte física.',
+                    isCorrect: false,
+                  },
+                  { text: 'São dois nomes para a mesma coisa.', isCorrect: false },
+                  { text: 'Hardware só existe em computadores de mesa.', isCorrect: false },
+                ],
+              },
+              {
+                statement: 'Na analogia usada no e-book, o que representa o caminho de um arquivo?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'O arquivo é a folha, a pasta é a gaveta e o caminho é o endereço que leva até ela.',
+                options: [
+                  { text: 'A folha guardada.', isCorrect: false },
+                  { text: 'A gaveta onde a folha fica.', isCorrect: false },
+                  { text: 'O endereço que leva até a gaveta.', isCorrect: true },
+                  { text: 'O nome do programa que abre o arquivo.', isCorrect: false },
+                ],
+              },
+              {
+                statement: 'Quais são as quatro etapas que quase toda tarefa do computador segue?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'A informação entra, o programa processa, o conteúdo é armazenado e o resultado é entregue.',
+                options: [
+                  { text: 'Entrada, processamento, armazenamento e saída.', isCorrect: true },
+                  { text: 'Ligar, digitar, imprimir e desligar.', isCorrect: false },
+                  { text: 'Abrir, salvar, fechar e apagar.', isCorrect: false },
+                  { text: 'Comprar, instalar, atualizar e descartar.', isCorrect: false },
+                ],
+              },
+              {
+                statement:
+                  'O que fazer quando o computador parece estar demorando para responder a um clique?',
+                type: QuestionType.SINGLE_CHOICE,
+                explanation:
+                  'O e-book orienta: se o computador estiver demorando, não clique muitas vezes — aguarde alguns segundos.',
+                options: [
+                  { text: 'Clicar várias vezes até algo acontecer.', isCorrect: false },
+                  { text: 'Aguardar alguns segundos antes de clicar de novo.', isCorrect: true },
+                  { text: 'Desligar o computador imediatamente pelo botão.', isCorrect: false },
+                  { text: 'Reinstalar o programa.', isCorrect: false },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    MODULE_01_ENRICHMENT,
+  ),
 };
 
 // ---------------------------------------------------------------------------
