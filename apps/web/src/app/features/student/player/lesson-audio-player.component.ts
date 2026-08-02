@@ -1,6 +1,19 @@
-import { ChangeDetectionStrategy, Component, OnChanges, OnDestroy, SimpleChanges, effect, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  effect,
+  inject,
+  input,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LessonNarrationService } from '../../../core/lesson-narration.service';
+import {
+  LessonNarrationService,
+  NARRATION_PROFILES,
+  NarrationProfile,
+} from '../../../core/lesson-narration.service';
 import { ProductAnalyticsService } from '../../../core/product-analytics.service';
 
 @Component({
@@ -15,7 +28,8 @@ import { ProductAnalyticsService } from '../../../core/product-analytics.service
           <p class="audio__eyebrow">Modo áudio</p>
           <h2 id="lesson-audio-title">Ouça esta aula</h2>
           <p class="audio__description">
-            A narração usa uma voz disponível no seu aparelho. Exemplos de código são ignorados para tornar a escuta mais natural.
+            A narração escolhe automaticamente uma voz em português e começa no ritmo focado de
+            1,75x, que deixa muitas vozes do aparelho mais fluidas. Sua escolha fica salva.
           </p>
         </div>
         <span class="audio__status" aria-live="polite">{{ statusLabel() }}</span>
@@ -48,7 +62,12 @@ import { ProductAnalyticsService } from '../../../core/product-analytics.service
         </p>
 
         <div class="audio__controls" role="group" aria-label="Controles da narração">
-          <button type="button" class="audio__button" (click)="narration.previous()" [disabled]="narration.currentBlockIndex() === 0">
+          <button
+            type="button"
+            class="audio__button"
+            (click)="narration.previous()"
+            [disabled]="narration.currentBlockIndex() === 0"
+          >
             <span aria-hidden="true">↶</span>
             Anterior
           </button>
@@ -69,17 +88,40 @@ import { ProductAnalyticsService } from '../../../core/product-analytics.service
           </button>
         </div>
 
+        <div class="audio__profiles" role="group" aria-label="Estilo da narração">
+          <p class="audio__profiles-title">Escolha o ritmo</p>
+          <div class="audio__profile-grid">
+            @for (profile of profiles; track profile.id) {
+              <button
+                type="button"
+                class="audio__profile"
+                [class.audio__profile--active]="narration.profile() === profile.id"
+                [attr.aria-pressed]="narration.profile() === profile.id"
+                (click)="changeProfile(profile.id)"
+              >
+                <span class="audio__profile-name">
+                  {{ profile.label }} · {{ profile.rate }}x
+                  @if (profile.id === 'FOCUSED') {
+                    <span class="audio__recommended">Recomendado</span>
+                  }
+                </span>
+                <span class="audio__profile-description">{{ profile.description }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
         <details class="audio__settings">
-          <summary>Preferências de áudio</summary>
+          <summary>Preferências avançadas</summary>
           <div class="audio__settings-grid">
             <label>
-              Velocidade
+              Velocidade personalizada
               <select [ngModel]="narration.rate()" (ngModelChange)="changeRate($event)">
                 <option [ngValue]="0.75">0,75x</option>
                 <option [ngValue]="1">1x</option>
                 <option [ngValue]="1.25">1,25x</option>
                 <option [ngValue]="1.5">1,5x</option>
-                <option [ngValue]="1.75">1,75x</option>
+                <option [ngValue]="1.75">1,75x — recomendado</option>
                 <option [ngValue]="2">2x</option>
               </select>
             </label>
@@ -87,9 +129,7 @@ import { ProductAnalyticsService } from '../../../core/product-analytics.service
             <label>
               Voz
               <select [ngModel]="narration.voiceUri()" (ngModelChange)="changeVoice($event)">
-                @if (narration.voices().length === 0) {
-                  <option [ngValue]="null">Voz padrão do aparelho</option>
-                }
+                <option [ngValue]="null">Melhor voz disponível automaticamente</option>
                 @for (voice of narration.voices(); track voice.voiceURI) {
                   <option [ngValue]="voice.voiceURI">{{ voice.name }} · {{ voice.lang }}</option>
                 }
@@ -190,7 +230,8 @@ import { ProductAnalyticsService } from '../../../core/product-analytics.service
         gap: var(--rl-space-2);
       }
 
-      .audio__button {
+      .audio__button,
+      .audio__profile {
         min-height: 44px;
         padding: var(--rl-space-3) var(--rl-space-4);
         border: 1px solid var(--rl-border);
@@ -198,8 +239,11 @@ import { ProductAnalyticsService } from '../../../core/product-analytics.service
         background: var(--rl-surface-raised);
         color: var(--rl-text);
         font: inherit;
-        font-weight: var(--rl-weight-semibold);
         cursor: pointer;
+      }
+
+      .audio__button {
+        font-weight: var(--rl-weight-semibold);
       }
 
       .audio__button:disabled {
@@ -211,6 +255,47 @@ import { ProductAnalyticsService } from '../../../core/product-analytics.service
         border-color: var(--rl-brand-600);
         background: var(--rl-brand-600);
         color: white;
+      }
+
+      .audio__profiles-title {
+        margin: 0 0 var(--rl-space-3);
+        font-weight: var(--rl-weight-semibold);
+      }
+
+      .audio__profile-grid {
+        display: grid;
+        gap: var(--rl-space-2);
+      }
+
+      .audio__profile {
+        display: grid;
+        gap: var(--rl-space-1);
+        text-align: left;
+      }
+
+      .audio__profile--active {
+        border-color: var(--rl-brand-600);
+        background: var(--rl-brand-50);
+        box-shadow: 0 0 0 1px var(--rl-brand-600);
+      }
+
+      .audio__profile-name {
+        font-weight: var(--rl-weight-semibold);
+      }
+
+      .audio__profile-description {
+        color: var(--rl-text-muted);
+        font-size: var(--rl-text-sm);
+      }
+
+      .audio__recommended {
+        display: inline-flex;
+        margin-left: var(--rl-space-2);
+        padding: 2px var(--rl-space-2);
+        border-radius: 999px;
+        background: var(--rl-brand-600);
+        color: white;
+        font-size: 0.72rem;
       }
 
       .audio__settings summary {
@@ -256,6 +341,14 @@ import { ProductAnalyticsService } from '../../../core/product-analytics.service
         flex: 0 0 auto;
       }
 
+      button:focus-visible,
+      summary:focus-visible,
+      select:focus-visible,
+      input:focus-visible {
+        outline: 3px solid var(--rl-brand-400);
+        outline-offset: 3px;
+      }
+
       @media (min-width: 640px) {
         .audio__head {
           flex-direction: row;
@@ -267,8 +360,18 @@ import { ProductAnalyticsService } from '../../../core/product-analytics.service
           grid-template-columns: 1fr 1.5fr 1fr;
         }
 
+        .audio__profile-grid,
         .audio__settings-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition: none !important;
         }
       }
     `,
@@ -281,6 +384,7 @@ export class LessonAudioPlayerComponent implements OnChanges, OnDestroy {
   readonly html = input.required<string>();
 
   readonly narration = inject(LessonNarrationService);
+  readonly profiles = NARRATION_PROFILES;
   private readonly analytics = inject(ProductAnalyticsService);
   private started = false;
   private completedTracked = false;
@@ -295,6 +399,7 @@ export class LessonAudioPlayerComponent implements OnChanges, OnDestroy {
         lessonId,
         courseSlug,
         rate: this.narration.rate(),
+        profile: this.narration.profile(),
       });
       this.completedTracked = true;
     });
@@ -321,6 +426,7 @@ export class LessonAudioPlayerComponent implements OnChanges, OnDestroy {
         lessonId: this.lessonId(),
         courseSlug: this.courseSlug(),
         rate: this.narration.rate(),
+        profile: this.narration.profile(),
       });
       this.started = true;
     }
@@ -331,13 +437,14 @@ export class LessonAudioPlayerComponent implements OnChanges, OnDestroy {
     this.narration.seek(Number(input.value));
   }
 
+  changeProfile(profile: Exclude<NarrationProfile, 'CUSTOM'>): void {
+    this.narration.setProfile(profile);
+    this.trackRateChange();
+  }
+
   changeRate(rate: number): void {
     this.narration.setRate(Number(rate));
-    this.analytics.track('lesson_audio_rate_changed', {
-      lessonId: this.lessonId(),
-      courseSlug: this.courseSlug(),
-      rate: Number(rate),
-    });
+    this.trackRateChange();
   }
 
   changeVoice(voiceUri: string | null): void {
@@ -352,7 +459,7 @@ export class LessonAudioPlayerComponent implements OnChanges, OnDestroy {
   statusLabel(): string {
     switch (this.narration.status()) {
       case 'playing':
-        return 'Reproduzindo';
+        return `Reproduzindo em ${this.narration.rate()}x`;
       case 'paused':
         return 'Pausado';
       case 'finished':
@@ -360,7 +467,16 @@ export class LessonAudioPlayerComponent implements OnChanges, OnDestroy {
       case 'unsupported':
         return 'Não disponível';
       default:
-        return 'Pronto para ouvir';
+        return `Pronto para ouvir em ${this.narration.rate()}x`;
     }
+  }
+
+  private trackRateChange(): void {
+    this.analytics.track('lesson_audio_rate_changed', {
+      lessonId: this.lessonId(),
+      courseSlug: this.courseSlug(),
+      rate: this.narration.rate(),
+      profile: this.narration.profile(),
+    });
   }
 }
