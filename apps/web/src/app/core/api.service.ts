@@ -12,12 +12,39 @@ export interface FriendlyError {
   status: number;
 }
 
+/**
+ * Distingue um erro vindo da API de qualquer outra coisa.
+ *
+ * Um `SyntaxError` de JSON também tem `message`, mas é texto técnico: nunca
+ * deve chegar ao usuário. Só o corpo padronizado da API é exibível.
+ */
+function isApiError(body: unknown): body is ApiErrorResponse {
+  return (
+    typeof body === 'object' &&
+    body !== null &&
+    !(body instanceof Error) &&
+    typeof (body as ApiErrorResponse).message === 'string' &&
+    typeof (body as ApiErrorResponse).statusCode === 'number'
+  );
+}
+
 export function toFriendlyError(error: unknown): FriendlyError {
   if (error instanceof HttpErrorResponse) {
-    const body = error.error as ApiErrorResponse | null;
+    const body: unknown = error.error;
 
-    if (body?.message) {
+    if (isApiError(body)) {
       return { code: body.error ?? 'ERRO', message: body.message, status: error.status };
+    }
+
+    // Resposta que não é JSON da API: em desenvolvimento, quase sempre o HTML
+    // do próprio front — sinal de que /api não está chegando na API.
+    if (body instanceof SyntaxError) {
+      return {
+        code: 'RESPOSTA_INVALIDA',
+        message:
+          'O servidor respondeu em um formato inesperado. Se você está rodando o projeto localmente, confira se a API está no ar em http://localhost:3333/api.',
+        status: error.status,
+      };
     }
 
     if (error.status === 0) {

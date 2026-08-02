@@ -1,0 +1,9 @@
+{
+  "//": "Em desenvolvimento o front roda na 4200 e a API na 3333. O front chama /api na mesma origem (como em produção, atrás de um reverse proxy), então o dev server repassa essas chamadas para a API. Sem isto, /api/... cai no fallback do SPA e volta HTML com status 200.",
+  "/api": {
+    "target": "http://localhost:3333",
+    "secure": false,
+    "changeOrigin": false,
+    "ws": true
+  }
+}
