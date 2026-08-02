@@ -468,6 +468,16 @@ responde. Se você atualizou o projeto com o `pnpm dev` rodando, **pare e suba d
 em `angular.json` e `proxy.conf.json` só valem na inicialização do servidor de desenvolvimento —
 o código TypeScript recompila sozinho, essas configurações não.
 
+**"does not provide an export named" ao abrir uma aula.** O navegador está
+recebendo uma cópia antiga do pacote `@romalearn/contracts` guardada pelo cache
+do servidor de desenvolvimento. Isso não deve mais acontecer, mas se acontecer,
+apague o cache e suba de novo:
+
+```bash
+rm -rf apps/web/.angular/cache
+pnpm dev
+```
+
 **Linhas `401 SESSION_EXPIRED` em `/api/auth/me` no log da API.** São normais: o site pergunta
 "existe sessão?" a cada carregamento de página, e a resposta para quem não está logado é 401. Não
 indicam falha de login.

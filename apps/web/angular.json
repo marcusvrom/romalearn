@@ -72,7 +72,14 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "proxyConfig": "proxy.conf.json"
+            "proxyConfig": "proxy.conf.json",
+            // Pacotes do próprio monorepo mudam junto com o código. O
+            // pré-bundle do Vite guarda uma cópia deles e não percebe quando
+            // são recompilados: a aplicação compila, mas o navegador recebe a
+            // versão antiga e falha com "does not provide an export named".
+            "prebundle": {
+              "exclude": ["@romalearn/contracts", "@romalearn/ui"]
+            }
           },
           "configurations": {
             "production": { "buildTarget": "web:build:production" },
