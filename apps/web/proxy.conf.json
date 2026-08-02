@@ -1,5 +1,5 @@
 {
-  "//": "Em desenvolvimento o front roda na 4200 e a API na 3333. O front chama /api na mesma origem (como em produção, atrás de um reverse proxy), então o dev server repassa essas chamadas para a API. Sem isto, /api/... cai no fallback do SPA e volta HTML com status 200.",
+  "//": "Repassa /api para a API local, para que o mesmo caminho usado em produção (mesma origem, atrás de um reverse proxy) também funcione no ng serve. O navegador não depende disto: em desenvolvimento o front fala direto com a porta 3333 (veja resolveApiBaseUrl), porque este arquivo só é lido quando o dev server inicia.",
   "/api": {
     "target": "http://localhost:3333",
     "secure": false,

@@ -463,11 +463,11 @@ cabeçalho e no rodapé. Depois volte para _RomaLearn_.
 Um caso merece explicação à parte:
 
 **"O servidor respondeu em um formato inesperado" na tela de login, com status 200 no
-Network.** O front chama `/api/...` na mesma origem, e o `ng serve` repassa essas chamadas para a
-API através de `apps/web/proxy.conf.json`. Se a API não estiver no ar, o dev server responde com o
-próprio HTML do site (status 200, conteúdo `<!DOCTYPE html>`) e o login não chega a acontecer.
-Confirme que `pnpm dev` subiu os dois processos e que `curl http://localhost:3333/api/health/ready`
-responde. Se você subiu só o front, suba a API também.
+Network.** A resposta veio como `<!DOCTYPE html>` em vez de JSON: a chamada não chegou à API.
+Confirme que os dois processos subiram e que `curl http://localhost:3333/api/health/ready`
+responde. Se você atualizou o projeto com o `pnpm dev` rodando, **pare e suba de novo**: mudanças
+em `angular.json` e `proxy.conf.json` só valem na inicialização do servidor de desenvolvimento —
+o código TypeScript recompila sozinho, essas configurações não.
 
 **Linhas `401 SESSION_EXPIRED` em `/api/auth/me` no log da API.** São normais: o site pergunta
 "existe sessão?" a cada carregamento de página, e a resposta para quem não está logado é 401. Não
