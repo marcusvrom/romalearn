@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnChanges, OnDestroy, SimpleChanges, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnChanges, OnDestroy, SimpleChanges, effect, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LessonNarrationService } from '../../../core/lesson-narration.service';
 import { ProductAnalyticsService } from '../../../core/product-analytics.service';
@@ -283,11 +283,26 @@ export class LessonAudioPlayerComponent implements OnChanges, OnDestroy {
   readonly narration = inject(LessonNarrationService);
   private readonly analytics = inject(ProductAnalyticsService);
   private started = false;
+  private completedTracked = false;
+
+  constructor() {
+    effect(() => {
+      if (this.narration.status() !== 'finished' || this.completedTracked) return;
+
+      this.analytics.track('lesson_audio_completed', {
+        lessonId: this.lessonId(),
+        courseSlug: this.courseSlug(),
+        rate: this.narration.rate(),
+      });
+      this.completedTracked = true;
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['lessonId'] || changes['html'] || changes['title']) {
       this.narration.loadHtml(this.lessonId(), this.title(), this.html());
       this.started = false;
+      this.completedTracked = false;
     }
   }
 
