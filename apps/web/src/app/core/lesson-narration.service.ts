@@ -50,15 +50,12 @@ export class LessonNarrationService {
   });
 
   private utterance: SpeechSynthesisUtterance | null = null;
-  private completedBlocks = 0;
 
   constructor() {
     if (!this.supported()) return;
 
     this.restorePreferences();
     this.loadVoices();
-
-    // Algumas plataformas carregam as vozes de forma assíncrona.
     globalThis.speechSynthesis.addEventListener('voiceschanged', () => this.loadVoices());
   }
 
@@ -67,7 +64,6 @@ export class LessonNarrationService {
     this.lessonKey.set(lessonKey);
     this.blocks.set(this.extractNarrationBlocks(title, html));
     this.currentBlockIndex.set(this.restorePosition(lessonKey));
-    this.completedBlocks = this.currentBlockIndex();
   }
 
   toggle(): void {
@@ -96,24 +92,25 @@ export class LessonNarrationService {
 
   stop(resetPosition = true): void {
     if (this.supported()) globalThis.speechSynthesis.cancel();
+    if (this.utterance) {
+      this.utterance.onend = null;
+      this.utterance.onerror = null;
+    }
     this.utterance = null;
     this.status.set(this.supported() ? 'idle' : 'unsupported');
 
     if (resetPosition) {
       this.currentBlockIndex.set(0);
-      this.completedBlocks = 0;
       this.persistPosition();
     }
   }
 
   previous(): void {
-    const target = Math.max(0, this.currentBlockIndex() - 1);
-    this.moveTo(target);
+    this.moveTo(Math.max(0, this.currentBlockIndex() - 1));
   }
 
   next(): void {
-    const target = Math.min(this.blocks().length - 1, this.currentBlockIndex() + 1);
-    this.moveTo(target);
+    this.moveTo(Math.min(this.blocks().length - 1, this.currentBlockIndex() + 1));
   }
 
   seek(blockIndex: number): void {
@@ -126,14 +123,12 @@ export class LessonNarrationService {
     const normalized = Math.max(0.75, Math.min(2, rate));
     this.rate.set(normalized);
     this.persistPreferences();
-
     if (this.status() === 'playing') this.restartCurrentBlock();
   }
 
   setVoice(voiceUri: string | null): void {
     this.voiceUri.set(voiceUri || null);
     this.persistPreferences();
-
     if (this.status() === 'playing') this.restartCurrentBlock();
   }
 
@@ -147,7 +142,6 @@ export class LessonNarrationService {
     if (this.supported()) globalThis.speechSynthesis.cancel();
     this.currentBlockIndex.set(index);
     this.persistPosition();
-
     if (wasActive) this.speakCurrentBlock();
   }
 
@@ -172,7 +166,6 @@ export class LessonNarrationService {
     utterance.voice = this.selectedVoice();
 
     utterance.onend = () => {
-      this.completedBlocks = Math.max(this.completedBlocks, this.currentBlockIndex() + 1);
       const nextIndex = this.currentBlockIndex() + 1;
 
       if (nextIndex < this.blocks().length) {
@@ -187,7 +180,6 @@ export class LessonNarrationService {
     };
 
     utterance.onerror = (event) => {
-      // Eventos "canceled" e "interrupted" são esperados ao trocar velocidade ou trecho.
       if (event.error === 'canceled' || event.error === 'interrupted') return;
       this.status.set('idle');
     };
