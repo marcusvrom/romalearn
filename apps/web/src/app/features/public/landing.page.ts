@@ -5,6 +5,8 @@ import { CourseCardComponent, LoadingStateComponent } from '@romalearn/ui';
 import { CatalogService } from '../../core/catalog.service';
 import { PLATFORM_CONFIG } from '../../core/platform.config';
 import { SeoService } from '../../core/seo.service';
+import { RevealDirective } from '../../shared/reveal.directive';
+import { HeroCanvasComponent } from './hero-canvas.component';
 
 interface Faq {
   question: string;
@@ -21,7 +23,13 @@ interface Faq {
 @Component({
   selector: 'rl-landing-page',
   standalone: true,
-  imports: [RouterLink, CourseCardComponent, LoadingStateComponent],
+  imports: [
+    RouterLink,
+    CourseCardComponent,
+    LoadingStateComponent,
+    HeroCanvasComponent,
+    RevealDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './landing.page.html',
   styleUrl: './landing.page.scss',

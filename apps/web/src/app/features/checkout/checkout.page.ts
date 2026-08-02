@@ -216,7 +216,7 @@ import { SeoService } from '../../core/seo.service';
       }
 
       .summary__row--discount {
-        color: var(--rl-success-700);
+        color: var(--rl-success-text);
         border-top: 1px solid var(--rl-border);
         font-size: var(--rl-text-sm);
       }
@@ -240,7 +240,7 @@ import { SeoService } from '../../core/seo.service';
         margin: var(--rl-space-3) 0 0;
         padding: var(--rl-space-2) var(--rl-space-3);
         background: var(--rl-warn-100);
-        color: var(--rl-warn-700);
+        color: var(--rl-warn-text);
         border-radius: var(--rl-radius-sm);
       }
 
@@ -308,7 +308,7 @@ import { SeoService } from '../../core/seo.service';
         margin: 0 auto var(--rl-space-5);
         border-radius: var(--rl-radius-full);
         background: var(--rl-success-100);
-        color: var(--rl-success-700);
+        color: var(--rl-success-text);
         font-size: 1.8rem;
         font-weight: var(--rl-weight-bold);
       }

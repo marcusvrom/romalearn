@@ -241,7 +241,7 @@ import { AdminService } from '../admin.service';
       }
 
       thead th {
-        background: var(--rl-neutral-100);
+        background: var(--rl-surface-sunken);
         font-size: var(--rl-text-xs);
         text-transform: uppercase;
         letter-spacing: 0.05em;

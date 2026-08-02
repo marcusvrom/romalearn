@@ -31,6 +31,10 @@
       <rl-progress-bar [value]="player.progress.percentage" [showLabel]="false" label="Progresso do curso" />
       <span class="rl-small">{{ player.progress.percentage }}%</span>
     </div>
+
+    <!-- O player esconde o cabeçalho do site; sem isto o aluno ficaria sem
+         como trocar de tema justamente onde passa mais tempo lendo. -->
+    <rl-theme-toggle />
   </header>
 
   <div class="player__body">

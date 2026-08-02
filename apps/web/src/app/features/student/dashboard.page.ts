@@ -237,7 +237,7 @@ import { SeoService } from '../../core/seo.service';
         margin: 0;
         padding-left: var(--rl-space-5);
         font-size: var(--rl-text-sm);
-        color: var(--rl-warn-700);
+        color: var(--rl-warn-text);
       }
     `,
   ],

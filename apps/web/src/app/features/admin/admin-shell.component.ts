@@ -3,11 +3,12 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { WEB_ROUTES } from '@romalearn/contracts';
 import { AuthService } from '../../core/auth.service';
 import { PLATFORM_CONFIG } from '../../core/platform.config';
+import { ThemeToggleComponent } from '../../shared/theme-toggle.component';
 
 @Component({
   selector: 'rl-admin-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ThemeToggleComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="admin" [class.admin--menu-open]="menuOpen()">
@@ -26,6 +27,7 @@ import { PLATFORM_CONFIG } from '../../core/platform.config';
         <p class="topbar__brand">{{ config.name }} · Administração</p>
 
         <div class="topbar__user">
+          <rl-theme-toggle />
           <span class="rl-small rl-muted">{{ auth.user()?.name }}</span>
           <a
             class="rl-button rl-button--secondary rl-button--small"
@@ -170,7 +172,7 @@ import { PLATFORM_CONFIG } from '../../core/platform.config';
 
       .sidebar a.active {
         background: var(--rl-brand-50);
-        color: var(--rl-brand-800);
+        color: var(--rl-brand-on-surface);
         font-weight: var(--rl-weight-semibold);
       }
 

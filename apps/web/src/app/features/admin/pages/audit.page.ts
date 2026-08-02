@@ -112,7 +112,7 @@ import { AdminService } from '../admin.service';
 
       .log__details summary {
         cursor: pointer;
-        color: var(--rl-brand-700);
+        color: var(--rl-brand-link);
       }
 
       pre {

@@ -3,6 +3,9 @@
 // ---------------------------------------------------------------------------
 
 .hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   background: radial-gradient(circle at 15% 10%, var(--rl-brand-50), transparent 55%),
     radial-gradient(
       circle at 85% 0%,
@@ -12,10 +15,69 @@
   padding-block: var(--rl-space-16) var(--rl-space-20);
 }
 
+/*
+ * Brilho que respira atrás do título. Fica em `::before` de um elemento
+ * próprio, e não no `.hero`, para que a animação não force o navegador a
+ * repintar a seção inteira a cada quadro.
+ */
+.hero__glow {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  z-index: -1;
+  width: min(900px, 120vw);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--rl-brand-500) 22%, transparent),
+    transparent 62%
+  );
+  filter: blur(40px);
+  animation: respirar 14s var(--rl-ease-in-out) infinite;
+}
+
+@keyframes respirar {
+  0%,
+  100% {
+    opacity: 0.65;
+    scale: 1;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.12;
+  }
+}
+
 .hero__inner {
+  position: relative;
   display: grid;
   gap: var(--rl-space-10);
   align-items: start;
+}
+
+/*
+ * Só o trecho final do título recebe o degradê. Aplicá-lo na frase inteira
+ * afinaria a leitura logo no primeiro contato, que é onde o aluno decide se
+ * fica ou sai.
+ */
+.hero__highlight {
+  background: linear-gradient(115deg, var(--rl-brand-600), var(--rl-accent-500));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/*
+ * Navegadores sem `background-clip: text` deixariam o texto invisível. Aqui a
+ * cor volta ao normal e o degradê some.
+ */
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero__highlight {
+    background: none;
+    color: var(--rl-brand-700);
+  }
 }
 
 @media (min-width: 960px) {
@@ -59,16 +121,40 @@
 }
 
 .hero__card {
-  background: var(--rl-surface-raised);
+  position: relative;
+  // Translúcido para deixar a malha animada passar por trás sem embaralhar
+  // o texto. O `blur` devolve o contraste que a transparência tira.
+  background: color-mix(in srgb, var(--rl-surface-raised) 82%, transparent);
+  backdrop-filter: blur(14px);
   border: 1px solid var(--rl-border);
   border-radius: var(--rl-radius-xl);
   padding: var(--rl-space-8);
-  box-shadow: var(--rl-shadow-lg);
+  box-shadow: var(--rl-shadow-lg), var(--rl-glow);
 
   h2 {
     font-size: var(--rl-text-lg);
     margin-bottom: var(--rl-space-5);
   }
+}
+
+// Fio de luz na borda superior, o detalhe que dá acabamento ao cartão.
+.hero__card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--rl-brand-400) 55%, transparent),
+    transparent 45%
+  );
+  // Pinta só a moldura: a máscara subtrai o miolo do degradê.
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .hero__list {
@@ -259,7 +345,7 @@
 
 .practice__row--current {
   background: var(--rl-brand-50);
-  color: var(--rl-brand-800);
+  color: var(--rl-brand-on-surface);
   font-weight: var(--rl-weight-semibold);
 }
 
@@ -273,7 +359,7 @@
   font-size: var(--rl-text-xs);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--rl-brand-700);
+  color: var(--rl-brand-link);
   margin-bottom: var(--rl-space-4);
 }
 
@@ -298,7 +384,7 @@
   place-items: center;
   width: 52px;
   height: 52px;
-  border: 2px solid var(--rl-neutral-800);
+  border: 2px solid var(--rl-border-strong);
   border-radius: var(--rl-radius-sm);
   font-size: var(--rl-text-xs);
   font-weight: var(--rl-weight-bold);
@@ -325,7 +411,7 @@
   }
 
   thead th {
-    background: var(--rl-neutral-100);
+    background: var(--rl-surface-sunken);
     font-size: var(--rl-text-xs);
     text-transform: uppercase;
     letter-spacing: 0.05em;

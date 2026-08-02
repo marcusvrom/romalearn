@@ -2,10 +2,17 @@
 <!-- Hero                                                                -->
 <!-- ------------------------------------------------------------------ -->
 <section class="hero">
+  <!-- Camadas decorativas: malha animada e brilho. Ambas fora do leitor de tela. -->
+  <rl-hero-canvas />
+  <div class="hero__glow" aria-hidden="true"></div>
+
   <div class="rl-container hero__inner">
     <div class="hero__content">
       <p class="rl-eyebrow">Trilha profissionalizante em português</p>
-      <h1>Aprenda tecnologia com calma e chegue preparado ao mercado de trabalho</h1>
+      <h1>
+        Aprenda tecnologia com calma e chegue
+        <span class="hero__highlight">preparado ao mercado de trabalho</span>
+      </h1>
       <p class="rl-lead">
         Uma trilha pensada para quem está começando: do primeiro contato com o computador ao uso responsável de
         inteligência artificial na rotina administrativa. Linguagem simples, exemplos do dia a dia e prática guiada em
@@ -13,8 +20,10 @@
       </p>
 
       <div class="hero__actions">
-        <a class="rl-button rl-button--primary" [routerLink]="routes.register"> Começar pelo módulo gratuito </a>
-        <a class="rl-button rl-button--secondary" [routerLink]="routes.catalog"> Ver todos os cursos </a>
+        <a class="rl-button rl-button--primary rl-button--lg" [routerLink]="routes.register">
+          Começar pelo módulo gratuito
+        </a>
+        <a class="rl-button rl-button--secondary rl-button--lg" [routerLink]="routes.catalog"> Ver todos os cursos </a>
       </div>
 
       <ul class="hero__points">
@@ -42,7 +51,7 @@
 <!-- ------------------------------------------------------------------ -->
 <section class="rl-section" id="por-que">
   <div class="rl-container">
-    <div class="section-head">
+    <div class="section-head" rlReveal>
       <p class="rl-eyebrow">Por que isso importa</p>
       <h2>O trabalho já é digital, mesmo fora da área de tecnologia</h2>
       <p class="rl-lead">
@@ -52,7 +61,7 @@
       </p>
     </div>
 
-    <div class="rl-grid rl-grid--2 pairs">
+    <div class="rl-grid rl-grid--2 pairs" rlReveal>
       <div class="rl-card">
         <h3>Conhecimento digital</h3>
         <ul class="checks">
@@ -84,7 +93,7 @@
 <!-- Módulo gratuito                                                     -->
 <!-- ------------------------------------------------------------------ -->
 <section class="rl-section rl-section--muted" id="modulo-gratuito">
-  <div class="rl-container free">
+  <div class="rl-container free" rlReveal>
     <div>
       <p class="rl-eyebrow">Comece por aqui</p>
       <h2>Módulo gratuito: Carreira Digital e Destaque Profissional</h2>
@@ -126,7 +135,7 @@
 <!-- ------------------------------------------------------------------ -->
 <section class="rl-section" id="trilha">
   <div class="rl-container">
-    <div class="section-head">
+    <div class="section-head" rlReveal>
       <p class="rl-eyebrow">Trilha completa</p>
       <h2>Cinco módulos, do básico ao avançado</h2>
       <p class="rl-lead">
@@ -164,14 +173,14 @@
 <!-- ------------------------------------------------------------------ -->
 <section class="rl-section rl-section--muted">
   <div class="rl-container">
-    <div class="section-head">
+    <div class="section-head" rlReveal>
       <p class="rl-eyebrow">O que esperar</p>
       <h2>Resultados que você consegue mostrar</h2>
     </div>
 
     <div class="rl-grid rl-grid--4">
       @for (benefit of benefits; track benefit.title) {
-      <div class="rl-card benefit">
+      <div class="rl-card benefit" [rlReveal]="$index * 80">
         <p class="benefit__icon" aria-hidden="true">{{ benefit.icon }}</p>
         <h3>{{ benefit.title }}</h3>
         <p class="rl-small rl-muted">{{ benefit.text }}</p>
@@ -186,14 +195,14 @@
 <!-- ------------------------------------------------------------------ -->
 <section class="rl-section" id="como-funciona">
   <div class="rl-container">
-    <div class="section-head">
+    <div class="section-head" rlReveal>
       <p class="rl-eyebrow">Como funciona</p>
       <h2>Quatro passos até o certificado</h2>
     </div>
 
     <ol class="steps">
       @for (step of steps; track step.number) {
-      <li class="rl-card step">
+      <li class="rl-card step" [rlReveal]="$index * 80">
         <span class="step__number" aria-hidden="true">{{ step.number }}</span>
         <h3>{{ step.title }}</h3>
         <p class="rl-small rl-muted">{{ step.text }}</p>
@@ -207,7 +216,7 @@
 <!-- Atividades práticas                                                  -->
 <!-- ------------------------------------------------------------------ -->
 <section class="rl-section rl-section--muted" id="atividades">
-  <div class="rl-container practice">
+  <div class="rl-container practice" rlReveal>
     <div>
       <p class="rl-eyebrow">Prática em primeiro lugar</p>
       <h2>Você aprende fazendo, não só lendo</h2>
@@ -239,7 +248,7 @@
 <!-- Certificados                                                         -->
 <!-- ------------------------------------------------------------------ -->
 <section class="rl-section" id="certificados">
-  <div class="rl-container practice">
+  <div class="rl-container practice" rlReveal>
     <div class="rl-card certificate" aria-hidden="true">
       <p class="certificate__title">Certificado de conclusão</p>
       <p class="certificate__name">Nome do aluno</p>
@@ -272,12 +281,12 @@
 <!-- ------------------------------------------------------------------ -->
 <section class="rl-section rl-section--muted" id="comparacao">
   <div class="rl-container">
-    <div class="section-head">
+    <div class="section-head" rlReveal>
       <p class="rl-eyebrow">Comparação</p>
       <h2>O que tem no gratuito e o que tem na trilha completa</h2>
     </div>
 
-    <div class="rl-table-scroll">
+    <div class="rl-table-scroll" rlReveal>
       <table class="compare">
         <caption class="rl-visually-hidden">
           Comparação entre o módulo gratuito e a trilha completa
@@ -321,7 +330,7 @@
 @if (testimonials().length > 0) {
 <section class="rl-section" id="depoimentos">
   <div class="rl-container">
-    <div class="section-head">
+    <div class="section-head" rlReveal>
       <p class="rl-eyebrow">Quem já estudou</p>
       <h2>Depoimentos de alunos</h2>
     </div>
@@ -345,12 +354,12 @@
 <!-- ------------------------------------------------------------------ -->
 <section class="rl-section" id="perguntas">
   <div class="rl-container rl-container--narrow">
-    <div class="section-head">
+    <div class="section-head" rlReveal>
       <p class="rl-eyebrow">Perguntas frequentes</p>
       <h2>Dúvidas comuns de quem está começando</h2>
     </div>
 
-    <div class="faq">
+    <div class="faq" rlReveal>
       @for (faq of faqs; track faq.question) {
       <details class="faq__item">
         <summary>{{ faq.question }}</summary>
@@ -365,7 +374,7 @@
 <!-- Chamada final                                                        -->
 <!-- ------------------------------------------------------------------ -->
 <section class="cta">
-  <div class="rl-container rl-container--narrow cta__inner">
+  <div class="rl-container rl-container--narrow cta__inner" rlReveal>
     <h2>Comece hoje pelo módulo gratuito</h2>
     <p>
       Crie sua conta, faça a matrícula gratuita e dê o primeiro passo. Quando quiser avançar, a trilha completa está

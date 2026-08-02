@@ -55,7 +55,7 @@ import { PLATFORM_CONFIG } from '../../core/platform.config';
       .brand {
         font-weight: var(--rl-weight-bold);
         text-decoration: none;
-        color: var(--rl-brand-700);
+        color: var(--rl-brand-link);
         margin-bottom: var(--rl-space-8);
         display: inline-block;
       }

@@ -164,7 +164,7 @@ import { SeoService } from '../../core/seo.service';
 
       .sandbox {
         margin: 0;
-        color: var(--rl-warn-700);
+        color: var(--rl-warn-text);
         background: var(--rl-warn-100);
         padding: var(--rl-space-2) var(--rl-space-3);
         border-radius: var(--rl-radius-sm);

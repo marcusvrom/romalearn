@@ -67,7 +67,7 @@ p {
 }
 
 a {
-  color: var(--rl-brand-700);
+  color: var(--rl-brand-link);
   text-underline-offset: 3px;
 }
 
@@ -176,7 +176,7 @@ img {
   font-weight: var(--rl-weight-semibold);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--rl-brand-700);
+  color: var(--rl-brand-link);
   margin-bottom: var(--rl-space-3);
 }
 
@@ -233,7 +233,7 @@ img {
   color: var(--rl-text-on-brand);
 
   &:not(:disabled):hover {
-    background-color: var(--rl-brand-700);
+    background-color: var(--rl-brand-link);
   }
 }
 
@@ -244,13 +244,13 @@ img {
 
   &:not(:disabled):hover {
     border-color: var(--rl-brand-600);
-    color: var(--rl-brand-700);
+    color: var(--rl-brand-link);
   }
 }
 
 .rl-button--ghost {
   background-color: transparent;
-  color: var(--rl-brand-700);
+  color: var(--rl-brand-link);
   padding-inline: var(--rl-space-3);
 }
 
@@ -259,7 +259,7 @@ img {
   color: var(--rl-neutral-0);
 
   &:not(:disabled):hover {
-    background-color: var(--rl-danger-700);
+    background-color: var(--rl-danger-text);
   }
 }
 
@@ -271,6 +271,18 @@ img {
   min-height: 36px;
   padding: var(--rl-space-2) var(--rl-space-4);
   font-size: var(--rl-text-sm);
+}
+
+// Chamada principal de uma página — usado no topo da landing.
+.rl-button--lg {
+  min-height: 52px;
+  padding: var(--rl-space-4) var(--rl-space-8);
+  font-size: var(--rl-text-lg);
+}
+
+// O halo só aparece no hover da chamada principal: constante, viraria ruído.
+.rl-button--primary.rl-button--lg:not(:disabled):hover {
+  box-shadow: var(--rl-glow);
 }
 
 // ---------------------------------------------------------------------------
@@ -291,10 +303,14 @@ img {
   text-decoration: none;
   transition:
     box-shadow var(--rl-transition-base),
-    border-color var(--rl-transition-base);
+    border-color var(--rl-transition-base),
+    transform var(--rl-transition-base) var(--rl-ease-out);
 
   &:hover {
-    box-shadow: var(--rl-shadow-md);
+    // O cartão sobe um pouco: o suficiente para confirmar que é clicável,
+    // pouco o bastante para não empurrar a grade ao lado.
+    transform: translateY(-4px);
+    box-shadow: var(--rl-shadow-lg);
     border-color: var(--rl-brand-300);
   }
 }
@@ -307,25 +323,25 @@ img {
   border-radius: var(--rl-radius-full);
   font-size: var(--rl-text-xs);
   font-weight: var(--rl-weight-semibold);
-  background-color: var(--rl-neutral-100);
-  color: var(--rl-neutral-700);
+  background-color: var(--rl-surface-sunken);
+  color: var(--rl-text-muted);
 }
 
 .rl-badge--free {
   background-color: var(--rl-success-100);
-  color: var(--rl-success-700);
+  color: var(--rl-success-text);
 }
 .rl-badge--brand {
   background-color: var(--rl-brand-100);
-  color: var(--rl-brand-800);
+  color: var(--rl-brand-on-surface);
 }
 .rl-badge--warn {
   background-color: var(--rl-warn-100);
-  color: var(--rl-warn-700);
+  color: var(--rl-warn-text);
 }
 .rl-badge--danger {
   background-color: var(--rl-danger-100);
-  color: var(--rl-danger-700);
+  color: var(--rl-danger-text);
 }
 
 // ---------------------------------------------------------------------------
@@ -382,7 +398,7 @@ img {
   display: block;
   margin-top: var(--rl-space-2);
   font-size: var(--rl-text-sm);
-  color: var(--rl-danger-700);
+  color: var(--rl-danger-text);
   font-weight: var(--rl-weight-medium);
 }
 
@@ -484,4 +500,34 @@ img {
 .rl-table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+// ---------------------------------------------------------------------------
+// Revelação ao rolar (diretiva `rlReveal`)
+// ---------------------------------------------------------------------------
+
+// `.rl-revelavel` é aplicada pela diretiva, no navegador, só depois que existe
+// um observador para revelar o elemento. Sem JavaScript a classe nunca entra e
+// o conteúdo aparece normalmente — a animação é acréscimo, não condição.
+.rl-revelavel {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--rl-transition-slow) var(--rl-ease-out),
+    transform var(--rl-transition-slow) var(--rl-ease-out);
+  transition-delay: var(--rl-reveal-delay, 0ms);
+}
+
+.rl-revelado {
+  opacity: 1;
+  transform: none;
+}
+
+// A regra global de movimento reduzido zera a duração da transição, o que
+// deixaria o elemento parado em opacidade 0. Aqui ele simplesmente aparece.
+@media (prefers-reduced-motion: reduce) {
+  .rl-revelavel {
+    opacity: 1;
+    transform: none;
+  }
 }

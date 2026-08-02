@@ -8,6 +8,29 @@
     <meta name="theme-color" content="#2543ea" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="preconnect" href="/" />
+
+    <!--
+      Pinta o tema antes da primeira renderização.
+
+      O HTML vem do servidor sem tema — o servidor não sabe o que este aluno
+      escolheu. Sem este trecho, quem prefere o escuro veria um clarão branco
+      até o Angular subir. Precisa ser embutido e síncrono: um arquivo externo
+      só chegaria depois da primeira pintura, que é justamente o que se quer
+      evitar. A chave repete `THEME_STORAGE_KEY` de `core/theme.service.ts`.
+    -->
+    <script>
+      (function () {
+        try {
+          var escolha = localStorage.getItem('romalearn:tema');
+          if (escolha === 'escuro') document.documentElement.setAttribute('data-theme', 'dark');
+          else if (escolha === 'claro') document.documentElement.setAttribute('data-theme', 'light');
+          // Em "sistema" (ou sem escolha) o atributo fica de fora e a media
+          // query `prefers-color-scheme` dos tokens assume.
+        } catch (erro) {
+          // Armazenamento bloqueado: segue a preferência do sistema.
+        }
+      })();
+    </script>
   </head>
   <body>
     <rl-root></rl-root>

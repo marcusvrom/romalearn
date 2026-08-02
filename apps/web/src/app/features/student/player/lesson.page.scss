@@ -96,7 +96,7 @@
 }
 
 .question__number {
-  color: var(--rl-brand-700);
+  color: var(--rl-brand-link);
   margin-right: var(--rl-space-1);
 }
 
@@ -143,13 +143,13 @@
   padding: var(--rl-space-8);
   border-radius: var(--rl-radius-md);
   background: var(--rl-warn-100);
-  color: var(--rl-warn-700);
+  color: var(--rl-warn-text);
   margin-bottom: var(--rl-space-6);
 }
 
 .result--passed {
   background: var(--rl-success-100);
-  color: var(--rl-success-700);
+  color: var(--rl-success-text);
 }
 
 .result__score {
@@ -194,12 +194,12 @@
   }
 
   li.is-correct {
-    color: var(--rl-success-700);
+    color: var(--rl-success-text);
     font-weight: var(--rl-weight-medium);
   }
 
   li.is-selected:not(.is-correct) {
-    color: var(--rl-danger-700);
+    color: var(--rl-danger-text);
     text-decoration: line-through;
   }
 }
@@ -265,7 +265,7 @@
 }
 
 .actions__done {
-  color: var(--rl-success-700);
+  color: var(--rl-success-text);
   font-weight: var(--rl-weight-semibold);
 }
 
@@ -283,7 +283,7 @@
 }
 
 .devolutiva--approved {
-  border-left-color: var(--rl-success-700);
+  border-left-color: var(--rl-success-text);
 }
 
 .devolutiva--needs_revision {
@@ -410,10 +410,10 @@
   margin-bottom: 0;
 
   li {
-    color: var(--rl-success-700);
+    color: var(--rl-success-text);
   }
 }
 
 .verificacoes--falhou {
-  color: var(--rl-danger-700);
+  color: var(--rl-danger-text);
 }

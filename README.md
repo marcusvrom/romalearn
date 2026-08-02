@@ -23,6 +23,7 @@ cinco módulos pagos (Windows, Word, Excel, PowerPoint e IA para processos admin
 | Área                                                          | Situação                                                      |
 | ------------------------------------------------------------- | ------------------------------------------------------------- |
 | Landing page, catálogo e páginas de curso/trilha              | Funcionando, com SSR e SEO                                    |
+| Tema claro/escuro e menu de celular em gaveta                 | Funcionando, com preferência salva no aparelho                |
 | Cadastro, login, confirmação de e-mail e recuperação de senha | Funcionando                                                   |
 | Matrícula gratuita                                            | Funcionando                                                   |
 | Checkout, pagamento e webhooks                                | Funcionando com gateway simulado; adapter Mercado Pago pronto |

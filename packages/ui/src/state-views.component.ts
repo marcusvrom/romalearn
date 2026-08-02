@@ -132,25 +132,25 @@ export class EmptyStateComponent {
       .alert--error {
         border-left-color: var(--rl-danger-500);
         background: var(--rl-danger-100);
-        color: var(--rl-danger-700);
+        color: var(--rl-danger-text);
       }
 
       .alert--success {
         border-left-color: var(--rl-success-500);
         background: var(--rl-success-100);
-        color: var(--rl-success-700);
+        color: var(--rl-success-text);
       }
 
       .alert--warn {
         border-left-color: var(--rl-warn-500);
         background: var(--rl-warn-100);
-        color: var(--rl-warn-700);
+        color: var(--rl-warn-text);
       }
 
       .alert--info {
         border-left-color: var(--rl-brand-500);
         background: var(--rl-brand-50);
-        color: var(--rl-brand-800);
+        color: var(--rl-brand-on-surface);
       }
     `,
   ],

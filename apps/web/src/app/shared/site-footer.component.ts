@@ -113,7 +113,7 @@ import { PLATFORM_CONFIG } from '../core/platform.config';
       }
 
       li a:hover {
-        color: var(--rl-brand-700);
+        color: var(--rl-brand-link);
         text-decoration: underline;
       }
 

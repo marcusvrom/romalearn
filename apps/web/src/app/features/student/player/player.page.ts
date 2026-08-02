@@ -10,6 +10,7 @@ import { ProgressStatus, WEB_ROUTES } from '@romalearn/contracts';
 import { AlertComponent, LoadingStateComponent, ProgressBarComponent } from '@romalearn/ui';
 import { LESSON_TYPE_ICON, LESSON_TYPE_LABEL } from '../../../core/format';
 import { SeoService } from '../../../core/seo.service';
+import { ThemeToggleComponent } from '../../../shared/theme-toggle.component';
 import { PlayerStore } from './player.store';
 
 /**
@@ -27,6 +28,7 @@ import { PlayerStore } from './player.store';
     LoadingStateComponent,
     AlertComponent,
     ProgressBarComponent,
+    ThemeToggleComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [PlayerStore],

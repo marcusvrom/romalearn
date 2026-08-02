@@ -145,12 +145,12 @@
   margin: var(--rl-space-2) 0 0;
   padding-left: var(--rl-space-5);
   font-size: var(--rl-text-xs);
-  color: var(--rl-warn-700);
+  color: var(--rl-warn-text);
 }
 
 .sidebar__done {
   margin-top: var(--rl-space-2);
-  color: var(--rl-success-700);
+  color: var(--rl-success-text);
   font-weight: var(--rl-weight-semibold);
   font-size: var(--rl-text-sm);
 }
@@ -190,13 +190,13 @@
 
   &.active {
     background: var(--rl-brand-50);
-    color: var(--rl-brand-800);
+    color: var(--rl-brand-on-surface);
     font-weight: var(--rl-weight-semibold);
   }
 }
 
 .sidebar__lesson--done .sidebar__status {
-  color: var(--rl-success-600, var(--rl-success-700));
+  color: var(--rl-success-text);
 }
 
 .sidebar__status {

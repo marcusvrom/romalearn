@@ -102,7 +102,7 @@ const LEVEL_LABEL: Record<string, string> = {
 
       .cta {
         font-weight: var(--rl-weight-semibold);
-        color: var(--rl-brand-700);
+        color: var(--rl-brand-link);
         font-size: var(--rl-text-sm);
       }
     `,

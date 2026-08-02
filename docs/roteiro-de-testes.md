@@ -445,6 +445,36 @@ cabeçalho e no rodapé. Depois volte para _RomaLearn_.
 
 ---
 
+### Roteiro 12 — Tema e menu do celular · ~6 min
+
+1. **Seletor de tema**: no canto direito do cabeçalho há três botões — ☀ (claro),
+   ☾ (escuro) e 🖥 (seguir o sistema).
+   - clique em ☾ → a página inteira escurece na hora;
+   - recarregue (F5) → continua escura, **sem piscar branco** no meio do caminho;
+   - clique em 🖥 → volta a seguir o sistema. Com a página aberta, mude o tema do
+     sistema operacional → a página acompanha sem recarregar.
+2. **Onde o seletor aparece**: ele existe no cabeçalho do site, no topo do player
+   de aulas e no painel administrativo — nas três telas a escolha é a mesma.
+3. **Contraste no escuro**: com o tema escuro ativo, percorra o player de uma aula
+   prática. Tabela de rubrica, avisos e mensagens de erro precisam continuar
+   legíveis; nada pode ficar texto escuro sobre fundo escuro.
+4. **Gaveta do celular** (F12 → modo dispositivo → 390px):
+   - toque em ☰ → a gaveta entra pela direita e escurece o resto da página;
+   - a página atrás **não** rola enquanto a gaveta está aberta;
+   - o botão vira ✕ e continua visível por cima da gaveta;
+   - tocar na área escurecida fora da gaveta fecha;
+   - `Esc` fecha e devolve o foco ao botão ☰;
+   - com a gaveta aberta, pressione `Tab` várias vezes → o foco dá a volta
+     **dentro** da gaveta e nunca escapa para os links da página atrás;
+   - escolher um link fecha a gaveta e navega.
+5. **Movimento reduzido**: ative "reduzir movimento" no sistema (no Windows,
+   Configurações → Acessibilidade → Efeitos visuais) e recarregue a landing.
+   - a malha animada do topo não aparece e o brilho para de pulsar;
+   - **todo o conteúdo continua visível** ao rolar a página — nenhuma seção pode
+     ficar invisível esperando uma animação que não vai acontecer.
+
+---
+
 ## Parte 5 — Problemas comuns
 
 | Sintoma                                | Causa provável               | Solução                                              |

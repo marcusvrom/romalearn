@@ -192,7 +192,7 @@ import { SeoService } from '../../core/seo.service';
       }
       .result--valid .result__icon {
         background: var(--rl-success-100);
-        color: var(--rl-success-700);
+        color: var(--rl-success-text);
       }
 
       .result--revoked {
@@ -200,7 +200,7 @@ import { SeoService } from '../../core/seo.service';
       }
       .result--revoked .result__icon {
         background: var(--rl-warn-100);
-        color: var(--rl-warn-700);
+        color: var(--rl-warn-text);
       }
 
       .result--invalid {
@@ -208,7 +208,7 @@ import { SeoService } from '../../core/seo.service';
       }
       .result--invalid .result__icon {
         background: var(--rl-danger-100);
-        color: var(--rl-danger-700);
+        color: var(--rl-danger-text);
       }
 
       .details {

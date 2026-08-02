@@ -62,7 +62,7 @@ interface LegalSection {
         padding: var(--rl-space-4);
         border-left: 4px solid var(--rl-warn-500);
         background: var(--rl-warn-100);
-        color: var(--rl-warn-700);
+        color: var(--rl-warn-text);
         border-radius: var(--rl-radius-md);
         margin: var(--rl-space-6) 0 var(--rl-space-10);
         font-size: var(--rl-text-sm);

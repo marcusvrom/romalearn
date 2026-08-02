@@ -37,7 +37,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
       .track {
         height: 10px;
-        background: var(--rl-neutral-100);
+        background: var(--rl-surface-sunken);
         border-radius: var(--rl-radius-full);
         overflow: hidden;
       }
