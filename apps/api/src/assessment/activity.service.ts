@@ -105,6 +105,7 @@ export class ActivityService {
       lesson.activityRubric,
       dto.notes,
       textoDoArquivo,
+      lesson.activityExample?.goodReport,
     );
 
     submission.status = graded.status;

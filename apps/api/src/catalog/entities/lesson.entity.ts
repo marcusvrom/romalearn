@@ -111,6 +111,15 @@ export class Lesson extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true })
   activityAttachmentPolicy: ActivityAttachmentPolicyDto | null;
 
+  /**
+   * Exemplo comentado exibido junto do enunciado.
+   *
+   * Guardado aqui, e não apenas no texto da aula, porque a correção precisa
+   * dele: uma entrega copiada do exemplo é recusada antes de ser avaliada.
+   */
+  @Column({ type: 'jsonb', nullable: true })
+  activityExample: { goodReport: string; weakReport: string } | null;
+
   /** Aula liberada como amostra na página de vendas. */
   @Column({ type: 'boolean', default: false })
   isPreview: boolean;

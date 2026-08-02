@@ -1,6 +1,6 @@
 import type { ActivityAttachmentPolicyDto } from '@romalearn/contracts';
 import type { SeedLesson, SeedQuestion, SeedSection } from '../catalog-data';
-import type { LessonContent } from './content-types';
+import type { ActivityExample, LessonContent } from './content-types';
 
 /**
  * Conteúdo e rubricas de um módulo, indexados pelo título da aula.
@@ -15,6 +15,8 @@ export interface SectionEnrichment {
   rubricas: Record<string, Pick<SeedLesson, 'rubric' | 'rubricReference'>>;
   /** Política de anexo por título de aula. */
   anexos?: Record<string, ActivityAttachmentPolicyDto>;
+  /** Exemplo comentado por título de aula. */
+  exemplos?: Record<string, ActivityExample>;
   /**
    * Questionário de fixação acrescentado ao fim de uma parte, indexado pelo
    * título da parte. Serve para o aluno conferir o que reteve antes de
@@ -50,7 +52,8 @@ export function enrichSections(
       const rubrica = enrichment.rubricas[lesson.title];
       const anexo = enrichment.anexos?.[lesson.title];
       const extras = enrichment.perguntas?.[lesson.title];
-      if (conteudo || rubrica || anexo || extras) usados.add(lesson.title);
+      const exemplo = enrichment.exemplos?.[lesson.title];
+      if (conteudo || rubrica || anexo || extras || exemplo) usados.add(lesson.title);
 
       return {
         ...lesson,
@@ -58,6 +61,7 @@ export function enrichSections(
         ...(rubrica ?? {}),
         ...(anexo ? { attachmentPolicy: anexo } : {}),
         ...(extras ? { questions: [...(lesson.questions ?? []), ...extras] } : {}),
+        ...(exemplo ? { example: exemplo } : {}),
       };
     });
 
@@ -75,6 +79,7 @@ export function enrichSections(
     ...Object.keys(enrichment.rubricas),
     ...Object.keys(enrichment.anexos ?? {}),
     ...Object.keys(enrichment.perguntas ?? {}),
+    ...Object.keys(enrichment.exemplos ?? {}),
   ].filter((titulo) => !usados.has(titulo));
 
   if (orfaos.length > 0) {

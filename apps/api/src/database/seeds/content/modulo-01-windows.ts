@@ -1,7 +1,7 @@
 import { ActivityAttachmentPolicyDto, LessonType, QuestionType } from '@romalearn/contracts';
 import type { SeedLesson, SeedQuestion } from '../catalog-data';
 import type { SectionEnrichment } from './apply-content';
-import { ActivityRubric, LessonContent } from './content-types';
+import { ActivityExample, ActivityRubric, LessonContent } from './content-types';
 
 /**
  * Módulo 1 — Introdução à Computação e ao Windows.
@@ -1430,10 +1430,90 @@ const PERGUNTAS_EXTRAS: Record<string, SeedQuestion[]> = {
   ],
 };
 
+const EXEMPLOS: Record<string, ActivityExample> = {
+  'Prática — Organize e envie um documento': {
+    scenario:
+      'a organização das fotos de uma viagem em família, e não os documentos de um escritório.',
+    goodReport:
+      'Criei a estrutura Viagens > 2026 > 03_Marco, e dentro dela três pastas: Fotos, Comprovantes e ' +
+      'Temporarios. Parei em três níveis porque mais que isso eu mesma me perderia.\n\n' +
+      'Renomeei os arquivos seguindo data, assunto e versão: 2026-03-14_Foto_Praia_v01.jpg, ' +
+      '2026-03-15_Comprovante_Hotel.pdf e 2026-03_Roteiro_Viagem_v02.docx. Usei a data no formato ' +
+      'ano-mês-dia porque assim os arquivos ficam em ordem sozinhos — testei rolando a lista e ' +
+      'realmente ficaram do mais antigo para o mais novo.\n\n' +
+      'Copiei o roteiro em branco antes de preencher, para não perder o modelo. Movi cada comprovante ' +
+      'para a pasta certa. Havia uma foto duplicada: comparei o tamanho e a data das duas, apaguei a ' +
+      'menor com Delete e depois restaurei pela Lixeira só para conferir que voltava ao lugar certo. ' +
+      'Voltou para a pasta Fotos, e aí sim exclui de novo.\n\n' +
+      'Salvei o roteiro em .docx e gerei um PDF por Exportar. Abri o PDF e conferi as duas páginas — a ' +
+      'segunda tinha ficado quase vazia, então ajustei o texto e gerei de novo.\n\n' +
+      'Antes de mandar para minha irmã, conferi três coisas: se o destinatário era ela mesma, se o ' +
+      'arquivo anexado era o PDF e não o rascunho, e se o PDF não mostrava o número do meu cartão que ' +
+      'aparecia no comprovante do hotel. Aparecia, então tirei esse comprovante do envio. Tudo isso foi ' +
+      'feito com arquivos meus, de treinamento.',
+    whyItWorks: [
+      'A estrutura de pastas aparece escrita, com o motivo de parar em três níveis.',
+      'Os nomes seguem o padrão e o aluno testou a ordenação em vez de só afirmar.',
+      'Copiar, mover, excluir e restaurar aparecem descritos como ações reais, com o resultado de cada uma.',
+      'O editável foi preservado e o PDF foi conferido — e uma correção real saiu dessa conferência.',
+      'A conferência antes do envio encontrou um dado sensível e o aluno agiu.',
+    ],
+    weakReport:
+      'Criei as pastas e organizei os arquivos com nomes melhores. Copiei, movi e excluí o que era duplicado, e depois restaurei. Gerei o PDF e conferi antes de enviar. Deu tudo certo.',
+    whyItFails: [
+      'Não mostra a estrutura nem um nome de arquivo sequer.',
+      'Não diz como conferiu que a ordenação por data funcionou.',
+      '"Restaurei" não diz de onde nem se voltou ao lugar certo.',
+      'A conferência antes do envio não menciona destinatário, arquivo nem dados sensíveis.',
+    ],
+  },
+  'Projeto final — Organize um pequeno escritório': {
+    scenario:
+      'a organização dos documentos de uma oficina mecânica fictícia, e não da Horizonte Serviços.',
+    goodReport:
+      'Pastas: criei Oficina > Financeiro > 2026 > 05_Maio e, dentro de maio, as subpastas Notas_Fiscais, ' +
+      'Recibos, Orcamentos e Temporarios. Escolhi separar orçamento de nota fiscal porque são momentos ' +
+      'diferentes do processo e eu confundia os dois.\n\n' +
+      'Nomes: renomeei os oito arquivos de treinamento. Exemplos: ' +
+      '2026-05-08_NotaFiscal_Fornecedor_Alfa_v01.pdf, 2026-05-12_Recibo_Servico_Cliente_Beta.pdf e ' +
+      '2026-05_Controle_Mensal_v03.xlsx. Marquei um deles como APROVADO no nome, porque era o orçamento ' +
+      'que tinha sido aceito.\n\n' +
+      'Operações: copiei o modelo de relatório antes de preencher, para a matriz continuar em branco — ' +
+      'conferi depois abrindo o original e ele estava intacto. Movi cada arquivo para a subpasta certa. ' +
+      'Encontrei um duplicado e uma versão antiga: comparei as datas de modificação antes de decidir, ' +
+      'apaguei a antiga com Delete, abri a Lixeira e restaurei para confirmar que voltava para a pasta ' +
+      'Orcamentos. Voltou.\n\n' +
+      'Janelas e atalhos: abri a planilha e o relatório lado a lado com Windows + Seta, e troquei entre ' +
+      'eles com Alt + Tab para copiar dois valores sem digitar errado.\n\n' +
+      'Salvamento e PDF: salvei o relatório em .docx e exportei o PDF. Abri o PDF e conferi as três ' +
+      'páginas: a numeração estava certa e nenhuma tabela ficou cortada.\n\n' +
+      'Segurança: fiz a captura da mensagem de erro com Windows + Shift + S, recortando só a caixa do ' +
+      'aviso. A primeira tentativa pegou a barra de tarefas com o nome de um cliente, então refiz. Na ' +
+      'simulação de envio conferi destinatário, arquivo e permissão de leitura.\n\n' +
+      'Recuperação: o item excluído voltou para Orcamentos, o local original. Bloqueei a tela com ' +
+      'Windows + L ao terminar. Todos os arquivos eram fictícios.',
+    whyItWorks: [
+      'Cada um dos sete critérios da rubrica aparece tratado, na ordem.',
+      'As decisões vêm com motivo: separar orçamento de nota fiscal, comparar datas antes de excluir.',
+      'A conferência é sempre concreta — "abri o original e ele estava intacto", "voltou para Orcamentos".',
+      'A captura de tela teve um problema real de dado exposto, e o aluno refez.',
+    ],
+    weakReport:
+      'Organizei tudo conforme pedido: criei as pastas, renomeei os arquivos, copiei o modelo, movi cada um para o lugar, gerei o PDF e fiz a captura. Restaurei o item excluído e bloqueei a tela no final.',
+    whyItFails: [
+      'Enumera as tarefas sem mostrar nenhum resultado.',
+      'Nenhum nome de pasta ou de arquivo aparece.',
+      'Não diz como conferiu que o modelo continuou intacto nem para onde o item restaurado voltou.',
+      'Não menciona a conferência de dados sensíveis na captura.',
+    ],
+  },
+};
+
 export const MODULE_01_ENRICHMENT: SectionEnrichment = {
   conteudo: CONTEUDO,
   rubricas: RUBRICAS,
   anexos: ANEXOS,
+  exemplos: EXEMPLOS,
   questionarios: QUESTIONARIOS,
   perguntas: PERGUNTAS_EXTRAS,
 };

@@ -1,7 +1,7 @@
 import { ActivityAttachmentPolicyDto, LessonType, QuestionType } from '@romalearn/contracts';
 import type { SeedLesson, SeedQuestion } from '../catalog-data';
 import type { SectionEnrichment } from './apply-content';
-import { ActivityRubric, LessonContent } from './content-types';
+import { ActivityExample, ActivityRubric, LessonContent } from './content-types';
 
 /**
  * Módulo 4 — Microsoft PowerPoint para Administração.
@@ -1164,10 +1164,56 @@ const PERGUNTAS_EXTRAS: Record<string, SeedQuestion[]> = {
   ],
 };
 
+const EXEMPLOS: Record<string, ActivityExample> = {
+  'Projeto final integrado': {
+    scenario:
+      'uma apresentação sobre redução de faltas em uma escola fictícia, e não sobre solicitações atrasadas.',
+    goodReport:
+      'Entrega iniciante. Montei sete slides: capa, contexto, resultado, problema, proposta, benefício e ' +
+      'encerramento. Usei o layout Título e Conteúdo em cinco deles e um tema claro, que testei em todos ' +
+      'os slides e não só na capa. Inseri uma foto autorizada do acervo da escola fictícia, um SmartArt ' +
+      'de processo com quatro etapas e um gráfico de colunas com as faltas por mês. Escrevi texto ' +
+      'alternativo na imagem e no gráfico, e a conclusão em uma frase abaixo dele. Salvei o PPTX e gerei ' +
+      'o PDF; ao conferir, o SmartArt tinha ficado com o texto cortado no PDF, então reduzi as frases de ' +
+      'cada etapa e exportei de novo.\n\n' +
+      'Entrega intermediária. Público: a coordenação. Objetivo: aprovar o envio de aviso no mesmo dia da ' +
+      'falta. Mensagem: as faltas se concentram nas segundas-feiras e o aviso demora três dias. Chamada ' +
+      'para ação: aprovar o teste por um mês. Reescrevi os títulos para contarem a história sozinhos — ' +
+      '"Faltas dobram às segundas" no lugar de "Análise por dia da semana". Alinhei e distribuí os ' +
+      'elementos com Alinhar e Distribuir, e agrupei cada etapa com seu rótulo. Informei período, unidade ' +
+      'e origem dos dados em todos os gráficos. Usei uma transição discreta entre as seções e animei ' +
+      'apenas o SmartArt, revelando uma etapa por vez. Escrevi as notas com as palavras-chave e ensaiei ' +
+      'no Modo do Apresentador: levei nove minutos, e o limite era sete, então cortei um slide de ' +
+      'contexto. Rodei o Verificador de Acessibilidade e corrigi o contraste de dois títulos.\n\n' +
+      'Entrega avançada. Criei layouts reutilizáveis para capa, conteúdo e dado em destaque, e testei ' +
+      'cada um com texto curto e longo. Trouxe o gráfico do Excel com Colar Especial escolhendo imagem, ' +
+      'não vínculo, porque a apresentação seria aberta em outro computador e o vínculo quebraria. Gravei ' +
+      'dois slides; na primeira tentativa o microfone pegou eco, então mudei de sala e regravei. ' +
+      'Inspecionei uma cópia, não o original. Pacote final: PPTX, PDF, MP4 dos dois slides e checklist. ' +
+      'Todos os nomes e números são inventados.',
+    whyItWorks: [
+      'As três entregas aparecem e o objetivo está escrito na forma "entender que… e fazer…".',
+      'Os títulos foram reescritos para contar a história — mostra o antes e o depois de um deles.',
+      'A escolha de colagem vem com o motivo, que é exatamente o risco que o capítulo aponta.',
+      'Três problemas reais surgiram no teste — texto cortado, tempo acima do limite, eco na gravação — e cada um foi resolvido.',
+      'A inspeção foi feita em cópia, como o capítulo exige.',
+    ],
+    weakReport:
+      'Montei a apresentação com sete slides, apliquei tema e layouts, inseri imagem, processo e gráfico. Defini público e objetivo, reescrevi os títulos e ensaiei. Criei o modelo, trouxe o gráfico do Excel e gravei dois slides. Exportei tudo.',
+    whyItFails: [
+      'Não mostra nenhum título, nem antes nem depois da reescrita.',
+      'Não diz qual é o objetivo nem a chamada para ação.',
+      'Não justifica a forma de colagem do gráfico — o ponto central do capítulo 8.',
+      'Não relata nenhuma conferência: ensaio sem tempo medido é ensaio não feito.',
+    ],
+  },
+};
+
 export const MODULE_04_ENRICHMENT: SectionEnrichment = {
   conteudo: CONTEUDO,
   rubricas: RUBRICAS,
   anexos: ANEXOS,
+  exemplos: EXEMPLOS,
   questionarios: QUESTIONARIOS,
   perguntas: PERGUNTAS_EXTRAS,
 };

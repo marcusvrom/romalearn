@@ -1,4 +1,10 @@
-import { ActivityRubric, ContentBlock, EbookReference, LessonContent } from './content-types';
+import {
+  ActivityExample,
+  ActivityRubric,
+  ContentBlock,
+  EbookReference,
+  LessonContent,
+} from './content-types';
 
 /**
  * Converte o conteúdo estruturado da aula em Markdown.
@@ -91,6 +97,7 @@ export function renderActivityContent(
   instructions: string,
   rubric: ActivityRubric,
   reference: EbookReference,
+  example?: ActivityExample,
 ): string {
   const criteria = [
     '| Critério | Peso | O que a correção observa |',
@@ -113,6 +120,40 @@ export function renderActivityContent(
       'acima. Diga também o que conferiu e o que ainda ficou com dúvida — reconhecer uma dúvida ' +
       `não tira nota. Escreva pelo menos ${rubric.minWords} palavras para que a correção consiga ` +
       'avaliar sua entrega.',
+    ...(example ? [renderExample(example)] : []),
     renderReference(reference),
   ].join('\n\n');
+}
+
+/**
+ * Exemplo comentado.
+ *
+ * Vem depois das instruções e da rubrica de propósito: o aluno primeiro
+ * entende o que precisa fazer, e só então vê como um relato bom se parece.
+ * O cenário do exemplo é outro, então ele orienta sem entregar a resposta.
+ */
+function renderExample(example: ActivityExample): string {
+  return [
+    '## Exemplo comentado',
+    `Para você ver a forma esperada, aqui está a entrega de **outro** exercício: ${example.scenario} ` +
+      'Repare no nível de detalhe, não no conteúdo — a sua atividade é diferente.',
+    '> **Atenção:** este exemplo serve de referência. Uma entrega copiada dele é recusada ' +
+      'automaticamente, antes mesmo da correção.',
+    '### Um relato que seria aprovado',
+    blockquote(example.goodReport),
+    '**Por que funciona**',
+    example.whyItWorks.map((item) => `- ${item}`).join('\n'),
+    '### O mesmo trabalho, mal relatado',
+    blockquote(example.weakReport),
+    '**O que falta**',
+    example.whyItFails.map((item) => `- ${item}`).join('\n'),
+  ].join('\n\n');
+}
+
+/** Cita um texto de várias linhas preservando os parágrafos. */
+function blockquote(text: string): string {
+  return text
+    .split('\n\n')
+    .map((paragrafo) => `> ${paragrafo.trim()}`)
+    .join('\n>\n');
 }

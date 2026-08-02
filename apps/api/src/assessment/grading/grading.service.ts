@@ -7,6 +7,7 @@ import {
 } from '@romalearn/contracts';
 import { ActivitySubmission } from '../entities/activity-submission.entity';
 import { ACTIVITY_GRADER, ActivityGrader, weightedScore } from './activity-grader';
+import { looksCopied } from './copy-check';
 
 /** Resultado consolidado de uma correção, pronto para persistir. */
 export interface GradedSubmission {
@@ -38,7 +39,27 @@ export class GradingService {
     rubric: ActivityRubricDto,
     notes: string,
     attachmentText = '',
+    example?: string | null,
   ): Promise<GradedSubmission> {
+    // Copiar o exemplo é recusado antes da correção: gastar uma chamada para
+    // dar nota alta a um texto que não é do aluno seria pior que inútil.
+    if (looksCopied(notes, example)) {
+      return {
+        status: ActivityReviewStatus.NEEDS_REVISION,
+        score: 0,
+        criteriaResults: [],
+        strengths: [],
+        improvements: [
+          'Seu relato reproduz o exemplo comentado da atividade. O exemplo é de outro exercício e ' +
+            'serve só para mostrar a forma esperada. Conte o que você mesmo fez, com seus dados e ' +
+            'suas palavras — mesmo que fique mais simples que o exemplo.',
+        ],
+        criticalFailures: [],
+        gradedBy: ActivityGraderKind.RULES,
+        graderModel: null,
+      };
+    }
+
     // Relato curto demais não tem o que corrigir: devolvemos sem gastar chamada.
     const wordCount = notes.trim().split(/\s+/).filter(Boolean).length;
     if (wordCount < rubric.minWords) {

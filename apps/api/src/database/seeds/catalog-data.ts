@@ -5,7 +5,12 @@ import {
   MaterialKind,
   QuestionType,
 } from '@romalearn/contracts';
-import { ActivityRubric, EbookReference, LessonContent } from './content/content-types';
+import {
+  ActivityExample,
+  ActivityRubric,
+  EbookReference,
+  LessonContent,
+} from './content/content-types';
 import { enrichSections } from './content/apply-content';
 import { MODULE_01_ENRICHMENT } from './content/modulo-01-windows';
 import { MODULE_02_ENRICHMENT } from './content/modulo-02-word';
@@ -54,6 +59,8 @@ export interface SeedLesson {
   rubricReference?: EbookReference;
   /** Arquivo que a atividade aceita como entrega. */
   attachmentPolicy?: ActivityAttachmentPolicyDto;
+  /** Exemplo comentado, exibido junto do enunciado. */
+  example?: ActivityExample;
   questions?: SeedQuestion[];
   passingScore?: number;
 }

@@ -59,3 +59,28 @@ export interface LessonContent {
  */
 export type ActivityRubric = ActivityRubricDto;
 export type RubricCriterion = RubricCriterionDto;
+
+/**
+ * Exemplo comentado de uma atividade prática.
+ *
+ * O cenário é **deliberadamente diferente** do que a atividade pede: o aluno
+ * vê a forma, o nível de detalhe e o tipo de evidência esperados, mas não
+ * encontra a resposta pronta. Copiar o exemplo é recusado pela plataforma
+ * antes mesmo da correção.
+ *
+ * O par "relato completo × relato fraco" segue o padrão dos próprios e-books,
+ * que ensinam por comparação: "Versão fraca / Versão com evidência",
+ * "Erro / Boa prática".
+ */
+export interface ActivityExample {
+  /** Situação fictícia usada no exemplo, diferente da pedida na atividade. */
+  scenario: string;
+  /** Relato que seria aprovado, escrito como um aluno escreveria. */
+  goodReport: string;
+  /** Por que ele funciona, ligado aos critérios da rubrica. */
+  whyItWorks: string[];
+  /** O mesmo esforço, mal relatado. */
+  weakReport: string;
+  /** O que falta nele. */
+  whyItFails: string[];
+}

@@ -148,6 +148,26 @@ describe('GradingService', () => {
     expect(espiao.mock.calls[0][0].attachmentText).toBe('texto do arquivo');
   });
 
+  it('recusa entrega copiada do exemplo sem chamar o corretor', async () => {
+    const grader = graderFake({});
+    const espiao = jest.spyOn(grader, 'grade');
+    const exemplo =
+      'Montei a planilha com vinte registros, conferi o total somando na calculadora e comparei ' +
+      'com a formula. Guardei o arquivo na pasta de estudos com a data no comeco do nome.';
+
+    const resultado = await new GradingService(grader).grade(
+      'enunciado',
+      RUBRICA,
+      exemplo,
+      '',
+      exemplo,
+    );
+
+    expect(resultado.status).toBe(ActivityReviewStatus.NEEDS_REVISION);
+    expect(resultado.improvements[0]).toContain('exemplo comentado');
+    expect(espiao).not.toHaveBeenCalled();
+  });
+
   it('limita a nota ao intervalo válido', async () => {
     const service = new GradingService(
       graderFake({

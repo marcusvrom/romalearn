@@ -211,6 +211,7 @@ export class SeedService {
           activityInstructions: lessonData.activityInstructions ?? null,
           activityRubric: lessonData.rubric ?? null,
           activityAttachmentPolicy: lessonData.attachmentPolicy ?? null,
+          activityExample: lessonData.example ?? null,
           // O primeiro capítulo de cada curso fica liberado como amostra.
           isPreview: sectionIndex === 0 && lessonIndex === 0,
           status: PublicationStatus.PUBLISHED,
@@ -279,6 +280,7 @@ export class SeedService {
           lesson.activityInstructions ?? '',
           lesson.rubric,
           lesson.rubricReference,
+          lesson.example,
         );
       }
 

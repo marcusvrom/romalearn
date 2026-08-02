@@ -1,6 +1,6 @@
 import { LessonType, QuestionType } from '@romalearn/contracts';
 import type { SeedLesson, SeedQuestion } from '../catalog-data';
-import { ActivityRubric, LessonContent } from './content-types';
+import { ActivityExample, ActivityRubric, LessonContent } from './content-types';
 import type { SeedSection } from '../catalog-data';
 
 /**
@@ -1037,6 +1037,228 @@ const QUESTIONARIOS: Record<string, SeedLesson> = {
   ]),
 };
 
+const EXEMPLOS: Record<string, ActivityExample> = {
+  'Prática — Mapa de habilidades e primeira evidência': {
+    scenario:
+      'uma pessoa que quer trabalhar com atendimento ao cliente, e não na área administrativa.',
+    goodReport:
+      'Escolhi cinco competências: escrever e-mails no Word, registrar chamados em planilha do Excel, ' +
+      'organizar arquivos no Windows, apresentar resultados no PowerPoint e usar IA para revisar textos. ' +
+      'Classifiquei assim: Word e Windows como "faço sozinho", porque já escrevo e guardo meus próprios ' +
+      'documentos sem consultar nada; Excel e PowerPoint como "faço com ajuda", porque consigo montar ' +
+      'a estrutura mas travo nas fórmulas e nos gráficos; IA como "ainda vou aprender", porque só usei ' +
+      'duas vezes e não sei conferir o que ela responde.\n\n' +
+      'Escolhi o Excel como prioridade desta semana. Motivo: nas três descrições de vaga de atendimento ' +
+      'que li, todas pediam controle de chamados em planilha, e é a competência da minha lista que ' +
+      'aparece com mais frequência. Estou no degrau executar: concluo a tarefa com o material aberto ao ' +
+      'lado, mas ainda não faço de memória.\n\n' +
+      'Minha entrega vai ser uma planilha fictícia de 20 chamados com data, cliente, assunto, status e ' +
+      'tempo de resposta, com o total por status calculado por fórmula. Vou conferir somando os status ' +
+      'na mão e comparando com o resultado da fórmula. Se os dois números baterem, a planilha está certa.',
+    whyItWorks: [
+      'Cita cinco competências com nome de ferramenta e de tarefa, não "informática básica".',
+      'Classifica cada uma e explica o porquê — "travo nas fórmulas" é mais honesto que "faço com ajuda" sozinho.',
+      'Escolhe uma única prioridade e justifica com um fato: apareceu em três vagas lidas.',
+      'A entrega é verificável e o método de conferência está descrito.',
+    ],
+    weakReport:
+      'Escolhi cinco competências e classifiquei todas. Vou praticar Excel esta semana e fazer uma planilha para comprovar. Estou evoluindo bem.',
+    whyItFails: [
+      'Não diz quais são as cinco competências.',
+      'Não classifica nenhuma delas: "classifiquei todas" não mostra o resultado.',
+      'Não justifica a escolha da prioridade.',
+      'A entrega não tem conteúdo definido nem forma de conferir.',
+      'Tem 27 palavras — abaixo do mínimo da atividade.',
+    ],
+  },
+  'Prática — Miniportfólio de uma entrega': {
+    scenario:
+      'um controle de empréstimo de livros de uma biblioteca fictícia, e não uma tarefa dos módulos.',
+    goodReport:
+      'Situação: a biblioteca fictícia Vila Nova anota empréstimos em papel e perde o prazo de devolução. ' +
+      'Objetivo: ter uma lista que mostre, em um olhar, quem está com atraso. Ferramentas: Excel, porque ' +
+      'precisava de contas por data, e Windows, para organizar as versões do arquivo.\n\n' +
+      'Processo: criei as colunas Código, Livro, Pessoa, Data de empréstimo e Data de devolução. Preenchi ' +
+      '15 registros inventados. Calculei os dias em atraso com uma subtração de datas e destaquei os ' +
+      'vencidos com formatação condicional, acrescentando também a palavra "Atrasado" em uma coluna de ' +
+      'status, para não depender só da cor.\n\n' +
+      'Entrega: o arquivo 2026-07-20_Controle_Emprestimos_v02.xlsx, guardado na minha pasta de estudos. ' +
+      'Verificação: conferi três linhas — a primeira, uma do meio e a última — comparando a conta do Excel ' +
+      'com a que fiz no papel; e testei mudando uma data para ver se o status mudava junto.\n\n' +
+      'Aprendizado: na próxima versão eu começaria pelos nomes das colunas antes de digitar os dados. ' +
+      'Tive que renomear duas colunas depois de preencher tudo, e isso deu retrabalho. Este é um projeto ' +
+      'de estudo com dados inventados, não um trabalho real.',
+    whyItWorks: [
+      'Percorre as sete partes do miniportfólio na ordem, sem pular nenhuma.',
+      'A descrição segue ação + ferramenta + problema + entrega + resultado verificável.',
+      'A verificação é concreta: duas conferências diferentes, uma delas manual.',
+      'O aprendizado aponta um erro real cometido, não uma frase genérica.',
+      'Identifica o trabalho como projeto de estudo com dados inventados.',
+    ],
+    weakReport:
+      'Fiz uma planilha de controle no Excel com dados fictícios. Usei fórmulas e formatação condicional. Ficou bom e conferi o resultado. Aprendi bastante com essa atividade.',
+    whyItFails: [
+      'Não descreve situação, objetivo nem processo.',
+      'Não diz qual é o arquivo entregue.',
+      '"Conferi o resultado" não explica como.',
+      '"Aprendi bastante" não é um aprendizado — não diz o que faria diferente.',
+    ],
+  },
+  'Prática — Título e seção Sobre': {
+    scenario: 'uma personagem que quer atuar em recepção de clínica, e não na área administrativa.',
+    goodReport:
+      'Título: Recepcionista em formação | Word, Excel e organização de agenda | Cadastro de pacientes e ' +
+      'controle de retornos.\n\n' +
+      'Sobre: Estou desenvolvendo conhecimentos em rotinas de recepção e atendimento. Já pratiquei o ' +
+      'cadastro de pacientes em planilha, a padronização de um documento de orientações no Word e a ' +
+      'organização de arquivos por mês e assunto. Tenho interesse em vagas de recepção em clínicas e ' +
+      'consultórios. Gosto de contribuir com organização e com atendimento paciente, que foi o que mais ' +
+      'ouvi como elogio no trabalho voluntário que fiz. Atualmente estou evoluindo em fórmulas de Excel ' +
+      'para acompanhar retornos.\n\n' +
+      'Competências que consigo demonstrar: digitação e revisão de textos no Word, organização de pastas ' +
+      'e arquivos, cadastro em planilha, comunicação escrita cordial e conferência de dados antes de ' +
+      'salvar.\n\n' +
+      'Projetos de estudo: (1) Planilha de agendamentos fictícios com 30 registros — exercício do curso; ' +
+      '(2) Documento de orientações ao paciente padronizado no Word — exercício do curso. Os dois estão ' +
+      'identificados como projeto de estudo.\n\n' +
+      'Precisaria de comprovação antes de ir para um perfil real: o trabalho voluntário citado em "Gosto ' +
+      'de contribuir" — eu teria que confirmar o período e o nome da instituição.',
+    whyItWorks: [
+      'O título segue o modelo de três partes, sem virar lista de palavras soltas.',
+      'A seção Sobre tem as cinco partes na ordem, cada uma reconhecível.',
+      'As competências são coisas que a personagem consegue mostrar, não adjetivos.',
+      'Os projetos aparecem marcados como estudo, nunca como emprego.',
+      'A última parte marca o que precisaria de comprovação, que é exatamente o que a atividade pede.',
+    ],
+    weakReport:
+      'Título: Profissional de recepção. Sobre: sou dedicada, proativa e aprendo rápido. Tenho conhecimento em Word e Excel e busco uma oportunidade na área.',
+    whyItFails: [
+      'O título não tem competências nem tipo de entrega.',
+      '"Dedicada, proativa e aprendo rápido" são adjetivos que ninguém consegue verificar.',
+      'A seção Sobre não tem as cinco partes.',
+      'Não lista competências demonstráveis nem projetos.',
+      'Não marca nada que precisaria de comprovação.',
+    ],
+  },
+  'Prática — Mensagens e controle de candidaturas': {
+    scenario:
+      'alguém interessado em logística, comentando a publicação de uma pessoa que trabalha com estoque.',
+    goodReport:
+      'Comentário: "Ana, o ponto sobre conferir o estoque em duas etapas — contagem e recontagem por ' +
+      'amostra — me chamou atenção porque eu imaginava que a recontagem fosse só quando dava diferença. ' +
+      'Nos lugares onde você trabalhou, a recontagem por amostra é feita em toda contagem ou só em ' +
+      'períodos específicos?"\n\n' +
+      'Mensagem de conexão: "Olá, Ana. Vi seu conteúdo sobre conferência de estoque em duas etapas. ' +
+      'Estou estudando rotinas de logística e o ponto da recontagem por amostra me ajudou a entender por ' +
+      'que os números divergiam nos meus exercícios. Gostaria de acompanhar seus próximos conteúdos."\n\n' +
+      'Não incluí pedido de vaga, de indicação nem de retorno. Se ela não responder, não vou insistir.\n\n' +
+      'Controle de candidaturas (três das cinco que registrei):\n\n' +
+      '1. Auxiliar de Estoque — Empresa Exemplo A. 02/08/2026, anúncio no site da empresa. Status: ' +
+      'salva. Evidência: planilha de conferência que montei no exercício. Lacuna: não sei usar coletor ' +
+      'de código de barras. Próximo passo: ler sobre o processo e revisar em 7 dias.\n\n' +
+      '2. Assistente de Logística — Empresa Exemplo B. 03/08/2026, indicação de anúncio público. Status: ' +
+      'enviada. Evidência: controle de entregas fictício. Lacuna: Excel com PROCX. Próximo passo: fazer ' +
+      'o exercício do Capítulo 7.\n\n' +
+      '3. Auxiliar Administrativo — Empresa Exemplo C. 03/08/2026. Status: salva. Evidência: documento ' +
+      'padronizado no Word. Lacuna: emissão de nota fiscal. Próximo passo: pesquisar o processo básico.',
+    whyItWorks: [
+      'O comentário mostra leitura real: cita um detalhe específico e faz uma pergunta que só faria sentido para quem leu.',
+      'A mensagem de conexão tem quatro linhas, contexto verdadeiro e nenhum pedido.',
+      'O relato afirma explicitamente que não há pedido de vaga nem cobrança de resposta.',
+      'O controle traz todos os sete campos pedidos, com lacuna e próximo passo reais.',
+    ],
+    weakReport:
+      'Comentei em uma publicação e enviei uma mensagem de conexão pedindo para acompanhar o conteúdo. Também montei um controle com cinco vagas que encontrei, anotando empresa e status.',
+    whyItFails: [
+      'Não mostra o comentário nem a mensagem — não dá para avaliar o que foi escrito.',
+      'Não há pergunta que demonstre leitura do conteúdo.',
+      'O controle cita só dois dos sete campos pedidos.',
+      'Não menciona evidência, lacuna nem próximo passo.',
+    ],
+  },
+  'Prática — Uso responsável de IA em um projeto': {
+    scenario:
+      'a melhoria de um cartaz fictício de campanha de doação de agasalhos, e não um projeto dos módulos.',
+    goodReport:
+      'Prompt que usei: "Objetivo: melhorar o texto de um cartaz de campanha de doação de agasalhos de ' +
+      'uma escola fictícia. Contexto autorizado: o cartaz diz onde entregar, o período e o que aceita. ' +
+      'Formato: três sugestões curtas de melhoria. Limites: não invente dados, não crie estatísticas e ' +
+      'marque o que estiver faltando."\n\n' +
+      'As três sugestões foram: (1) começar pelo prazo, que estava no rodapé; (2) trocar "aceitamos ' +
+      'doações" por uma lista do que serve e do que não serve; (3) acrescentar um número de telefone ' +
+      'para dúvidas.\n\n' +
+      'Aceitei a sugestão 2. Motivo: no cartaz original estava escrito só "agasalhos", e quem lê não sabe ' +
+      'se cobertor conta. A lista resolve a dúvida antes de a pessoa perguntar.\n\n' +
+      'Rejeitei a sugestão 3. Motivo: eu não tenho um telefone autorizado para divulgar nesse exercício, ' +
+      'e colocar um número inventado seria dado falso no cartaz.\n\n' +
+      'Erro que encontrei na resposta: a IA sugeriu escrever "mais de 200 famílias atendidas no ano ' +
+      'passado". Esse número não existe em lugar nenhum — ela inventou. Descartei a frase inteira.\n\n' +
+      'Finalizei no Word, refiz a lista de itens aceitos e conferi abrindo o arquivo e lendo em voz alta ' +
+      'para ver se um adolescente entenderia. Exportei em PDF e conferi a página.',
+    whyItWorks: [
+      'O prompt aparece inteiro, com objetivo, contexto, formato e limites — os quatro elementos do modelo do capítulo.',
+      'Uma sugestão aceita e uma rejeitada, cada uma com motivo próprio e concreto.',
+      'Identifica um número inventado pela IA e diz o que fez com ele. Esse é o ponto central do capítulo.',
+      'A finalização acontece na ferramenta adequada e a conferência é descrita.',
+    ],
+    weakReport:
+      'Pedi três melhorias para a IA em um projeto meu. Aceitei uma e rejeitei outra, como pedido. Depois apliquei a mudança e conferi tudo. A IA ajudou bastante.',
+    whyItFails: [
+      'Não mostra o prompt.',
+      'Não diz quais foram as sugestões nem quais foram aceitas ou rejeitadas.',
+      'Não registra o motivo de nenhuma das duas decisões.',
+      'Não menciona nenhum erro ou exagero encontrado — que é o que a atividade pede para procurar.',
+    ],
+  },
+  'Projeto final — Plano de 30 dias': {
+    scenario:
+      'um personagem chamado Rui, que busca sua primeira vaga em almoxarifado, e não a Ana da área administrativa.',
+    goodReport:
+      'Mapa de competências: li três vagas de almoxarifado e os requisitos repetidos foram controle de ' +
+      'entrada e saída, conferência de nota fiscal e organização física. Classifiquei: organização de ' +
+      'arquivos — faço sozinho; planilha de controle — faço com ajuda; conferência de nota fiscal — ainda ' +
+      'vou aprender; comunicação escrita — faço sozinho; PowerPoint — faço com ajuda. Escolhi três ' +
+      'prioridades: planilha de controle (técnica), conferência de nota fiscal (técnica) e comunicação ' +
+      'escrita para relatar divergência (humana).\n\n' +
+      'Evidência: montei uma planilha fictícia de entrada e saída com 25 movimentações, com saldo ' +
+      'calculado por fórmula. Situação: o almoxarifado inventado não sabia o saldo real. Objetivo: saber ' +
+      'o saldo a qualquer momento. Ferramenta: Excel. Processo: colunas de data, item, tipo de ' +
+      'movimentação, quantidade e saldo acumulado. Entrega: 2026-08-02_Controle_Almoxarifado_v01.xlsx. ' +
+      'Verificação: conferi o saldo final somando entradas e subtraindo saídas na calculadora e comparei ' +
+      'com a fórmula. Aprendizado: eu tinha esquecido de travar a referência da primeira linha e o saldo ' +
+      'saiu errado nas cinco primeiras vezes.\n\n' +
+      'Perfil: título "Auxiliar de Almoxarifado em formação | Excel e organização | Controle de entrada e ' +
+      'saída". Sobre em cinco partes, com as práticas que realmente fiz. Cinco competências ' +
+      'demonstráveis e dois projetos marcados como estudo.\n\n' +
+      'Candidaturas e IA: registrei cinco oportunidades com vaga, empresa, data, status, evidência, ' +
+      'lacuna e próximo passo. Usei o prompt de comparação de vaga do Capítulo 5. A IA respondeu que eu ' +
+      '"já tenho experiência com gestão de estoque" — não tenho, ela inferiu isso da planilha de estudo. ' +
+      'Corrigi e registrei a lacuna como lacuna. Decisão final: mantive só as correspondências que ' +
+      'consigo demonstrar.\n\n' +
+      'Plano de 30 dias. Semana 1: diagnóstico — o mapa acima e as três prioridades. Semana 2: prática — ' +
+      'refazer a planilha do zero sem consultar, e uma página de miniportfólio. Semana 3: presença — ' +
+      'revisar o perfil, quatro interações e duas conexões com contexto. Semana 4: oportunidades — cinco ' +
+      'registros novos, uma simulação de entrevista e escolher o próximo módulo. Tudo neste projeto usa ' +
+      'dados inventados e está identificado como exercício de estudo.',
+    whyItWorks: [
+      'As cinco entregas aparecem, na ordem, cada uma reconhecível.',
+      'Nenhuma experiência inventada: a única vez que a IA sugeriu uma, o aluno percebeu, corrigiu e registrou.',
+      'A evidência é explicada e verificável, com o método de conferência e um erro real que aconteceu.',
+      'O plano tem foco e entrega definidos por semana, em tamanho realista.',
+      'O projeto inteiro está identificado como estudo com dados inventados.',
+    ],
+    weakReport:
+      'Fiz o mapa de competências, criei uma evidência no Excel, escrevi o perfil, registrei cinco vagas e usei IA para comparar uma delas. Montei o plano de 30 dias com as quatro semanas. Está tudo pronto e conferido.',
+    whyItFails: [
+      'Lista as etapas sem mostrar o resultado de nenhuma.',
+      'Não há competências, classificação nem prioridades.',
+      'A evidência não tem processo, verificação nem aprendizado.',
+      'Não registra o que a IA respondeu nem que decisão foi tomada.',
+      'As semanas do plano não têm foco nem entrega.',
+    ],
+  },
+};
+
 // ---------------------------------------------------------------------------
 // Seções
 // ---------------------------------------------------------------------------
@@ -1081,6 +1303,7 @@ export const FREE_MODULE_SECTIONS: SeedSection[] = [
           chapter: 'Capítulo 1 — Sua missão / Capítulo 2 — Estrutura de um miniportfólio',
           pages: '7–10',
         },
+        example: EXEMPLOS['Prática — Mapa de habilidades e primeira evidência'],
       },
       {
         title: 'Prática — Miniportfólio de uma entrega',
@@ -1098,6 +1321,7 @@ export const FREE_MODULE_SECTIONS: SeedSection[] = [
           chapter: 'Capítulo 2 — Sua missão e Estrutura de um miniportfólio',
           pages: '10',
         },
+        example: EXEMPLOS['Prática — Miniportfólio de uma entrega'],
       },
       QUESTIONARIOS['Parte 1 — Conhecimento que vira valor'],
     ],
@@ -1133,6 +1357,7 @@ export const FREE_MODULE_SECTIONS: SeedSection[] = [
           chapter: 'Capítulo 3 — Sua missão e listas Conferir',
           pages: '12–13',
         },
+        example: EXEMPLOS['Prática — Título e seção Sobre'],
       },
       {
         title: 'Capítulo 4 — Networking online e candidaturas',
@@ -1158,6 +1383,7 @@ export const FREE_MODULE_SECTIONS: SeedSection[] = [
           chapter: 'Capítulo 4 — Sua missão e Candidaturas',
           pages: '14–15',
         },
+        example: EXEMPLOS['Prática — Mensagens e controle de candidaturas'],
       },
       QUESTIONARIOS['Parte 2 — Visibilidade e relacionamentos'],
     ],
@@ -1193,6 +1419,7 @@ export const FREE_MODULE_SECTIONS: SeedSection[] = [
           chapter: 'Capítulo 5 — Sua missão e O fluxo seguro de trabalho',
           pages: '17–19',
         },
+        example: EXEMPLOS['Prática — Uso responsável de IA em um projeto'],
       },
       QUESTIONARIOS['Parte 3 — Trabalho ampliado por IA'],
     ],
@@ -1223,6 +1450,7 @@ export const FREE_MODULE_SECTIONS: SeedSection[] = [
           chapter: 'Projeto final — Critérios de avaliação',
           pages: '20–22',
         },
+        example: EXEMPLOS['Projeto final — Plano de 30 dias'],
       },
       {
         title: 'Guia de consulta rápida e referências oficiais',

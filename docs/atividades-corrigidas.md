@@ -10,6 +10,8 @@ próprios e-books — nada foi inventado.
 - [Como funciona](#como-funciona)
 - [Quem decide a nota](#quem-decide-a-nota)
 - [Configuração e custo](#configuração-e-custo)
+- [Exemplo comentado](#exemplo-comentado)
+- [Anexo da entrega](#anexo-da-entrega)
 - [Segurança](#segurança)
 - [Quando a correção não decide](#quando-a-correção-não-decide)
 - [Cadastrando uma rubrica](#cadastrando-uma-rubrica)
@@ -91,6 +93,29 @@ viram nota ruim: viram `PENDING_HUMAN_REVIEW`.
 Nesse estado **a aula é liberada** e a entrega entra na fila de revisão da
 equipe. A limitação é nossa, não do aluno: ninguém fica parado porque a nossa
 correção automática falhou.
+
+## Exemplo comentado
+
+Toda atividade prática traz um exemplo antes do campo de envio, com quatro
+partes: um relato que seria aprovado, por que ele funciona critério a
+critério, o mesmo trabalho mal relatado e o que falta nele. O par
+"completo × fraco" segue o padrão dos próprios e-books, que ensinam por
+comparação.
+
+Duas decisões evitam que o exemplo vire gabarito:
+
+1. **O cenário é sempre outro.** A atividade pede um mapa de competências para
+   a área administrativa; o exemplo mostra o de atendimento ao cliente. O aluno
+   vê a forma, o nível de detalhe e o tipo de evidência — não a resposta.
+2. **Entrega copiada é recusada antes da correção.** A plataforma compara o
+   relato com o exemplo por trigramas de palavras: se metade ou mais do exemplo
+   reaparece na entrega, ela volta com uma explicação em vez de nota.
+
+A comparação resiste a disfarce — trocar palavras soltas ou colar o exemplo e
+escrever um parágrafo por cima continua sendo detectado, porque a referência é
+a proporção do **exemplo** reproduzida, não o tamanho da entrega. E não acusa
+quem escreveu por conta própria sobre o mesmo assunto: texto original raramente
+repete longas sequências de palavras.
 
 ## Anexo da entrega
 

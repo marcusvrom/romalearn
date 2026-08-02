@@ -1,7 +1,7 @@
 import { ActivityAttachmentPolicyDto, LessonType, QuestionType } from '@romalearn/contracts';
 import type { SeedLesson, SeedQuestion } from '../catalog-data';
 import type { SectionEnrichment } from './apply-content';
-import { ActivityRubric, LessonContent } from './content-types';
+import { ActivityExample, ActivityRubric, LessonContent } from './content-types';
 
 /**
  * Módulo 3 — Microsoft Excel para Administração.
@@ -1162,10 +1162,56 @@ const PERGUNTAS_EXTRAS: Record<string, SeedQuestion[]> = {
   ],
 };
 
+const EXEMPLOS: Record<string, ActivityExample> = {
+  'Projeto final integrado': {
+    scenario:
+      'o controle de pedidos de uma padaria fictícia, e não as compras da Horizonte Serviços.',
+    goodReport:
+      'Entrega 1. Criei as abas Pedidos, Cadastros e Resumo. Registrei 20 pedidos fictícios com ID, data, ' +
+      'setor, item, quantidade, preço e status. O total por linha saiu de =E2*F2 e o total geral de ' +
+      '=SOMA(G2:G21). Transformei em Tabela e nomeei como Pedidos. Filtrei os pendentes e classifiquei ' +
+      'pela data mais antiga. Congelei a linha superior. Ao gerar o PDF, a coluna de status ficou cortada ' +
+      'na segunda página; troquei para paisagem e conferi de novo.\n\n' +
+      'Entrega 2. Encontrei dois IDs duplicados e três datas gravadas como texto — alinhadas à esquerda, ' +
+      'foi assim que percebi. Corrigi as duas coisas. Criei uma regra de formatação condicional para ' +
+      'pedidos com mais de sete dias e acrescentei a palavra "Atrasado" numa coluna de status, para não ' +
+      'depender só da cor. Calculei o total aprovado por setor com ' +
+      '=SOMASES(G2:G21;D2:D21;"Confeitaria";H2:H21;"Aprovado") e contei as pendências com ' +
+      '=CONT.SES(D2:D21;"Confeitaria";H2:H21;"Pendente"). Criei um indicador com ' +
+      '=SE(H2="Concluído";"OK";"Acompanhar"). Montei o gráfico de linhas dos seis meses com título ' +
+      '"Pedidos por mês — janeiro a junho de 2026", unidade em reais, e escrevi a conclusão abaixo. ' +
+      'Rodei a verificação de acessibilidade.\n\n' +
+      'Entrega 3. Usei =PROCX(D2;Cadastros[Setor];Cadastros[Responsável];"Não encontrado") para trazer o ' +
+      'responsável. Dois pedidos voltaram "Não encontrado": o setor estava escrito com espaço no fim no ' +
+      'cadastro. Corrigi na origem em vez de mudar a fórmula. Criei a lista dinâmica de pendências com ' +
+      'FILTRO. Montei a Tabela Dinâmica com valor por setor e mês; ela veio contando em vez de somar, ' +
+      'porque uma coluna tinha número como texto — corrigi e o Total Geral passou a bater com a base. ' +
+      'Adicionei segmentação por status, criei validação de dados para a coluna Status e protegi a ' +
+      'planilha deixando só as células de entrada editáveis. Testei preenchendo como se fosse outra ' +
+      'pessoa. Todos os dados são inventados.',
+    whyItWorks: [
+      'Mostra as fórmulas de verdade, não "usei SOMASES".',
+      'Três erros reais foram encontrados e corrigidos: coluna cortada no PDF, datas como texto, espaço no fim do setor.',
+      'Corrigiu a origem em vez de contornar a fórmula — é a diferença entre resolver e disfarçar.',
+      'A Tabela Dinâmica só foi aceita depois de o Total Geral bater com a base.',
+      'A proteção foi testada do ponto de vista de quem vai preencher.',
+    ],
+    weakReport:
+      'Montei as três abas, registrei os pedidos e calculei os totais. Usei SOMASES, CONT.SES e PROCX, criei a Tabela Dinâmica e o gráfico. Protegi a planilha e gerei o PDF. Os números bateram.',
+    whyItFails: [
+      'Cita os nomes das funções sem mostrar nenhuma fórmula.',
+      '"Os números bateram" não diz com o que foram comparados.',
+      'Não menciona nenhum problema encontrado na base — uma base fictícia com duplicados e datas em texto foi montada justamente para isso.',
+      'Não diz o que a validação limita nem quais células ficaram editáveis.',
+    ],
+  },
+};
+
 export const MODULE_03_ENRICHMENT: SectionEnrichment = {
   conteudo: CONTEUDO,
   rubricas: RUBRICAS,
   anexos: ANEXOS,
+  exemplos: EXEMPLOS,
   questionarios: QUESTIONARIOS,
   perguntas: PERGUNTAS_EXTRAS,
 };

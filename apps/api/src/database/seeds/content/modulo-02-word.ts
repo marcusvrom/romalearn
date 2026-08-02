@@ -1,7 +1,7 @@
 import { ActivityAttachmentPolicyDto, LessonType, QuestionType } from '@romalearn/contracts';
 import type { SeedLesson, SeedQuestion } from '../catalog-data';
 import type { SectionEnrichment } from './apply-content';
-import { ActivityRubric, LessonContent } from './content-types';
+import { ActivityExample, ActivityRubric, LessonContent } from './content-types';
 
 /**
  * Módulo 2 — Microsoft Word para Administração.
@@ -1173,10 +1173,57 @@ const PERGUNTAS_EXTRAS: Record<string, SeedQuestion[]> = {
   ],
 };
 
+const EXEMPLOS: Record<string, ActivityExample> = {
+  'Projeto final integrado': {
+    scenario:
+      'um pacote documental para uma escola fictícia de idiomas, e não para a Horizonte Serviços.',
+    goodReport:
+      'Entrega 1. Criei o comunicado de duas páginas 2026-08_Comunicado_Matriculas_v01.docx. Apliquei ' +
+      'Título 1 no cabeçalho e Título 2 nos dois assuntos, deixei o corpo em Normal e transformei os ' +
+      'prazos em lista numerada, porque a ordem importa. Inseri uma tabela de três colunas com turma, ' +
+      'prazo e valor, e a logo fictícia da escola em linha com o texto. Acrescentei cabeçalho, rodapé e ' +
+      'número de página, e exportei o PDF. Ao conferir o PDF, a tabela tinha quebrado entre as páginas ' +
+      'sem repetir o cabeçalho; liguei a repetição e gerei de novo.\n\n' +
+      'Entrega 2. Estruturei o manual de seis páginas com Título 1, 2 e 3 e gerei o sumário automático. ' +
+      'Movi a seção de critérios para antes da de prazos arrastando no Painel de Navegação, e atualizei o ' +
+      'sumário inteiro. Criei uma seção paisagem só para a tabela de critérios, com quebra de seção antes ' +
+      'e depois — conferi que as páginas anterior e posterior continuaram em retrato. Inseri duas figuras ' +
+      'com legenda pela guia Referências e texto alternativo. Revisei com Controlar Alterações ligado e ' +
+      'três comentários. Rodei o Verificador de Acessibilidade: acusou uma imagem sem texto alternativo, ' +
+      'que eu tinha esquecido. Corrigi e salvei a cópia limpa.\n\n' +
+      'Entrega 3. Transformei o manual em modelo .dotx com dois blocos reutilizáveis (bloco de rodapé ' +
+      'legal e bloco de contatos) e três campos de propriedade. Abri o modelo para gerar um documento ' +
+      'novo e confirmei que a matriz não foi alterada. Criei uma planilha com dez alunos fictícios e ' +
+      'gerei as cartas por mala direta. Um dos registros não tinha o campo de turma; visualizei os ' +
+      'resultados e a saudação ficou incompleta, então acrescentei um valor padrão. Conclui em novo ' +
+      'documento e conferi que eram dez cartas e que nenhuma tinha dados de outro aluno. Criei o ' +
+      'formulário de cadastro com cinco controles de conteúdo e restringi a edição depois de testar todos ' +
+      'os campos com o teclado. Comparei a versão revisada com o original em um documento separado. Por ' +
+      'fim, inspecionei uma cópia, atualizei os campos e o sumário, e montei o pacote com DOCX, PDF, ' +
+      'fonte de teste e checklist. Todos os dados são inventados.',
+    whyItWorks: [
+      'As três entregas aparecem separadas e completas.',
+      'Três problemas reais foram encontrados na conferência — tabela quebrada, imagem sem texto alternativo, campo vazio na mesclagem — e cada um foi corrigido.',
+      'Prova que a matriz não foi sobrescrita, que é falha crítica do projeto.',
+      'Confere a contagem de saídas e a ausência de mistura entre destinatários.',
+      'O pacote final está listado item a item.',
+    ],
+    weakReport:
+      'Fiz as três entregas. O comunicado ficou com tabela e imagem, o manual com estilos e sumário, e o modelo com mala direta e formulário. Conferi tudo e exportei os PDFs. Não tive problemas.',
+    whyItFails: [
+      '"Não tive problemas" é o sinal mais forte de que a conferência não aconteceu.',
+      'Não mostra nenhum nome de arquivo, estilo ou campo.',
+      'Não diz se a matriz do modelo foi preservada.',
+      'Não confere a contagem de cartas nem a separação entre destinatários.',
+    ],
+  },
+};
+
 export const MODULE_02_ENRICHMENT: SectionEnrichment = {
   conteudo: CONTEUDO,
   rubricas: RUBRICAS,
   anexos: ANEXOS,
+  exemplos: EXEMPLOS,
   questionarios: QUESTIONARIOS,
   perguntas: PERGUNTAS_EXTRAS,
 };

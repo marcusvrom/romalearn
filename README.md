@@ -31,7 +31,7 @@ cinco módulos pagos (Windows, Word, Excel, PowerPoint e IA para processos admin
 | Certificados em PDF e validação pública                       | Funcionando                                                   |
 | Painel administrativo                                         | Funcionando                                                   |
 | E-mails transacionais                                         | Funcionando (console/SMTP)                                    |
-| Testes automatizados                                          | 67 unitários + 69 end-to-end                                  |
+| Testes automatizados                                          | 75 unitários + 69 end-to-end                                  |
 
 ## Arquitetura
 
