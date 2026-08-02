@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
+  ActivityReviewStatus,
   CourseProgressDto,
   CoursePlayerDto,
   EnrolledCourseDto,
@@ -15,8 +16,10 @@ import {
   PublicationStatus,
 } from '@romalearn/contracts';
 import { In, Repository } from 'typeorm';
+import { ActivityService } from '../assessment/activity.service';
 import { ActivitySubmission } from '../assessment/entities/activity-submission.entity';
 import { QuizAttempt } from '../assessment/entities/quiz-attempt.entity';
+import { QuizService } from '../assessment/quiz.service';
 import { CatalogService } from '../catalog/catalog.service';
 import { Course } from '../catalog/entities/course.entity';
 import { Lesson } from '../catalog/entities/lesson.entity';
@@ -39,7 +42,6 @@ import { Enrollment } from './entities/enrollment.entity';
 import { LessonProgress } from './entities/lesson-progress.entity';
 import { EnrollmentService } from './enrollment.service';
 import { EntitlementService } from './entitlement.service';
-import { QuizService } from '../assessment/quiz.service';
 
 @Injectable()
 export class ProgressService {
@@ -58,6 +60,7 @@ export class ProgressService {
     private readonly enrollmentService: EnrollmentService,
     private readonly catalogService: CatalogService,
     private readonly quizService: QuizService,
+    private readonly activityService: ActivityService,
     private readonly storageService: StorageService,
     private readonly mailService: MailService,
     private readonly events: DomainEventsService,
@@ -155,6 +158,10 @@ export class ProgressService {
 
     const materials = await this.materialsFor(lesson.id);
     const quiz = await this.quizService.findForLesson(lesson.id, userId);
+    const submission =
+      lesson.type === LessonType.PRACTICAL_ACTIVITY
+        ? await this.activityService.findForUser(userId, lesson.id)
+        : null;
 
     return {
       id: lesson.id,
@@ -179,6 +186,8 @@ export class ProgressService {
         ? (await this.storageService.urlFor(lesson.fileStorageKey)).url
         : null,
       activityInstructions: lesson.activityInstructions,
+      activityRubric: lesson.activityRubric,
+      activitySubmission: submission ? this.activityService.toDto(submission, lesson) : null,
       quiz,
       materials,
       progress: this.toProgressDto(progress),
@@ -417,16 +426,26 @@ export class ProgressService {
     confirmed: boolean,
   ): Promise<CompletionEvidence> {
     const quizPassed = await this.quizService.hasPassedForLesson(userId, lesson.id);
-    const activitySubmitted =
+
+    const submission =
       lesson.type === LessonType.PRACTICAL_ACTIVITY
-        ? (await this.submissions.count({ where: { userId, lessonId: lesson.id } })) > 0
-        : true;
+        ? await this.submissions.findOne({ where: { userId, lessonId: lesson.id } })
+        : null;
 
     return {
       secondsSpent: progress.secondsSpent,
       watchRatio: progress.watchRatio,
       quizPassed,
-      activitySubmitted,
+      activitySubmitted: lesson.type === LessonType.PRACTICAL_ACTIVITY ? submission !== null : true,
+      /*
+       * Aprovada conclui; aguardando revisão humana também. Quando a nossa
+       * correção automática não consegue decidir, o custo dessa limitação é
+       * nosso, não do aluno: ele segue estudando e a equipe revisa depois.
+       */
+      activityApproved:
+        submission !== null &&
+        (submission.status === ActivityReviewStatus.APPROVED ||
+          submission.status === ActivityReviewStatus.PENDING_HUMAN_REVIEW),
       confirmed,
     };
   }

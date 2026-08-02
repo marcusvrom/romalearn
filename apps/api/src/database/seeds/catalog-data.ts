@@ -1,4 +1,6 @@
 import { CourseLevel, LessonType, MaterialKind, QuestionType } from '@romalearn/contracts';
+import { ActivityRubric, EbookReference, LessonContent } from './content/content-types';
+import { FREE_MODULE_SECTIONS } from './content/modulo-gratuito';
 
 /**
  * Estrutura inicial dos cursos.
@@ -29,7 +31,16 @@ export interface SeedLesson {
   summary?: string;
   /** Tópicos listados no e-book para o capítulo. */
   topics?: string[];
+  /**
+   * Conteúdo do capítulo em blocos estruturados. Quando presente, substitui
+   * o texto mínimo montado a partir de `summary` e `topics`.
+   */
+  content?: LessonContent;
   activityInstructions?: string;
+  /** Rubrica de correção da atividade prática. */
+  rubric?: ActivityRubric;
+  /** Origem dos critérios da rubrica no e-book. */
+  rubricReference?: EbookReference;
   questions?: SeedQuestion[];
   passingScore?: number;
 }
@@ -105,215 +116,7 @@ const FREE_MODULE: SeedCourse = {
   isFree: true,
   order: 0,
   ebookTitle: 'Módulo Extra Gratuito — Carreira Digital e Destaque Profissional (Edição 2026)',
-  sections: [
-    {
-      title: 'Parte 1 — Conhecimento que vira valor',
-      summary:
-        'Compreenda o mercado, avalie seu domínio e transforme aprendizado em evidências. ' +
-        'Ao concluir esta parte: reconhecer o papel da tecnologia em diferentes profissões, ' +
-        'distinguir conhecimento inicial de proficiência e criar uma primeira evidência profissional verdadeira.',
-      lessons: [
-        {
-          title: 'Capítulo 1 — Tecnologia e o mercado de trabalho',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary:
-            'Entenda por que conhecimentos digitais ajudam em muitas profissões e como eles se combinam com habilidades humanas.',
-          topics: [
-            'O trabalho já é digital, mesmo fora da área de TI',
-            'O que é letramento tecnológico',
-            'Os cinco degraus da proficiência',
-          ],
-        },
-        {
-          title: 'Capítulo 2 — Da habilidade à evidência profissional',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary:
-            'Transforme estudo e prática em entregas que outras pessoas conseguem compreender e verificar.',
-          topics: [
-            'Competência precisa deixar um rastro',
-            'Como montar um miniportfólio verdadeiro',
-          ],
-        },
-        {
-          title: 'Prática — Mapa de habilidades e primeira evidência',
-          type: LessonType.PRACTICAL_ACTIVITY,
-          estimatedMinutes: 25,
-          activityInstructions:
-            'Liste as ferramentas digitais que você já usa e, para cada uma, indique em qual dos cinco ' +
-            'degraus da proficiência você se encontra hoje. Depois escolha **uma** tarefa que você ' +
-            'consegue concluir e produza uma evidência real dela (um arquivo, um print ou um pequeno ' +
-            'roteiro explicando o que fez). Use apenas dados fictícios ou autorizados.',
-        },
-      ],
-    },
-    {
-      title: 'Parte 2 — Visibilidade e relacionamentos',
-      summary:
-        'Ao concluir esta parte: estruturar um perfil básico no LinkedIn e escrever mensagens de ' +
-        'networking com respeito e clareza.',
-      lessons: [
-        {
-          title: 'Capítulo 3 — LinkedIn e presença profissional',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary:
-            'Monte uma vitrine profissional clara, verdadeira e coerente com o tipo de oportunidade que procura.',
-          topics: ['LinkedIn como vitrine profissional', 'Título e seção Sobre'],
-        },
-        {
-          title: 'Capítulo 4 — Networking online e candidaturas',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 20,
-          summary:
-            'Crie relações profissionais com respeito e organize a busca por oportunidades sem transformar contato em spam.',
-          topics: [
-            'Networking é relacionamento, não coleção',
-            'Mensagens e controle de candidaturas',
-          ],
-        },
-        {
-          title: 'Prática — Título, seção Sobre e mensagem de contato',
-          type: LessonType.PRACTICAL_ACTIVITY,
-          estimatedMinutes: 25,
-          activityInstructions:
-            'Escreva o título e a seção "Sobre" do seu perfil profissional, usando apenas informações ' +
-            'verdadeiras. Em seguida, redija uma mensagem curta de networking (até 5 linhas) explicando ' +
-            'quem você é, por que está entrando em contato e o que gostaria de aprender. ' +
-            'Se você for menor de idade, faça esta atividade com orientação de um adulto responsável e ' +
-            'não publique informações pessoais.',
-        },
-      ],
-    },
-    {
-      title: 'Parte 3 — Trabalho ampliado por IA',
-      summary:
-        'Ao concluir esta parte: escolher usos simples e seguros de IA e conferir respostas antes de ' +
-        'aplicar ou compartilhar.',
-      lessons: [
-        {
-          title: 'Capítulo 5 — Inteligência artificial no dia a dia profissional',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 25,
-          summary:
-            'Use IA para aprender, planejar, rascunhar e revisar, mantendo dados, fatos e decisões sob controle humano.',
-          topics: [
-            'A IA é uma assistente, não uma substituta da sua responsabilidade',
-            'O que conferir antes de aplicar ou compartilhar uma resposta',
-          ],
-        },
-      ],
-    },
-    {
-      title: 'Projeto final e conclusão',
-      summary:
-        'Reúna o que você aprendeu em um plano realista de 30 dias e verifique sua compreensão.',
-      lessons: [
-        {
-          title: 'Projeto final — Plano de 30 dias',
-          type: LessonType.PRACTICAL_ACTIVITY,
-          estimatedMinutes: 40,
-          activityInstructions:
-            'Monte um plano profissional de 30 dias com passos pequenos e realistas. Para cada semana, ' +
-            'defina: o que você vai aprender, o que vai praticar e qual entrega vai comprovar esse ' +
-            'aprendizado. Ao final, registre o uso que fez de IA durante o processo e escolha o módulo ' +
-            'pago que resolve a sua maior lacuna.',
-        },
-        {
-          title: 'Guia de consulta rápida e referências oficiais',
-          type: LessonType.RICH_TEXT,
-          estimatedMinutes: 10,
-          summary:
-            'Use este guia para relembrar termos e consultar as fontes oficiais citadas no e-book.',
-          topics: ['Guia de consulta rápida', 'Referências oficiais'],
-        },
-        {
-          title: 'Questionário de conclusão',
-          type: LessonType.QUIZ,
-          estimatedMinutes: 10,
-          passingScore: 70,
-          questions: [
-            {
-              statement: 'O que é letramento tecnológico, segundo o módulo?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'Letramento tecnológico é usar ferramentas digitais com compreensão, segurança e senso ' +
-                'crítico. Não é decorar todos os menus.',
-              options: [
-                { text: 'Decorar todos os menus e botões dos programas.', isCorrect: false },
-                {
-                  text: 'Usar ferramentas digitais com compreensão, segurança e senso crítico.',
-                  isCorrect: true,
-                },
-                { text: 'Trabalhar exclusivamente na área de tecnologia.', isCorrect: false },
-                { text: 'Ter o computador mais moderno possível.', isCorrect: false },
-              ],
-            },
-            {
-              statement:
-                'Qual afirmação descreve corretamente a diferença entre conhecer uma ferramenta e ter proficiência nela?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'Saber abrir uma ferramenta não é o mesmo que ter proficiência. A evolução acontece com ' +
-                'prática, repetição, compreensão e evidência.',
-              options: [
-                {
-                  text: 'São a mesma coisa: abrir o programa já é proficiência.',
-                  isCorrect: false,
-                },
-                {
-                  text: 'Proficiência aparece com prática, repetição, compreensão e evidência.',
-                  isCorrect: true,
-                },
-                { text: 'Proficiência depende apenas de fazer um curso.', isCorrect: false },
-                {
-                  text: 'Proficiência é medida pelo tempo de uso do computador.',
-                  isCorrect: false,
-                },
-              ],
-            },
-            {
-              statement:
-                'Quais cuidados o módulo recomenda ao usar inteligência artificial no trabalho? (marque todas as corretas)',
-              type: QuestionType.MULTIPLE_CHOICE,
-              explanation:
-                'A IA é uma assistente: use-a apenas quando conseguir conferir a resposta e mantenha ' +
-                'dados, fatos e decisões sob controle humano.',
-              options: [
-                {
-                  text: 'Usar a IA apenas quando você conseguir conferir a resposta.',
-                  isCorrect: true,
-                },
-                { text: 'Manter fatos e decisões sob responsabilidade humana.', isCorrect: true },
-                {
-                  text: 'Aceitar qualquer resposta da IA sem revisar, para ganhar tempo.',
-                  isCorrect: false,
-                },
-                {
-                  text: 'Transformar lacunas de experiência em experiência inventada no currículo.',
-                  isCorrect: false,
-                },
-              ],
-            },
-            {
-              statement: 'O que este material se propõe a fazer?',
-              type: QuestionType.SINGLE_CHOICE,
-              explanation:
-                'O e-book afirma explicitamente que melhora preparo e clareza, mas não garante emprego, ' +
-                'salário, promoção ou aprovação em processo seletivo.',
-              options: [
-                { text: 'Garantir emprego e promoção após a conclusão.', isCorrect: false },
-                { text: 'Melhorar o preparo e a clareza profissional.', isCorrect: true },
-                { text: 'Substituir a experiência prática de trabalho.', isCorrect: false },
-                { text: 'Garantir aprovação em processos seletivos.', isCorrect: false },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
+  sections: FREE_MODULE_SECTIONS,
 };
 
 // ---------------------------------------------------------------------------

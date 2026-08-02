@@ -13,6 +13,12 @@ export interface CompletionEvidence {
   quizPassed: boolean;
   /** A atividade prática foi enviada. */
   activitySubmitted: boolean;
+  /**
+   * A entrega da atividade foi corrigida e aprovada — ou está aguardando
+   * revisão humana, caso em que o aluno não pode ficar parado por uma
+   * limitação nossa.
+   */
+  activityApproved: boolean;
   /** O aluno marcou explicitamente "concluí esta aula". */
   confirmed: boolean;
 }
@@ -109,6 +115,16 @@ export function evaluateCompletion(
             satisfied: false,
             reason: 'Envie a confirmação da atividade prática para concluir esta aula.',
           };
+
+    case LessonCompletionRule.ACTIVITY_APPROVED:
+      if (evidence.activityApproved) return { satisfied: true, reason: '' };
+
+      return {
+        satisfied: false,
+        reason: evidence.activitySubmitted
+          ? 'Sua entrega ainda não atingiu a nota mínima. Ajuste o relato com base nos comentários e envie de novo.'
+          : 'Envie sua entrega da atividade prática para que ela seja corrigida.',
+      };
 
     default:
       return { satisfied: false, reason: 'Não foi possível validar a conclusão desta aula.' };

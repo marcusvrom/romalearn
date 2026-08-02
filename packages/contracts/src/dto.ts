@@ -6,6 +6,8 @@
  * front-end a partir deles — a API é sempre a fonte da verdade.
  */
 import type {
+  ActivityGraderKind,
+  ActivityReviewStatus,
   AttemptStatus,
   CertificateScope,
   CertificateStatus,
@@ -187,6 +189,10 @@ export interface LessonContentDto {
   videoProvider: string | null;
   fileUrl: string | null;
   activityInstructions: string | null;
+  /** Rubrica da atividade prática, exibida antes do envio. */
+  activityRubric: ActivityRubricDto | null;
+  /** Última entrega do aluno nesta aula, já corrigida. */
+  activitySubmission: ActivitySubmissionDto | null;
   quiz: QuizDto | null;
   materials: LessonMaterialDto[];
   progress: LessonProgressDto;
@@ -246,6 +252,66 @@ export interface EnrolledCourseDto {
 // ---------------------------------------------------------------------------
 // Questionários
 // ---------------------------------------------------------------------------
+
+/** Um critério da rubrica de correção de uma atividade prática. */
+export interface RubricCriterionDto {
+  /** Identificador estável, usado na devolutiva e nos relatórios. */
+  id: string;
+  title: string;
+  /** Peso percentual. A soma dos critérios fecha em 100. */
+  weight: number;
+  /** O que a correção observa no relato do aluno. */
+  whatToObserve: string;
+}
+
+/**
+ * Rubrica de uma atividade prática.
+ *
+ * É pública para o aluno de propósito: ele precisa saber como será avaliado
+ * enquanto ainda pode melhorar a entrega.
+ */
+export interface ActivityRubricDto {
+  /** Nota mínima de aprovação, de 0 a 100. */
+  passingScore: number;
+  criteria: RubricCriterionDto[];
+  /** Situações que reprovam independentemente da nota. */
+  criticalFailures: string[];
+  /** Tamanho mínimo do relato para que a correção seja possível. */
+  minWords: number;
+}
+
+/** Nota e comentário de um critério na devolutiva. */
+export interface CriterionResultDto {
+  criterionId: string;
+  title: string;
+  weight: number;
+  /** Nota do critério, de 0 a 100. */
+  score: number;
+  /** Comentário curto explicando a nota. */
+  comment: string;
+}
+
+/** Devolutiva de uma entrega de atividade prática. */
+export interface ActivitySubmissionDto {
+  id: string;
+  lessonId: string;
+  notes: string;
+  submittedAt: string;
+  status: ActivityReviewStatus;
+  /** Nota final de 0 a 100; nula enquanto a correção não terminou. */
+  score: number | null;
+  approved: boolean;
+  criteria: CriterionResultDto[];
+  strengths: string[];
+  improvements: string[];
+  /** Falhas críticas encontradas, em texto pronto para exibição. */
+  criticalFailures: string[];
+  gradedBy: ActivityGraderKind | null;
+  gradedAt: string | null;
+  attemptNumber: number;
+  /** Mensagem em português explicando o estado atual da correção. */
+  statusMessage: string;
+}
 
 export interface QuizDto {
   id: string;

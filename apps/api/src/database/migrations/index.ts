@@ -1,4 +1,5 @@
 import { InitialSchema1785620295283 } from './1785620295283-InitialSchema';
+import { ActivityGrading1785899000000 } from './1785899000000-ActivityGrading';
 
 /**
  * Registro explícito das migrations, em ordem cronológica.
@@ -9,4 +10,4 @@ import { InitialSchema1785620295283 } from './1785620295283-InitialSchema';
  *
  * Ao gerar uma nova migration, acrescente-a no fim desta lista.
  */
-export const MIGRATIONS = [InitialSchema1785620295283];
+export const MIGRATIONS = [InitialSchema1785620295283, ActivityGrading1785899000000];

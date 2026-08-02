@@ -1,4 +1,9 @@
-import { LessonCompletionRule, LessonType, PublicationStatus } from '@romalearn/contracts';
+import {
+  ActivityRubricDto,
+  LessonCompletionRule,
+  LessonType,
+  PublicationStatus,
+} from '@romalearn/contracts';
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../database/base.entity';
 import { Quiz } from '../../assessment/entities/quiz.entity';
@@ -84,6 +89,16 @@ export class Lesson extends BaseEntity {
 
   @Column({ type: 'text', nullable: true })
   activityInstructions: string | null;
+
+  /**
+   * Rubrica usada para corrigir a entrega da atividade prática.
+   *
+   * Fica na aula, não no corretor: trocar de modelo de IA não muda o que é
+   * cobrado do aluno, e o painel administrativo edita os critérios sem
+   * alteração de código.
+   */
+  @Column({ type: 'jsonb', nullable: true })
+  activityRubric: ActivityRubricDto | null;
 
   /** Aula liberada como amostra na página de vendas. */
   @Column({ type: 'boolean', default: false })

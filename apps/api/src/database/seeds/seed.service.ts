@@ -36,6 +36,7 @@ import {
   SeedCourse,
   SeedLesson,
 } from './catalog-data';
+import { renderActivityContent, renderLessonContent } from './content/render-content';
 
 export interface SeedOptions {
   adminEmail: string;
@@ -196,10 +197,15 @@ export class SeedService {
           // Ordena global e continuamente dentro do curso.
           order: sectionIndex * 100 + lessonIndex,
           estimatedMinutes: lessonData.estimatedMinutes,
-          completionRule: DEFAULT_RULE_BY_TYPE[lessonData.type],
+          // Atividade com rubrica exige aprovação; sem rubrica, basta entregar.
+          completionRule:
+            lessonData.type === LessonType.PRACTICAL_ACTIVITY && lessonData.rubric
+              ? LessonCompletionRule.ACTIVITY_APPROVED
+              : DEFAULT_RULE_BY_TYPE[lessonData.type],
           completionThreshold: this.thresholdFor(lessonData),
           contentMarkdown: this.buildContent(lessonData, data),
           activityInstructions: lessonData.activityInstructions ?? null,
+          activityRubric: lessonData.rubric ?? null,
           // O primeiro capítulo de cada curso fica liberado como amostra.
           isPreview: sectionIndex === 0 && lessonIndex === 0,
           status: PublicationStatus.PUBLISHED,
@@ -225,19 +231,30 @@ export class SeedService {
   /**
    * Monta o conteúdo da aula a partir dos dados oficiais do e-book.
    *
-   * Deliberadamente não inventa texto didático: apresenta o resumo do
-   * capítulo, os tópicos e encaminha o aluno ao e-book oficial anexado.
+   * Quando o capítulo já foi transcrito em blocos estruturados, usa esse
+   * conteúdo. Caso contrário, cai no texto mínimo — resumo, tópicos e
+   * encaminhamento ao e-book — em vez de inventar material didático.
    */
   private buildContent(lesson: SeedLesson, course: SeedCourse): string | null {
     if (lesson.type === LessonType.QUIZ) return null;
 
     if (lesson.type === LessonType.PRACTICAL_ACTIVITY) {
+      if (lesson.rubric && lesson.rubricReference) {
+        return renderActivityContent(
+          lesson.activityInstructions ?? '',
+          lesson.rubric,
+          lesson.rubricReference,
+        );
+      }
+
       return (
         `## Atividade prática\n\n${lesson.activityInstructions ?? ''}\n\n` +
         '> Use sempre dados fictícios ou autorizados. Guarde a entrega em uma pasta de estudos.\n\n' +
         'Quando terminar, descreva no campo abaixo o que você fez e o que ainda ficou com dúvida.'
       );
     }
+
+    if (lesson.content) return renderLessonContent(lesson.content);
 
     const parts: string[] = [];
 

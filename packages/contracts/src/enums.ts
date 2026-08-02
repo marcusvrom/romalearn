@@ -60,6 +60,36 @@ export enum LessonCompletionRule {
   QUIZ_PASSED = 'QUIZ_PASSED',
   /** Exige o envio da confirmação da atividade prática. */
   ACTIVITY_SUBMITTED = 'ACTIVITY_SUBMITTED',
+  /** Exige que a entrega da atividade tenha sido corrigida e aprovada. */
+  ACTIVITY_APPROVED = 'ACTIVITY_APPROVED',
+}
+
+/** Situação da correção de uma entrega de atividade prática. */
+export enum ActivityReviewStatus {
+  /** Entregue, ainda na fila de correção. */
+  SUBMITTED = 'SUBMITTED',
+  /** Correção em andamento. */
+  GRADING = 'GRADING',
+  /** Corrigida e aprovada. */
+  APPROVED = 'APPROVED',
+  /** Corrigida e reprovada: o aluno pode reenviar com os ajustes. */
+  NEEDS_REVISION = 'NEEDS_REVISION',
+  /**
+   * A correção automática não pôde decidir com segurança e a entrega
+   * aguarda uma pessoa da equipe. O aluno nunca fica bloqueado por uma
+   * falha nossa: a aula é liberada e a revisão acontece depois.
+   */
+  PENDING_HUMAN_REVIEW = 'PENDING_HUMAN_REVIEW',
+}
+
+/** Quem produziu a correção registrada na entrega. */
+export enum ActivityGraderKind {
+  /** Verificação determinística feita pela própria API, sem custo. */
+  RULES = 'RULES',
+  /** Modelo de linguagem, através do adapter configurado. */
+  AI = 'AI',
+  /** Pessoa da equipe, pelo painel administrativo. */
+  HUMAN = 'HUMAN',
 }
 
 export enum ProgressStatus {

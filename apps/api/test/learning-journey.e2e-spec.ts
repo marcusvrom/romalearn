@@ -1,4 +1,6 @@
 import {
+  ActivityReviewStatus,
+  ActivityRubricDto,
   CertificateStatus,
   EnrollmentStatus,
   LessonType,
@@ -289,6 +291,83 @@ describe('Jornada de aprendizagem (e2e)', () => {
     });
   });
 
+  describe('Atividade prática corrigida', () => {
+    const SLUG = 'pratica-mapa-de-habilidades-e-primeira-evidencia';
+
+    it('entrega a rubrica antes do envio', async () => {
+      const lesson = await api.get(
+        `/learning/courses/${FREE_COURSE_SLUG}/lessons/${SLUG}`,
+        student,
+      );
+
+      expect(lesson.body.activityRubric.passingScore).toBe(70);
+      expect(lesson.body.activityRubric.criteria.length).toBeGreaterThan(0);
+      expect(lesson.body.activityRubric.criticalFailures.length).toBeGreaterThan(0);
+
+      const pesos = lesson.body.activityRubric.criteria.reduce(
+        (soma: number, criterio: { weight: number }) => soma + criterio.weight,
+        0,
+      );
+      expect(pesos).toBe(100);
+    });
+
+    it('reprova relato curto demais e explica o motivo', async () => {
+      const lesson = await api.get(
+        `/learning/courses/${FREE_COURSE_SLUG}/lessons/${SLUG}`,
+        student,
+      );
+
+      const resposta = await api
+        .post(
+          `/learning/lessons/${lesson.body.id}/activity`,
+          { notes: 'Fiz a atividade.' },
+          student,
+        )
+        .expect(200);
+
+      expect(resposta.body.status).toBe(ActivityReviewStatus.NEEDS_REVISION);
+      expect(resposta.body.approved).toBe(false);
+      expect(resposta.body.improvements[0]).toContain('palavras');
+    });
+
+    it('não conclui a aula enquanto a entrega não é aprovada', async () => {
+      const lesson = await api.get(
+        `/learning/courses/${FREE_COURSE_SLUG}/lessons/${SLUG}`,
+        student,
+      );
+
+      const resposta = await api
+        .post(`/learning/lessons/${lesson.body.id}/complete`, { confirmed: true }, student)
+        .expect(400);
+
+      expect(resposta.body.message).toContain('nota mínima');
+    });
+
+    it('aprova a entrega que trata de todos os critérios e libera a conclusão', async () => {
+      const lesson = await api.get(
+        `/learning/courses/${FREE_COURSE_SLUG}/lessons/${SLUG}`,
+        student,
+      );
+
+      const resposta = await api
+        .post(
+          `/learning/lessons/${lesson.body.id}/activity`,
+          { notes: relatoQueCobreARubrica(lesson.body.activityRubric) },
+          student,
+        )
+        .expect(200);
+
+      expect(resposta.body.approved).toBe(true);
+      expect(resposta.body.score).toBeGreaterThanOrEqual(70);
+      // A tentativa anterior foi contada: o histórico do aluno é um só.
+      expect(resposta.body.attemptNumber).toBe(2);
+
+      await api
+        .post(`/learning/lessons/${lesson.body.id}/complete`, { confirmed: true }, student)
+        .expect(200);
+    });
+  });
+
   describe('Conclusão do curso e certificado', () => {
     it('lista os requisitos que ainda faltam', async () => {
       const player = await api.get(`/learning/courses/${FREE_COURSE_SLUG}/player`, student);
@@ -431,6 +510,34 @@ async function correctAnswersFor(context: TestContext, quizId: string) {
   }));
 }
 
+/**
+ * Relato de atividade que trata de todos os critérios da rubrica.
+ *
+ * Reproduz o que um aluno aplicado escreveria: um parágrafo por critério,
+ * usando os termos do próprio enunciado. Sem isso a entrega é reprovada — que
+ * é exatamente o comportamento esperado da regra ACTIVITY_APPROVED.
+ */
+function relatoQueCobreARubrica(rubric: ActivityRubricDto | null): string {
+  if (!rubric) return 'Atividade concluída com dados fictícios durante o teste.';
+
+  const paragrafos = rubric.criteria.map(
+    (criterio) =>
+      `Sobre ${criterio.title}: fiz esta parte com dados fictícios em uma pasta de estudos. ` +
+      `${criterio.whatToObserve} Conferi o resultado abrindo o arquivo final e revisando cada item.`,
+  );
+
+  let relato = paragrafos.join('\n\n');
+
+  // Também cumpre o tamanho mínimo pedido pela rubrica.
+  const complemento =
+    ' Registrei o passo a passo, guardei o arquivo na pasta de estudos e anotei o que revisar depois.';
+  while (relato.trim().split(/\s+/).length < rubric.minWords) {
+    relato += complemento;
+  }
+
+  return relato;
+}
+
 /** Cumpre de fato cada regra de conclusão do curso, aula por aula. */
 async function completeEntireCourse(
   context: TestContext,
@@ -452,7 +559,7 @@ async function completeEntireCourse(
       if (entity.type === LessonType.PRACTICAL_ACTIVITY) {
         await api.post(
           `/learning/lessons/${entity.id}/activity`,
-          { notes: 'Atividade concluída com dados fictícios durante o teste.' },
+          { notes: relatoQueCobreARubrica(lesson.body.activityRubric) },
           session,
         );
       }

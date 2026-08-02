@@ -6,6 +6,7 @@ const evidence = (patch: Partial<CompletionEvidence> = {}): CompletionEvidence =
   watchRatio: 0,
   quizPassed: false,
   activitySubmitted: false,
+  activityApproved: false,
   confirmed: false,
   ...patch,
 });
@@ -116,6 +117,40 @@ describe('Regras de conclusão de aula', () => {
       expect(evaluateCompletion(lesson, evidence({ activitySubmitted: true })).satisfied).toBe(
         true,
       );
+    });
+  });
+
+  describe('ACTIVITY_APPROVED', () => {
+    const lesson = {
+      type: LessonType.PRACTICAL_ACTIVITY,
+      completionRule: LessonCompletionRule.ACTIVITY_APPROVED,
+      completionThreshold: null,
+      estimatedMinutes: 30,
+    };
+
+    it('não aceita entrega apenas enviada', () => {
+      const check = evaluateCompletion(lesson, evidence({ activitySubmitted: true }));
+
+      expect(check.satisfied).toBe(false);
+      expect(check.reason).toContain('nota mínima');
+    });
+
+    it('pede a entrega quando ainda não houve nenhuma', () => {
+      const check = evaluateCompletion(lesson, evidence());
+
+      expect(check.satisfied).toBe(false);
+      expect(check.reason).toContain('Envie sua entrega');
+    });
+
+    it('aceita entrega aprovada', () => {
+      expect(
+        evaluateCompletion(lesson, evidence({ activitySubmitted: true, activityApproved: true }))
+          .satisfied,
+      ).toBe(true);
+    });
+
+    it('não bloqueia o aluno quando a confirmação é declarada sem entrega', () => {
+      expect(evaluateCompletion(lesson, evidence({ confirmed: true })).satisfied).toBe(false);
     });
   });
 });

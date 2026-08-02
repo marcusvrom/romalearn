@@ -112,6 +112,23 @@ export const configuration = () => {
       /** Minutos até um pagamento pendente expirar automaticamente. */
       expirationMinutes: num('PAYMENT_EXPIRATION_MINUTES', 60 * 24),
     },
+    /**
+     * Correção automática das atividades práticas.
+     *
+     * `rules` não faz chamada externa e não custa nada; `llm` usa um provedor
+     * compatível com a API de chat da OpenAI — DeepSeek, por exemplo — sempre
+     * com um teto de caracteres e de tokens por correção.
+     */
+    activityGrading: {
+      driver: str('ACTIVITY_GRADER', 'rules') as 'rules' | 'llm',
+      baseUrl: str('ACTIVITY_GRADER_BASE_URL', 'https://api.deepseek.com'),
+      model: str('ACTIVITY_GRADER_MODEL', 'deepseek-chat'),
+      apiKey: str('ACTIVITY_GRADER_API_KEY'),
+      /** Corta o relato antes de enviar, para limitar o custo por correção. */
+      maxInputChars: num('ACTIVITY_GRADER_MAX_INPUT_CHARS', 6000),
+      maxOutputTokens: num('ACTIVITY_GRADER_MAX_OUTPUT_TOKENS', 900),
+      timeoutMs: num('ACTIVITY_GRADER_TIMEOUT_MS', 30_000),
+    },
     seed: {
       adminEmail: str('SEED_ADMIN_EMAIL', 'admin@romalearn.local'),
       adminPassword: str('SEED_ADMIN_PASSWORD', 'Admin@123456'),
