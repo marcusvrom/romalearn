@@ -55,6 +55,7 @@ Recursos implementados:
 - preferências persistidas no aparelho;
 - compatibilidade com SSR;
 - controles acessíveis por teclado e áreas de status;
+- foco visível e respeito a `prefers-reduced-motion` no player;
 - remoção de scripts, iframes, código e elementos ocultos da narração;
 - analytics de início, velocidade e conclusão, sem dados pessoais.
 
