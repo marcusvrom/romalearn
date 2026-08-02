@@ -3,6 +3,11 @@
   margin: 0 auto;
 }
 
+.lesson :focus-visible {
+  outline: 3px solid var(--rl-brand-400);
+  outline-offset: 3px;
+}
+
 .lesson__head {
   margin-bottom: var(--rl-space-8);
 }
@@ -45,10 +50,6 @@
   margin: 0;
 }
 
-// ---------------------------------------------------------------------------
-// Atividade prática
-// ---------------------------------------------------------------------------
-
 .activity {
   margin: var(--rl-space-10) 0;
   background: var(--rl-surface-muted);
@@ -61,10 +62,6 @@
 .activity textarea {
   margin-bottom: var(--rl-space-4);
 }
-
-// ---------------------------------------------------------------------------
-// Questionário
-// ---------------------------------------------------------------------------
 
 .quiz {
   margin: var(--rl-space-10) 0;
@@ -133,10 +130,6 @@
   border-color: var(--rl-brand-600);
   background: var(--rl-brand-50);
 }
-
-// ---------------------------------------------------------------------------
-// Resultado
-// ---------------------------------------------------------------------------
 
 .result {
   text-align: center;
@@ -211,10 +204,6 @@
   font-style: italic;
 }
 
-// ---------------------------------------------------------------------------
-// Materiais
-// ---------------------------------------------------------------------------
-
 .materials {
   margin: var(--rl-space-10) 0;
 }
@@ -243,10 +232,6 @@
   font-weight: var(--rl-weight-semibold);
 }
 
-// ---------------------------------------------------------------------------
-// Navegação inferior
-// ---------------------------------------------------------------------------
-
 .actions {
   display: flex;
   flex-direction: column;
@@ -273,10 +258,6 @@
   margin-top: var(--rl-space-4);
   text-align: center;
 }
-
-// ---------------------------------------------------------------------------
-// Devolutiva da atividade prática
-// ---------------------------------------------------------------------------
 
 .devolutiva {
   border-left: 4px solid var(--rl-border);
@@ -416,4 +397,15 @@
 
 .verificacoes--falhou {
   color: var(--rl-danger-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson *,
+  .lesson *::before,
+  .lesson *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
