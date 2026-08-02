@@ -61,18 +61,24 @@ export class SeedService {
   constructor(private readonly dataSource: DataSource) {}
 
   async run(options: SeedOptions): Promise<void> {
+    const inicio = Date.now();
     this.logger.log('Iniciando seed…');
 
     await this.seedSettings();
     const instructor = await this.seedInstructor();
     const courses = await this.seedCourses(instructor.id);
+
+    this.logger.log('Trilha, produtos e ofertas…');
     const program = await this.seedProgram(courses);
     await this.seedCommerce(courses, program);
+
+    this.logger.log('Contas locais…');
     const admin = await this.seedAdmin(options);
     await this.seedDemoStudent(options, courses);
 
+    const segundos = Math.round((Date.now() - inicio) / 100) / 10;
     this.logger.log(
-      `Seed concluído. Administrador local: ${admin.email} — ` +
+      `Seed concluído em ${segundos}s. Administrador local: ${admin.email} — ` +
         `${courses.size} cursos e 1 trilha disponíveis.`,
     );
   }
@@ -127,7 +133,11 @@ export class SeedService {
     const courseRepository = this.dataSource.getRepository(Course);
     const result = new Map<string, Course>();
 
-    for (const data of SEED_COURSES) {
+    for (const [indice, data] of SEED_COURSES.entries()) {
+      // Cada curso leva alguns segundos: sem este aviso o terminal fica mudo
+      // por bastante tempo e o seed parece travado.
+      this.logger.log(`Curso ${indice + 1}/${SEED_COURSES.length}: ${data.title}…`);
+
       let course = await courseRepository.findOne({ where: { slug: data.slug } });
 
       const payload = {

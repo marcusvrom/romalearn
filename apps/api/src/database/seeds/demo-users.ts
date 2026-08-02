@@ -93,19 +93,32 @@ export class DemoUsersSeeder {
       return [];
     }
 
+    /*
+     * Cada persona passa pelos fluxos reais da aplicação — matrícula, aulas,
+     * questionários, compra, certificado. Algumas levam vários segundos, então
+     * o nome aparece antes de começar: sem isso o terminal fica mudo e o
+     * comando parece travado.
+     */
+    const etapas: [string, () => Promise<DemoPersona>][] = [
+      ['aluno recém-cadastrado', () => this.newStudent(options)],
+      ['aluno matriculado', () => this.enrolledStudent(options)],
+      ['aluno em progresso', () => this.inProgressStudent(options)],
+      ['concluinte com certificado', () => this.graduatedStudent(options)],
+      ['certificado revogado', () => this.revokedCertificateStudent(options)],
+      ['comprador da trilha', () => this.programBuyer(options)],
+      ['pagamento pendente', () => this.pendingPaymentStudent(options)],
+      ['pagamento recusado', () => this.rejectedPaymentStudent(options)],
+      ['conta suspensa', () => this.suspendedStudent(options)],
+      ['gestor de conteúdo', () => this.contentManager(options)],
+      ['suporte', () => this.support(options)],
+    ];
+
     const personas: DemoPersona[] = [];
 
-    personas.push(await this.newStudent(options));
-    personas.push(await this.enrolledStudent(options));
-    personas.push(await this.inProgressStudent(options));
-    personas.push(await this.graduatedStudent(options));
-    personas.push(await this.revokedCertificateStudent(options));
-    personas.push(await this.programBuyer(options));
-    personas.push(await this.pendingPaymentStudent(options));
-    personas.push(await this.rejectedPaymentStudent(options));
-    personas.push(await this.suspendedStudent(options));
-    personas.push(await this.contentManager(options));
-    personas.push(await this.support(options));
+    for (const [indice, [descricao, criar]] of etapas.entries()) {
+      this.logger.log(`Conta ${indice + 1}/${etapas.length}: ${descricao}…`);
+      personas.push(await criar());
+    }
 
     this.logger.log(`${personas.length} contas de demonstração disponíveis.`);
     return personas;

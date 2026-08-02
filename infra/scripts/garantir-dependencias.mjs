@@ -39,7 +39,12 @@ if (carimboAtual() === esperado) process.exit(0);
 
 console.log('\nAs dependências mudaram desde a última instalação. Rodando pnpm install…\n');
 
-const resultado = spawnSync('pnpm', ['install'], { cwd: raiz, stdio: 'inherit', shell: true });
+// No Windows o executável é `pnpm.cmd`. Resolver o nome aqui evita `shell: true`,
+// que o Node 22 adverte por não escapar argumentos e que atrapalha o
+// encaminhamento de Ctrl+C para o processo filho.
+const comando = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
+
+const resultado = spawnSync(comando, ['install'], { cwd: raiz, stdio: 'inherit' });
 
 if (resultado.status !== 0) {
   console.error('\nA instalação das dependências falhou. Rode `pnpm install` e veja a mensagem.\n');

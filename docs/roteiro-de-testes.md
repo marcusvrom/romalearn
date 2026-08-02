@@ -454,6 +454,7 @@ cabeçalho e no rodapé. Depois volte para _RomaLearn_.
 | Catálogo vazio no site                 | Seed não rodou               | `pnpm seed:all`                                      |
 | `Catálogo vazio` ao rodar `seed:demo`  | Faltou o `pnpm seed` antes   | `pnpm seed && pnpm seed:demo`                        |
 | `Cannot find module` em algum pacote   | Dependências desatualizadas  | `pnpm preparar` (ou `pnpm install`)                  |
+| Seed encerra com código 3221225786     | Ctrl+C durante a execução    | Rode `pnpm seed` de novo e aguarde                   |
 | Erro de tipo em `@romalearn/contracts` | Contratos desatualizados     | `pnpm preparar`                                      |
 | E-mails não aparecem                   | Driver errado                | Confirme `MAIL_DRIVER=smtp` e a porta 1025 no `.env` |
 | Porta 4200 ou 3333 ocupada             | Outro processo               | Mude `API_PORT` no `.env` ou encerre o processo      |
@@ -478,6 +479,11 @@ apague o cache e suba de novo:
 rm -rf apps/web/.angular/cache
 pnpm dev
 ```
+
+**O seed parece travado.** Ele imprime o curso e a conta que está processando.
+Se o último aviso tem menos de um minuto, está trabalhando — aguarde. Em uma
+máquina com Docker, `pnpm seed:all` leva de trinta segundos a poucos minutos na
+primeira vez.
 
 **Linhas `401 SESSION_EXPIRED` em `/api/auth/me` no log da API.** São normais: o site pergunta
 "existe sessão?" a cada carregamento de página, e a resposta para quem não está logado é 401. Não
