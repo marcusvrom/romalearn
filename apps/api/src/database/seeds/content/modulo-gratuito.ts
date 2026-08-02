@@ -1,4 +1,5 @@
 import { LessonType, QuestionType } from '@romalearn/contracts';
+import type { SeedLesson, SeedQuestion } from '../catalog-data';
 import { ActivityRubric, LessonContent } from './content-types';
 import type { SeedSection } from '../catalog-data';
 
@@ -12,6 +13,18 @@ import type { SeedSection } from '../catalog-data';
  */
 
 const EBOOK = 'Módulo Extra Gratuito';
+
+/** Uma pergunta de múltipla escolha simples. */
+const QUESTAO = (
+  statement: string,
+  explanation: string,
+  options: [string, boolean][],
+): SeedQuestion => ({
+  statement,
+  type: QuestionType.SINGLE_CHOICE,
+  explanation,
+  options: options.map(([text, isCorrect]) => ({ text, isCorrect })),
+});
 
 // ---------------------------------------------------------------------------
 // Parte 1 — Conhecimento que vira valor
@@ -817,6 +830,213 @@ const GUIA_RAPIDO: LessonContent = {
   ],
 };
 
+/** Questionário curto de fixação, ao fim de uma parte. */
+const FIXACAO = (titulo: string, questions: SeedQuestion[]): SeedLesson => ({
+  title: titulo,
+  type: LessonType.QUIZ,
+  estimatedMinutes: 8,
+  passingScore: 70,
+  summary: 'Confira o que ficou desta parte antes de avançar. Tentativas ilimitadas.',
+  questions,
+});
+
+const QUESTIONARIOS: Record<string, SeedLesson> = {
+  'Parte 1 — Conhecimento que vira valor': FIXACAO('Fixação — Conhecimento que vira valor', [
+    QUESTAO(
+      'O que é letramento tecnológico?',
+      'É usar ferramentas digitais com compreensão, segurança e senso crítico — não decorar menus.',
+      [
+        ['Usar ferramentas digitais com compreensão, segurança e senso crítico.', true],
+        ['Decorar todos os menus dos programas.', false],
+        ['Trabalhar na área de tecnologia.', false],
+        ['Ter o computador mais moderno.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você concluiu uma tarefa com apoio do material, mas ainda depende de copiar cada passo. Em que degrau está?',
+      'Executar é concluir a tarefa com apoio; repetir é fazer de novo com consistência, sem copiar passo a passo.',
+      [
+        ['Executar.', true],
+        ['Repetir.', false],
+        ['Explicar.', false],
+        ['Melhorar.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual frase é uma evidência profissional, e não apenas uma informação?',
+      'A evidência mostra ação, ferramenta, problema, entrega e como foi conferida.',
+      [
+        [
+          'Criei uma planilha de estudo de despesas, usei filtros e conferi os totais por dois métodos.',
+          true,
+        ],
+        ['Sei Excel.', false],
+        ['Tenho conhecimento de informática.', false],
+        ['Uso IA no dia a dia.', false],
+      ],
+    ),
+    QUESTAO(
+      'Pode usar um projeto fictício no portfólio?',
+      'Pode, desde que identificado como exercício ou estudo. Nunca apresente como experiência real.',
+      [
+        ['Sim, desde que identificado como projeto de estudo.', true],
+        ['Não, projetos fictícios nunca podem aparecer.', false],
+        ['Sim, e pode ser apresentado como experiência de trabalho.', false],
+        ['Só se a empresa citada existir de verdade.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual destes itens este material pode oferecer?',
+      'O e-book é explícito: melhora preparo, evidências e clareza; não garante contratação nem salário.',
+      [
+        ['Preparo, evidências e clareza para comunicar competências.', true],
+        ['Garantia de contratação.', false],
+        ['Salário específico.', false],
+        ['Aprovação em processo seletivo.', false],
+      ],
+    ),
+    QUESTAO(
+      'O que a estrutura do miniportfólio registra, além da entrega?',
+      'Ela registra situação, objetivo, ferramentas, processo, entrega, verificação e aprendizado.',
+      [
+        ['Como você pensou, executou e conferiu.', true],
+        ['Apenas o arquivo final.', false],
+        ['O tempo gasto em cada tarefa.', false],
+        ['A nota atribuída pelo professor.', false],
+      ],
+    ),
+  ]),
+
+  'Parte 2 — Visibilidade e relacionamentos': FIXACAO('Fixação — Visibilidade e relacionamentos', [
+    QUESTAO(
+      'Qual é o modelo de título profissional apresentado no capítulo?',
+      'O modelo é: [área ou função] | [2 ou 3 competências] | [problema ou tipo de entrega].',
+      [
+        ['Área ou função | competências | problema ou tipo de entrega.', true],
+        ['Nome completo | cidade | telefone.', false],
+        ['Uma lista com todas as ferramentas que você já viu.', false],
+        ['Uma frase motivacional.', false],
+      ],
+    ),
+    QUESTAO(
+      'Antes de publicar um arquivo na área de Destaques, o que remover?',
+      'Remova nomes, dados, logotipos, números internos e qualquer material que você não tenha direito de divulgar.',
+      [
+        ['Nomes, dados, logotipos e números internos.', true],
+        ['Todas as imagens.', false],
+        ['As datas dos projetos.', false],
+        ['A descrição do processo.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual mensagem de conexão segue a orientação do capítulo?',
+      'Prefira contexto real e específico, sem pedido imediato de vaga ou indicação.',
+      [
+        [
+          'Vi seu conteúdo sobre X e o ponto sobre Y me ajudou. Gostaria de acompanhar seus próximos conteúdos.',
+          true,
+        ],
+        ['Olá, tem vaga na sua empresa?', false],
+        ['Pode me indicar para alguma oportunidade?', false],
+        ['Preciso de uma resposta ainda hoje.', false],
+      ],
+    ),
+    QUESTAO(
+      'O que caracteriza networking, segundo o capítulo?',
+      'Networking é relacionamento construído com tempo e troca, não coleção de conexões.',
+      [
+        ['Construir relações que fazem sentido ao longo do tempo.', true],
+        ['Ter o maior número possível de conexões.', false],
+        ['Enviar a mesma mensagem para muitas pessoas.', false],
+        ['Pedir indicação logo no primeiro contato.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual destes é sinal de uma vaga suspeita?',
+      'Cobrança para participar do processo é um dos sinais listados no capítulo.',
+      [
+        ['Existe cobrança para participar do processo seletivo.', true],
+        ['A vaga pede experiência prévia.', false],
+        ['A empresa tem página oficial.', false],
+        ['O processo tem várias etapas.', false],
+      ],
+    ),
+    QUESTAO(
+      'Para que serve o controle de candidaturas?',
+      'Ele evita perder prazos e ajuda a descobrir padrões, lacunas e próximos passos.',
+      [
+        ['Não perder prazos e descobrir padrões e lacunas.', true],
+        ['Aumentar o número de currículos enviados por dia.', false],
+        ['Comparar salários entre empresas.', false],
+        ['Guardar os dados pessoais dos recrutadores.', false],
+      ],
+    ),
+  ]),
+
+  'Parte 3 — Trabalho ampliado por IA': FIXACAO('Fixação — Trabalho ampliado por IA', [
+    QUESTAO(
+      'Qual é a regra de ouro do fluxo seguro de trabalho com IA?',
+      'A IA pode preparar; a pessoa responsável precisa verificar e aprovar.',
+      [
+        ['A IA prepara; a pessoa verifica e aprova.', true],
+        ['A IA decide e a pessoa executa.', false],
+        ['A pessoa prepara e a IA aprova.', false],
+        ['A IA substitui a revisão quando o texto está bom.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual destes papéis da IA está descrito no capítulo?',
+      'Planejadora, rascunhadora, explicadora e revisora são os quatro papéis listados.',
+      [
+        ['Revisora: aponta lacunas e inconsistências, e você decide o que aceitar.', true],
+        ['Decisora: escolhe a prioridade por você.', false],
+        ['Testemunha: confirma sua experiência profissional.', false],
+        ['Auditora: garante que os dados estão corretos.', false],
+      ],
+    ),
+    QUESTAO(
+      'O que nunca deve ser enviado a uma ferramenta de IA?',
+      'Senhas, documentos, dados de clientes e conteúdo interno exigem autorização e ambiente aprovado.',
+      [
+        ['Senhas, dados de clientes e conteúdo interno sem autorização.', true],
+        ['Um texto público de descrição de vaga.', false],
+        ['Sua própria lista de competências verdadeiras.', false],
+        ['Um rascunho de e-mail sem dados sensíveis.', false],
+      ],
+    ),
+    QUESTAO(
+      'Ao comparar uma vaga com suas competências usando IA, o que conferir na resposta?',
+      'Confira se a IA usou só as informações fornecidas e não transformou lacuna em experiência.',
+      [
+        ['Se nenhuma lacuna virou experiência inventada.', true],
+        ['Se a resposta ficou com o tamanho certo.', false],
+        ['Se o texto está em linguagem formal.', false],
+        ['Se a IA sugeriu mais de dez práticas.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você quer aprender a controlar e analisar dados. Qual módulo o e-book indica?',
+      'A tabela de próximos passos indica o Módulo 3 — Microsoft Excel para controlar, calcular e analisar dados.',
+      [
+        ['Módulo 3 — Microsoft Excel.', true],
+        ['Módulo 1 — Computação e Windows.', false],
+        ['Módulo 2 — Microsoft Word.', false],
+        ['Módulo 4 — Microsoft PowerPoint.', false],
+      ],
+    ),
+    QUESTAO(
+      'Onde a mudança sugerida pela IA deve ser finalizada?',
+      'O fluxo pede finalizar no Word, Excel, PowerPoint ou sistema adequado, e conferir o resultado.',
+      [
+        ['Na ferramenta adequada, conferindo o resultado.', true],
+        ['Na própria conversa com a IA.', false],
+        ['Em um bloco de notas, para não perder.', false],
+        ['Diretamente no e-mail para o destinatário.', false],
+      ],
+    ),
+  ]),
+};
+
 // ---------------------------------------------------------------------------
 // Seções
 // ---------------------------------------------------------------------------
@@ -879,6 +1099,7 @@ export const FREE_MODULE_SECTIONS: SeedSection[] = [
           pages: '10',
         },
       },
+      QUESTIONARIOS['Parte 1 — Conhecimento que vira valor'],
     ],
   },
   {
@@ -938,6 +1159,7 @@ export const FREE_MODULE_SECTIONS: SeedSection[] = [
           pages: '14–15',
         },
       },
+      QUESTIONARIOS['Parte 2 — Visibilidade e relacionamentos'],
     ],
   },
   {
@@ -972,6 +1194,7 @@ export const FREE_MODULE_SECTIONS: SeedSection[] = [
           pages: '17–19',
         },
       },
+      QUESTIONARIOS['Parte 3 — Trabalho ampliado por IA'],
     ],
   },
   {
@@ -1084,6 +1307,66 @@ export const FREE_MODULE_SECTIONS: SeedSection[] = [
               { text: 'Garantir aprovação em processos seletivos.', isCorrect: false },
             ],
           },
+          QUESTAO(
+            'Qual é a fórmula de uma boa descrição de evidência?',
+            'Ação + ferramenta + problema + entrega + resultado verificável.',
+            [
+              ['Ação + ferramenta + problema + entrega + resultado verificável.', true],
+              ['Cargo + empresa + tempo de casa.', false],
+              ['Curso + carga horária + nota.', false],
+              ['Ferramenta + anos de experiência.', false],
+            ],
+          ),
+          QUESTAO(
+            'Qual é a primeira etapa do caminho de networking em três passos?',
+            'Observar: conhecer o trabalho, os interesses e o contexto da pessoa antes de interagir.',
+            [
+              ['Observar o trabalho e o contexto da pessoa.', true],
+              ['Enviar o convite de conexão.', false],
+              ['Pedir uma indicação.', false],
+              ['Publicar um artigo longo.', false],
+            ],
+          ),
+          QUESTAO(
+            'O que o recurso Open to Work permite?',
+            'Indicar interesse em oportunidades e escolher quem pode ver essa informação.',
+            [
+              ['Indicar interesse em oportunidades e controlar quem vê.', true],
+              ['Garantir que recrutadores entrem em contato.', false],
+              ['Publicar o currículo automaticamente.', false],
+              ['Ocultar seu perfil de outras empresas.', false],
+            ],
+          ),
+          QUESTAO(
+            'Na semana 1 do plano de 30 dias, qual é a entrega?',
+            'A semana 1 é de diagnóstico: mapa de competências e três prioridades.',
+            [
+              ['Mapa de competências e três prioridades.', true],
+              ['Perfil revisado e duas conexões.', false],
+              ['Cinco registros de candidatura.', false],
+              ['Uma apresentação de três minutos.', false],
+            ],
+          ),
+          QUESTAO(
+            'Qual critério tem o maior peso na avaliação do projeto final?',
+            'Verdade e clareza vale 25%, o maior peso da tabela de critérios.',
+            [
+              ['Verdade e clareza (25%).', true],
+              ['Networking (15%).', false],
+              ['IA responsável (15%).', false],
+              ['Plano de evolução (10%).', false],
+            ],
+          ),
+          QUESTAO(
+            'O que caracteriza uma falha crítica no projeto final?',
+            'Experiência inventada, dado sensível exposto, spam, IA não revisada ou promessa de emprego.',
+            [
+              ['Apresentar experiência inventada como real.', true],
+              ['Entregar o projeto com uma semana de atraso.', false],
+              ['Escolher uma área diferente da sugerida.', false],
+              ['Usar menos de cinco competências no mapa.', false],
+            ],
+          ),
         ],
       },
     ],

@@ -93,7 +93,9 @@ export class RulesActivityGrader implements ActivityGrader {
   ]);
 
   async grade(input: GradingInput): Promise<GradingOutcome> {
-    const words = this.tokenize(input.notes);
+    // O arquivo entregue conta junto com o relato: um .docx com o documento
+    // pronto é evidência tão legítima quanto a descrição escrita.
+    const words = this.tokenize(`${input.notes} ${input.attachmentText}`);
     const present = new Set(words);
 
     const criteria = input.rubric.criteria.map((criterion) => {

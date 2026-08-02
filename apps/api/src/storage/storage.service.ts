@@ -17,6 +17,20 @@ export const ALLOWED_UPLOAD_TYPES: Record<string, string[]> = {
     'application/zip',
   ],
   image: ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'],
+  /**
+   * Entregas de atividade. Sempre privadas: o arquivo do aluno só é servido
+   * por URL assinada, para ele mesmo e para a equipe que corrige.
+   */
+  submission: [
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'text/csv',
+    'text/plain',
+    'application/pdf',
+    'image/png',
+    'image/jpeg',
+  ],
 };
 
 const EXTENSION_BY_TYPE: Record<string, string> = {
@@ -30,6 +44,7 @@ const EXTENSION_BY_TYPE: Record<string, string> = {
   'image/jpeg': '.jpg',
   'image/webp': '.webp',
   'image/svg+xml': '.svg',
+  'text/plain': '.txt',
 };
 
 export interface UploadRequest {

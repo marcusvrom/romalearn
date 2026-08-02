@@ -1,4 +1,5 @@
-import type { SeedLesson, SeedSection } from '../catalog-data';
+import type { ActivityAttachmentPolicyDto } from '@romalearn/contracts';
+import type { SeedLesson, SeedQuestion, SeedSection } from '../catalog-data';
 import type { LessonContent } from './content-types';
 
 /**
@@ -12,6 +13,20 @@ import type { LessonContent } from './content-types';
 export interface SectionEnrichment {
   conteudo: Record<string, LessonContent>;
   rubricas: Record<string, Pick<SeedLesson, 'rubric' | 'rubricReference'>>;
+  /** Política de anexo por título de aula. */
+  anexos?: Record<string, ActivityAttachmentPolicyDto>;
+  /**
+   * Questionário de fixação acrescentado ao fim de uma parte, indexado pelo
+   * título da parte. Serve para o aluno conferir o que reteve antes de
+   * avançar, sem esperar o questionário final.
+   */
+  questionarios?: Record<string, SeedLesson>;
+  /**
+   * Perguntas acrescentadas a um questionário que já existe na estrutura,
+   * indexadas pelo título da aula. Usado para ampliar o questionário final
+   * sem reescrever a estrutura do curso.
+   */
+  perguntas?: Record<string, SeedQuestion[]>;
 }
 
 /**
@@ -27,25 +42,55 @@ export function enrichSections(
 ): SeedSection[] {
   const usados = new Set<string>();
 
-  const resultado = sections.map((section) => ({
-    ...section,
-    lessons: section.lessons.map((lesson) => {
+  const partesUsadas = new Set<string>();
+
+  const resultado = sections.map((section) => {
+    const lessons = section.lessons.map((lesson) => {
       const conteudo = enrichment.conteudo[lesson.title];
       const rubrica = enrichment.rubricas[lesson.title];
-      if (conteudo || rubrica) usados.add(lesson.title);
+      const anexo = enrichment.anexos?.[lesson.title];
+      const extras = enrichment.perguntas?.[lesson.title];
+      if (conteudo || rubrica || anexo || extras) usados.add(lesson.title);
 
-      return { ...lesson, ...(conteudo ? { content: conteudo } : {}), ...(rubrica ?? {}) };
-    }),
-  }));
+      return {
+        ...lesson,
+        ...(conteudo ? { content: conteudo } : {}),
+        ...(rubrica ?? {}),
+        ...(anexo ? { attachmentPolicy: anexo } : {}),
+        ...(extras ? { questions: [...(lesson.questions ?? []), ...extras] } : {}),
+      };
+    });
 
-  const orfaos = [...Object.keys(enrichment.conteudo), ...Object.keys(enrichment.rubricas)].filter(
-    (titulo) => !usados.has(titulo),
-  );
+    const questionario = enrichment.questionarios?.[section.title];
+    if (questionario) {
+      partesUsadas.add(section.title);
+      lessons.push(questionario);
+    }
+
+    return { ...section, lessons };
+  });
+
+  const orfaos = [
+    ...Object.keys(enrichment.conteudo),
+    ...Object.keys(enrichment.rubricas),
+    ...Object.keys(enrichment.anexos ?? {}),
+    ...Object.keys(enrichment.perguntas ?? {}),
+  ].filter((titulo) => !usados.has(titulo));
 
   if (orfaos.length > 0) {
     throw new Error(
       `Conteúdo escrito para aulas que não existem na estrutura do curso: ${orfaos.join(', ')}. ` +
         'Confira se o título da aula é o mesmo nos dois arquivos.',
+    );
+  }
+
+  const partesOrfas = Object.keys(enrichment.questionarios ?? {}).filter(
+    (titulo) => !partesUsadas.has(titulo),
+  );
+
+  if (partesOrfas.length > 0) {
+    throw new Error(
+      `Questionário escrito para partes que não existem no curso: ${partesOrfas.join(', ')}.`,
     );
   }
 

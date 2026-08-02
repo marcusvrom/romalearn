@@ -134,6 +134,20 @@ describe('GradingService', () => {
     expect(resultado.score).toBeNull();
   });
 
+  it('entrega o texto do arquivo ao corretor', async () => {
+    const grader = graderFake({
+      criteria: [
+        { criterionId: 'a', score: 80, comment: '' },
+        { criterionId: 'b', score: 80, comment: '' },
+      ],
+    });
+    const espiao = jest.spyOn(grader, 'grade');
+
+    await new GradingService(grader).grade('enunciado', RUBRICA, RELATO, 'texto do arquivo');
+
+    expect(espiao.mock.calls[0][0].attachmentText).toBe('texto do arquivo');
+  });
+
   it('limita a nota ao intervalo válido', async () => {
     const service = new GradingService(
       graderFake({

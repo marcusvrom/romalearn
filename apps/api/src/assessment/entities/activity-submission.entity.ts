@@ -1,4 +1,9 @@
-import { ActivityGraderKind, ActivityReviewStatus, CriterionResultDto } from '@romalearn/contracts';
+import {
+  ActivityGraderKind,
+  ActivityReviewStatus,
+  AttachmentCheckDto,
+  CriterionResultDto,
+} from '@romalearn/contracts';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../database/base.entity';
 import { Lesson } from '../../catalog/entities/lesson.entity';
@@ -32,9 +37,23 @@ export class ActivitySubmission extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   notes: string | null;
 
-  /** Reservado para o upload de anexos (evolução prevista). */
+  /** Chave no bucket privado. O arquivo nunca é servido por URL pública. */
+  @Column({ type: 'varchar', length: 512, nullable: true })
+  attachmentKey: string | null;
+
+  /** Nome original, apenas para exibição — nunca usado como caminho. */
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  attachmentName: string | null;
+
+  @Column({ type: 'int', nullable: true })
+  attachmentSizeBytes: number | null;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  attachmentUploadedAt: Date | null;
+
+  /** Resultado das verificações automáticas feitas no arquivo. */
   @Column({ type: 'jsonb', default: () => `'[]'::jsonb` })
-  attachmentKeys: string[];
+  attachmentChecks: AttachmentCheckDto[];
 
   @Column({ type: 'timestamptz' })
   submittedAt: Date;

@@ -9,6 +9,11 @@ export interface GradingInput {
   rubric: ActivityRubricDto;
   /** Relato escrito pelo aluno. Conteúdo não confiável. */
   notes: string;
+  /**
+   * Texto extraído do arquivo entregue, quando houver. Também é conteúdo
+   * não confiável: veio de um arquivo de fora.
+   */
+  attachmentText: string;
 }
 
 export interface GradingOutcome {

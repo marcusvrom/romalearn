@@ -60,6 +60,7 @@ export class LessonPage implements OnInit, OnDestroy {
   activityNotes = '';
   readonly submission = signal<ActivitySubmissionDto | null>(null);
   readonly submitting = signal(false);
+  readonly arquivo = signal<File | null>(null);
 
   // Questionário
   readonly answers = signal<Record<string, string[]>>({});
@@ -89,6 +90,7 @@ export class LessonPage implements OnInit, OnDestroy {
     this.answers.set({});
     this.submission.set(null);
     this.activityNotes = '';
+    this.arquivo.set(null);
     this.stopHeartbeat();
 
     this.learning.lesson(courseSlug, lessonSlug).subscribe({
@@ -197,6 +199,11 @@ export class LessonPage implements OnInit, OnDestroy {
     });
   }
 
+  escolherArquivo(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.arquivo.set(input.files?.[0] ?? null);
+  }
+
   /** Palavras já escritas, para o aluno acompanhar o mínimo pedido. */
   wordCount(): number {
     return this.activityNotes.trim().split(/\s+/).filter(Boolean).length;
@@ -216,10 +223,11 @@ export class LessonPage implements OnInit, OnDestroy {
     }
 
     this.submitting.set(true);
-    this.learning.submitActivity(lesson.id, notes).subscribe({
+    this.learning.submitActivity(lesson.id, notes, this.arquivo()).subscribe({
       next: (entrega) => {
         this.submitting.set(false);
         this.submission.set(entrega);
+        this.arquivo.set(null);
         // A mensagem definitiva é a da API: ela conhece a rubrica e a nota.
         this.feedback.set({
           tone: entrega.status === ActivityReviewStatus.NEEDS_REVISION ? 'error' : 'success',

@@ -1,4 +1,5 @@
-import type { SeedLesson } from '../catalog-data';
+import { ActivityAttachmentPolicyDto, LessonType, QuestionType } from '@romalearn/contracts';
+import type { SeedLesson, SeedQuestion } from '../catalog-data';
 import type { SectionEnrichment } from './apply-content';
 import { ActivityRubric, LessonContent } from './content-types';
 
@@ -872,7 +873,299 @@ const RUBRICAS: Record<string, Pick<SeedLesson, 'rubric' | 'rubricReference'>> =
   },
 };
 
+/** Uma pergunta de múltipla escolha simples. */
+const QUESTAO = (
+  statement: string,
+  explanation: string,
+  options: [string, boolean][],
+): SeedQuestion => ({
+  statement,
+  type: QuestionType.SINGLE_CHOICE,
+  explanation,
+  options: options.map(([text, isCorrect]) => ({ text, isCorrect })),
+});
+
+/** Questionário curto de fixação, ao fim de uma parte. */
+const FIXACAO = (titulo: string, questions: SeedQuestion[]): SeedLesson => ({
+  title: titulo,
+  type: LessonType.QUIZ,
+  estimatedMinutes: 8,
+  passingScore: 70,
+  summary: 'Confira o que ficou desta parte antes de avançar. Tentativas ilimitadas.',
+  questions,
+});
+
+const QUESTIONARIOS: Record<string, SeedLesson> = {
+  'Parte 1 — Excel Iniciante': FIXACAO('Fixação — Excel Iniciante', [
+    QUESTAO(
+      'O que é a célula C7?',
+      'A célula é o encontro de uma coluna com uma linha: coluna C, linha 7.',
+      [
+        ['O encontro da coluna C com a linha 7.', true],
+        ['A sétima aba da pasta de trabalho.', false],
+        ['Um intervalo com sete células.', false],
+        ['Uma fórmula que soma sete valores.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você precisa registrar o valor de R$ 1.250,00 em uma coluna de preços. O que fazer?',
+      'Digite o número e aplique o formato Moeda. Escrever R$ junto transforma o valor em texto.',
+      [
+        ['Digitar 1250 e aplicar o formato Moeda.', true],
+        ['Digitar R$ 1.250,00 na célula.', false],
+        ['Digitar 1250 e pintar a célula de verde.', false],
+        ['Digitar 1250 como texto para não perder a formatação.', false],
+      ],
+    ),
+    QUESTAO(
+      'Uma célula guarda 0,15 e mostra 15%. O que aconteceu?',
+      'O valor guardado e a aparência exibida são coisas diferentes: mudou apenas o formato.',
+      [
+        ['Apenas o formato mudou; o valor continua 0,15.', true],
+        ['O Excel multiplicou o valor por 100.', false],
+        ['A célula virou texto.', false],
+        ['O valor foi arredondado.', false],
+      ],
+    ),
+    QUESTAO(
+      'Ao copiar =B2*C2 de D2 para D3, o que acontece com as referências?',
+      'Referências relativas acompanham a linha: viram B3 e C3.',
+      [
+        ['Elas viram B3 e C3.', true],
+        ['Elas continuam B2 e C2.', false],
+        ['O Excel copia apenas o resultado.', false],
+        ['A fórmula vira texto.', false],
+      ],
+    ),
+    QUESTAO(
+      'Uma coluna mostra #####. O que significa?',
+      'A largura da coluna é insuficiente para exibir o valor. Aumente a largura.',
+      [
+        ['A coluna está estreita demais para mostrar o valor.', true],
+        ['Existe um erro na fórmula.', false],
+        ['O valor é negativo.', false],
+        ['A planilha está protegida.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você aplicou um filtro e quer excluir algumas linhas. Qual é o risco?',
+      'Excluir com filtro ativo pode remover registros que você não está vendo. Confira o filtro antes.',
+      [
+        ['Excluir pode remover registros que estão ocultos pelo filtro.', true],
+        ['O filtro impede qualquer exclusão.', false],
+        ['As fórmulas param de calcular.', false],
+        ['A tabela perde os cabeçalhos.', false],
+      ],
+    ),
+  ]),
+
+  'Parte 2 — Excel Intermediário': FIXACAO('Fixação — Excel Intermediário', [
+    QUESTAO(
+      'Por que uma base limpa é parte do cálculo?',
+      'Se a base mistura datas, textos e números, até uma fórmula correta produz resposta ruim.',
+      [
+        ['Porque uma fórmula correta sobre dados inconsistentes dá resposta errada.', true],
+        ['Porque o Excel fica mais rápido.', false],
+        ['Porque o arquivo ocupa menos espaço.', false],
+        ['Porque a impressão fica mais bonita.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é a diferença entre célula vazia e célula com zero?',
+      'Vazio significa não informado ou desconhecido; zero é um valor conhecido igual a zero.',
+      [
+        ['Vazio é não informado; zero é um valor conhecido.', true],
+        ['São equivalentes para o Excel.', false],
+        ['Vazio conta como zero em todas as funções.', false],
+        ['Zero é sempre um erro de digitação.', false],
+      ],
+    ),
+    QUESTAO(
+      'A formatação condicional pintou de vermelho os prazos vencidos. Isso basta?',
+      'Cor sozinha exclui quem não a distingue. Acrescente um rótulo de texto, como Atrasado.',
+      [
+        ['Não: acrescente também um rótulo de texto, como Atrasado.', true],
+        ['Sim: a cor comunica o suficiente.', false],
+        ['Sim, desde que o vermelho seja forte.', false],
+        ['Não: é preciso excluir as linhas vencidas.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você copiou =C2*$H$1 para baixo. O que acontece com $H$1?',
+      'A referência absoluta fica fixa: continua $H$1 em todas as linhas.',
+      [
+        ['Continua $H$1 em todas as linhas.', true],
+        ['Vira $H$2, $H$3 e assim por diante.', false],
+        ['Vira um valor fixo digitado.', false],
+        ['Gera erro de referência circular.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual função responde "quanto foi aprovado no setor Financeiro"?',
+      'SOMASES soma valores que atendem a mais de um critério.',
+      [
+        ['SOMASES', true],
+        ['CONT.SES', false],
+        ['PROCX', false],
+        ['SEERRO', false],
+      ],
+    ),
+    QUESTAO(
+      'Por que transformar todo erro em zero com SEERRO é uma má ideia?',
+      'Um zero falso parece resultado válido e esconde um problema de cadastro ou de fórmula.',
+      [
+        ['Um zero falso parece válido e esconde o problema real.', true],
+        ['SEERRO deixa a planilha lenta.', false],
+        ['SEERRO não funciona com divisão.', false],
+        ['Zero não pode aparecer em planilhas financeiras.', false],
+      ],
+    ),
+  ]),
+
+  'Parte 3 — Excel Avançado': FIXACAO('Fixação — Excel Avançado', [
+    QUESTAO(
+      'O que caracteriza uma boa chave de busca?',
+      'Ela precisa estar preenchida, seguir o mesmo formato e ser única quando o processo exige um resultado só.',
+      [
+        ['Estar preenchida, ter formato padronizado e ser única.', true],
+        ['Ser sempre numérica.', false],
+        ['Estar na primeira coluna da planilha.', false],
+        ['Ter no máximo dez caracteres.', false],
+      ],
+    ),
+    QUESTAO(
+      'O PROCX devolveu "Não encontrado" para vários pedidos. Qual é o próximo passo?',
+      'O aviso é útil, mas não resolve: descubra se o código falta, está duplicado ou tem outro formato.',
+      [
+        ['Investigar se o código falta, está duplicado ou mudou de formato.', true],
+        ['Trocar a mensagem por zero.', false],
+        ['Apagar as linhas com o aviso.', false],
+        ['Substituir PROCX por PROCV.', false],
+      ],
+    ),
+    QUESTAO(
+      'A Tabela Dinâmica está contando em vez de somar os valores. Qual é a causa provável?',
+      'Números armazenados como texto, ou conteúdo inconsistente, fazem o Excel contar em vez de somar.',
+      [
+        ['A coluna tem números armazenados como texto.', true],
+        ['A Tabela Dinâmica não soma moeda.', false],
+        ['Falta aplicar negrito no cabeçalho.', false],
+        ['O arquivo precisa ser salvo como .xls.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você alterou valores na base de origem. O que precisa fazer na Tabela Dinâmica?',
+      'A Tabela Dinâmica não percebe sozinha: é preciso atualizar antes de apresentar ou exportar.',
+      [
+        ['Atualizar a Tabela Dinâmica.', true],
+        ['Nada: ela se atualiza sozinha.', false],
+        ['Recriar a Tabela Dinâmica do zero.', false],
+        ['Reabrir o arquivo.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual recurso limita as entradas de uma coluna a Pendente, Em análise e Concluído?',
+      'Validação de dados com origem em lista aceita apenas as opções previstas.',
+      [
+        ['Validação de dados com lista.', true],
+        ['Proteção de planilha.', false],
+        ['Formatação condicional.', false],
+        ['Criptografia do arquivo.', false],
+      ],
+    ),
+    QUESTAO(
+      'Uma mensagem pede para você habilitar macros de um arquivo recebido por e-mail. O que fazer?',
+      'Macros executam código. O e-book manda parar e confirmar com o responsável ou o suporte.',
+      [
+        ['Não habilitar e confirmar com o responsável ou o suporte.', true],
+        ['Habilitar, porque sem macros a planilha não abre.', false],
+        ['Habilitar apenas se o remetente for conhecido.', false],
+        ['Encaminhar o arquivo para um colega testar.', false],
+      ],
+    ),
+  ]),
+};
+
+const ANEXOS: Record<string, ActivityAttachmentPolicyDto> = {
+  'Projeto final integrado': {
+    required: true,
+    maxBytes: 1024 * 1024,
+    extensions: ['.xlsx', '.csv'],
+    hint:
+      'Envie sua planilha em .xlsx (ou .csv, se preferir exportar só os dados), com até 1 MB. ' +
+      'Use dados fictícios: o conteúdo é lido para conferir sua entrega.',
+  },
+};
+
+const PERGUNTAS_EXTRAS: Record<string, SeedQuestion[]> = {
+  'Questionário de conclusão': [
+    QUESTAO(
+      'Qual é a diferença entre classificar e filtrar?',
+      'Classificar muda a ordem dos registros; filtrar apenas esconde temporariamente alguns deles.',
+      [
+        ['Classificar muda a ordem; filtrar esconde temporariamente.', true],
+        ['Classificar apaga duplicados; filtrar não.', false],
+        ['São o mesmo recurso.', false],
+        ['Filtrar altera as fórmulas.', false],
+      ],
+    ),
+    QUESTAO(
+      'Para que serve Congelar Linha Superior?',
+      'Mantém os nomes das colunas visíveis enquanto a lista é rolada.',
+      [
+        ['Manter os cabeçalhos visíveis ao rolar a lista.', true],
+        ['Impedir a edição da primeira linha.', false],
+        ['Ordenar automaticamente pela primeira coluna.', false],
+        ['Repetir a linha na impressão apenas.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual gráfico responde melhor "como as despesas mudaram ao longo dos meses"?',
+      'Linhas mostram evolução no tempo; barras comparam categorias.',
+      [
+        ['Linhas.', true],
+        ['Pizza.', false],
+        ['Dispersão.', false],
+        ['Rosca.', false],
+      ],
+    ),
+    QUESTAO(
+      'O que fazer antes de aceitar o resultado de uma fórmula copiada para 500 linhas?',
+      'Conferir uma linha do início, uma do meio e a última é a orientação repetida no e-book.',
+      [
+        ['Conferir uma linha do início, uma do meio e a última.', true],
+        ['Conferir apenas a primeira linha.', false],
+        ['Converter as fórmulas em valores.', false],
+        ['Proteger a planilha imediatamente.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é a função do FILTRO em uma lista dinâmica?',
+      'FILTRO devolve apenas as linhas que atendem à regra, sem reorganizar a base original.',
+      [
+        ['Devolver apenas as linhas que atendem a uma regra.', true],
+        ['Excluir as linhas que não atendem à regra.', false],
+        ['Ordenar a base original.', false],
+        ['Proteger as células filtradas.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual afirmação sobre proteção de planilha está correta?',
+      'Ela controla quais células podem ser editadas, mas não impede a leitura do arquivo.',
+      [
+        ['Controla a edição, mas não impede a leitura do arquivo.', true],
+        ['Criptografa o conteúdo da planilha.', false],
+        ['Impede que o arquivo seja copiado.', false],
+        ['Substitui a política de acesso da empresa.', false],
+      ],
+    ),
+  ],
+};
+
 export const MODULE_03_ENRICHMENT: SectionEnrichment = {
   conteudo: CONTEUDO,
   rubricas: RUBRICAS,
+  anexos: ANEXOS,
+  questionarios: QUESTIONARIOS,
+  perguntas: PERGUNTAS_EXTRAS,
 };

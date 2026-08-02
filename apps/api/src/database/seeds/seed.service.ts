@@ -210,6 +210,7 @@ export class SeedService {
           contentMarkdown: this.buildContent(lessonData, data),
           activityInstructions: lessonData.activityInstructions ?? null,
           activityRubric: lessonData.rubric ?? null,
+          activityAttachmentPolicy: lessonData.attachmentPolicy ?? null,
           // O primeiro capítulo de cada curso fica liberado como amostra.
           isPreview: sectionIndex === 0 && lessonIndex === 0,
           status: PublicationStatus.PUBLISHED,

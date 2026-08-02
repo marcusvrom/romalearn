@@ -196,20 +196,30 @@ describe('Jornada de aprendizagem (e2e)', () => {
     let quizLessonId: string;
 
     beforeAll(async () => {
-      const course = await api.get(`/catalog/courses/${FREE_COURSE_SLUG}`);
-      const quizOutline = course.body.sections
-        .flatMap(
-          (section: { lessons: { id: string; slug: string; type: string }[] }) => section.lessons,
-        )
-        .find((lesson: { type: string }) => lesson.type === LessonType.QUIZ);
-
+      // O curso tem um questionário de fixação por parte, além do final.
+      // Este bloco trata especificamente do questionário de conclusão.
       const lesson = await api.get(
-        `/learning/courses/${FREE_COURSE_SLUG}/lessons/${quizOutline.slug}`,
+        `/learning/courses/${FREE_COURSE_SLUG}/lessons/questionario-de-conclusao`,
         student,
       );
 
       quizId = lesson.body.quiz.id;
       quizLessonId = lesson.body.id;
+    });
+
+    it('oferece um questionário de fixação ao fim de cada parte', async () => {
+      const course = await api.get(`/catalog/courses/${FREE_COURSE_SLUG}`).expect(200);
+
+      const partes = course.body.sections.filter((section: { title: string }) =>
+        section.title.startsWith('Parte'),
+      );
+      expect(partes.length).toBeGreaterThan(0);
+
+      for (const parte of partes) {
+        const ultima = parte.lessons[parte.lessons.length - 1];
+        expect(ultima.type).toBe(LessonType.QUIZ);
+        expect(ultima.title).toContain('Fixação');
+      }
     });
 
     it('não entrega o gabarito antes da tentativa', async () => {

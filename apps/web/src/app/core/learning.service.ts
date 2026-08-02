@@ -50,10 +50,21 @@ export class LearningService {
     return this.api.post(API_ROUTES.learning.complete(lessonId), { confirmed });
   }
 
-  submitActivity(lessonId: string, notes: string): Observable<ActivitySubmissionDto> {
-    return this.api.post<ActivitySubmissionDto>(API_ROUTES.learning.submitActivity(lessonId), {
-      notes,
-    });
+  submitActivity(
+    lessonId: string,
+    notes: string,
+    arquivo?: File | null,
+  ): Observable<ActivitySubmissionDto> {
+    const rota = API_ROUTES.learning.submitActivity(lessonId);
+
+    if (!arquivo) {
+      return this.api.post<ActivitySubmissionDto>(rota, { notes });
+    }
+
+    const dados = new FormData();
+    dados.append('notes', notes);
+    dados.append('arquivo', arquivo, arquivo.name);
+    return this.api.post<ActivitySubmissionDto>(rota, dados);
   }
 
   submitQuiz(

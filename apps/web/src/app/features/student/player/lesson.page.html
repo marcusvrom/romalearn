@@ -103,6 +103,21 @@
       <li>{{ ponto }}</li>
       }
     </ul>
+    } @if (entrega.attachment; as anexo) {
+    <div class="devolutiva__anexo">
+      <h3>Arquivo entregue</h3>
+      <p class="rl-small">
+        <a [href]="anexo.url" target="_blank" rel="noopener">{{ anexo.filename }}</a>
+      </p>
+      <ul class="rl-small verificacoes">
+        @for (check of anexo.checks; track check.label) {
+        <li [class.verificacoes--falhou]="!check.passed">
+          <span aria-hidden="true">{{ check.passed ? '✓' : '✕' }}</span>
+          {{ check.label }}
+        </li>
+        }
+      </ul>
+    </div>
     }
 
     <p class="rl-small rl-muted devolutiva__origem">
@@ -141,6 +156,24 @@
     <p class="rl-small rl-muted contador" [class.contador--curto]="wordCount() < rubrica.minWords">
       {{ wordCount() }} de {{ rubrica.minWords }} palavras
     </p>
+    } @if (lesson.activityAttachmentPolicy; as anexo) {
+    <div class="rl-field anexo">
+      <label class="rl-label" for="arquivo">
+        Arquivo da entrega
+        <span class="rl-small rl-muted">{{ anexo.required ? '(obrigatório)' : '(opcional)' }}</span>
+      </label>
+      <p class="rl-small rl-muted">{{ anexo.hint }}</p>
+      <input
+        id="arquivo"
+        type="file"
+        class="rl-input"
+        [attr.accept]="anexo.extensions.join(',')"
+        (change)="escolherArquivo($event)"
+      />
+      @if (arquivo(); as escolhido) {
+      <p class="rl-small">Selecionado: {{ escolhido.name }}</p>
+      }
+    </div>
     }
 
     <button type="button" class="rl-button rl-button--secondary" [disabled]="submitting()" (click)="submitActivity()">

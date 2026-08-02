@@ -37,6 +37,7 @@ export class GradingService {
     instructions: string,
     rubric: ActivityRubricDto,
     notes: string,
+    attachmentText = '',
   ): Promise<GradedSubmission> {
     // Relato curto demais não tem o que corrigir: devolvemos sem gastar chamada.
     const wordCount = notes.trim().split(/\s+/).filter(Boolean).length;
@@ -56,7 +57,7 @@ export class GradingService {
       };
     }
 
-    const outcome = await this.grader.grade({ instructions, rubric, notes });
+    const outcome = await this.grader.grade({ instructions, rubric, notes, attachmentText });
     const gradedBy = outcome.model ? ActivityGraderKind.AI : ActivityGraderKind.RULES;
 
     if (!outcome.confident) {

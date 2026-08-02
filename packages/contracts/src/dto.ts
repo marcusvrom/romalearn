@@ -191,6 +191,8 @@ export interface LessonContentDto {
   activityInstructions: string | null;
   /** Rubrica da atividade prática, exibida antes do envio. */
   activityRubric: ActivityRubricDto | null;
+  /** Regras do anexo, quando a atividade pede um arquivo. */
+  activityAttachmentPolicy: ActivityAttachmentPolicyDto | null;
   /** Última entrega do aluno nesta aula, já corrigida. */
   activitySubmission: ActivitySubmissionDto | null;
   quiz: QuizDto | null;
@@ -253,6 +255,33 @@ export interface EnrolledCourseDto {
 // Questionários
 // ---------------------------------------------------------------------------
 
+/** Política de anexo de uma atividade prática. */
+export interface ActivityAttachmentPolicyDto {
+  /** Quando verdadeiro, a entrega sem arquivo é recusada. */
+  required: boolean;
+  maxBytes: number;
+  /** Extensões aceitas, em minúsculas e com ponto: [".docx"]. */
+  extensions: string[];
+  /** Explicação curta do que o aluno deve enviar. */
+  hint: string;
+}
+
+/** Uma verificação automática feita no arquivo entregue. */
+export interface AttachmentCheckDto {
+  label: string;
+  passed: boolean;
+}
+
+/** Arquivo entregue pelo aluno em uma atividade prática. */
+export interface ActivityAttachmentDto {
+  filename: string;
+  sizeBytes: number;
+  uploadedAt: string;
+  /** URL assinada e temporária; nunca um endereço público. */
+  url: string;
+  checks: AttachmentCheckDto[];
+}
+
 /** Um critério da rubrica de correção de uma atividade prática. */
 export interface RubricCriterionDto {
   /** Identificador estável, usado na devolutiva e nos relatórios. */
@@ -308,6 +337,8 @@ export interface ActivitySubmissionDto {
   criticalFailures: string[];
   gradedBy: ActivityGraderKind | null;
   gradedAt: string | null;
+  /** Arquivo entregue, quando a atividade aceita anexo. */
+  attachment: ActivityAttachmentDto | null;
   attemptNumber: number;
   /** Mensagem em português explicando o estado atual da correção. */
   statusMessage: string;

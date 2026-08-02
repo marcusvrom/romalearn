@@ -92,6 +92,37 @@ Nesse estado **a aula é liberada** e a entrega entra na fila de revisão da
 equipe. A limitação é nossa, não do aluno: ninguém fica parado porque a nossa
 correção automática falhou.
 
+## Anexo da entrega
+
+Cada aula define o que aceita. O curso de Word pede `.docx`; o de Excel,
+`.xlsx` ou `.csv`; o de PowerPoint, `.pptx` ou `.pdf`. O limite padrão é 1 MB.
+
+O arquivo **conta na correção**: a API extrai o texto e o entrega ao corretor
+junto com o relato. Um `.docx` com o documento pronto é evidência tão legítima
+quanto a descrição escrita.
+
+Um arquivo enviado de fora é a entrada mais perigosa da plataforma, então ele é
+tratado como dado hostil:
+
+| Verificação                | O que impede                                        |
+| -------------------------- | --------------------------------------------------- |
+| Extensão contra a política | Formato que a aula não aceita                       |
+| Tamanho                    | Arquivo acima do limite, aplicado já no recebimento |
+| Assinatura dos bytes       | `virus.exe` renomeado para `.docx`                  |
+| Estrutura interna do OOXML | Um `.zip` qualquer com o nome trocado               |
+| Teto de descompactação     | "Zip bomb": 1 MB que expande para gigabytes         |
+
+Nada é executado e nenhuma biblioteca de escritório abre o arquivo. O texto é
+extraído lendo as partes XML, sem parser completo — um parser abriria espaço
+para entidades externas e expansão recursiva.
+
+O arquivo vai para o bucket privado com uma chave gerada pela plataforma; o
+nome enviado pelo aluno nunca vira caminho. Ele só é servido por URL assinada e
+temporária, para o próprio aluno e para quem corrige.
+
+O texto extraído vai ao modelo entre delimitadores próprios, marcado como
+material a avaliar e nunca como instrução — a mesma defesa aplicada ao relato.
+
 ## Cadastrando uma rubrica
 
 Pelo painel administrativo, sem alteração de código. Uma rubrica precisa de:

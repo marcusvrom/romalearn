@@ -1,4 +1,10 @@
-import { CourseLevel, LessonType, MaterialKind, QuestionType } from '@romalearn/contracts';
+import {
+  ActivityAttachmentPolicyDto,
+  CourseLevel,
+  LessonType,
+  MaterialKind,
+  QuestionType,
+} from '@romalearn/contracts';
 import { ActivityRubric, EbookReference, LessonContent } from './content/content-types';
 import { enrichSections } from './content/apply-content';
 import { MODULE_01_ENRICHMENT } from './content/modulo-01-windows';
@@ -46,6 +52,8 @@ export interface SeedLesson {
   rubric?: ActivityRubric;
   /** Origem dos critérios da rubrica no e-book. */
   rubricReference?: EbookReference;
+  /** Arquivo que a atividade aceita como entrega. */
+  attachmentPolicy?: ActivityAttachmentPolicyDto;
   questions?: SeedQuestion[];
   passingScore?: number;
 }

@@ -1,4 +1,5 @@
-import type { SeedLesson } from '../catalog-data';
+import { ActivityAttachmentPolicyDto, LessonType, QuestionType } from '@romalearn/contracts';
+import type { SeedLesson, SeedQuestion } from '../catalog-data';
 import type { SectionEnrichment } from './apply-content';
 import { ActivityRubric, LessonContent } from './content-types';
 
@@ -883,7 +884,299 @@ const RUBRICAS: Record<string, Pick<SeedLesson, 'rubric' | 'rubricReference'>> =
   },
 };
 
+/** Uma pergunta de múltipla escolha simples. */
+const QUESTAO = (
+  statement: string,
+  explanation: string,
+  options: [string, boolean][],
+): SeedQuestion => ({
+  statement,
+  type: QuestionType.SINGLE_CHOICE,
+  explanation,
+  options: options.map(([text, isCorrect]) => ({ text, isCorrect })),
+});
+
+/** Questionário curto de fixação, ao fim de uma parte. */
+const FIXACAO = (titulo: string, questions: SeedQuestion[]): SeedLesson => ({
+  title: titulo,
+  type: LessonType.QUIZ,
+  estimatedMinutes: 8,
+  passingScore: 70,
+  summary: 'Confira o que ficou desta parte antes de avançar. Tentativas ilimitadas.',
+  questions,
+});
+
+const QUESTIONARIOS: Record<string, SeedLesson> = {
+  'Parte 1 — Word Iniciante': FIXACAO('Fixação — Word Iniciante', [
+    QUESTAO(
+      'Você recebeu o modelo oficial de ata da empresa e precisa preencher a ata de hoje. Qual é o primeiro passo seguro?',
+      'Editar direto o modelo sobrescreve a matriz. Use Salvar uma Cópia antes da primeira alteração.',
+      [
+        ['Usar Salvar uma Cópia antes de qualquer alteração.', true],
+        ['Editar o modelo e depois desfazer com Ctrl + Z.', false],
+        ['Editar o modelo e salvar com o mesmo nome.', false],
+        ['Exportar o modelo em PDF e editar o PDF.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é a diferença entre Salvar e Salvar como?',
+      'Salvar registra as mudanças no mesmo arquivo; Salvar como cria outro arquivo ou muda nome, local ou formato.',
+      [
+        ['Salvar atualiza o arquivo atual; Salvar como cria outro arquivo.', true],
+        ['São a mesma coisa, com nomes diferentes.', false],
+        ['Salvar gera PDF; Salvar como gera DOCX.', false],
+        ['Salvar como apaga a versão anterior.', false],
+      ],
+    ),
+    QUESTAO(
+      'Para separar dois parágrafos com mais espaço, o que o capítulo recomenda?',
+      'Várias linhas vazias criam um layout frágil. Use Espaçamento Antes/Depois do parágrafo.',
+      [
+        ['Usar o Espaçamento Antes/Depois do parágrafo.', true],
+        ['Apertar Enter três vezes.', false],
+        ['Aumentar a fonte do parágrafo anterior.', false],
+        ['Inserir uma quebra de página.', false],
+      ],
+    ),
+    QUESTAO(
+      'Quando usar lista numerada em vez de marcadores?',
+      'Numeração indica ordem. Use quando a sequência importa, como em um procedimento.',
+      [
+        ['Quando a ordem dos itens importa, como em um procedimento.', true],
+        ['Sempre, porque fica mais organizado.', false],
+        ['Quando há mais de cinco itens.', false],
+        ['Quando o texto será exportado em PDF.', false],
+      ],
+    ),
+    QUESTAO(
+      'Uma tabela do relatório atravessa duas páginas. O que conferir?',
+      'O cabeçalho precisa se repetir na página seguinte e nenhuma linha pode ficar cortada.',
+      [
+        ['Se o cabeçalho se repete e nenhuma linha foi cortada.', true],
+        ['Se todas as colunas têm a mesma largura.', false],
+        ['Se a tabela tem bordas coloridas.', false],
+        ['Se a tabela cabe em uma página ao reduzir a fonte para 6.', false],
+      ],
+    ),
+    QUESTAO(
+      'Depois de exportar o PDF do comunicado, qual é o último passo antes de enviar?',
+      'O e-book pede para abrir o PDF criado e conferir todas as páginas antes do envio.',
+      [
+        ['Abrir o PDF e conferir todas as páginas.', true],
+        ['Excluir o DOCX para não confundir as versões.', false],
+        ['Renomear o PDF com a data de hoje e enviar direto.', false],
+        ['Compactar o PDF em .zip.', false],
+      ],
+    ),
+  ]),
+
+  'Parte 2 — Word Intermediário': FIXACAO('Fixação — Word Intermediário', [
+    QUESTAO(
+      'O título de uma seção está grande e em negrito, mas no estilo Normal. Qual é o problema?',
+      'Sem um estilo de título real, o texto não aparece no Painel de Navegação nem no sumário automático.',
+      [
+        ['Ele não entra no Painel de Navegação nem no sumário automático.', true],
+        ['Nenhum: a aparência é o que importa.', false],
+        ['O arquivo fica maior.', false],
+        ['O Word não consegue imprimir a página.', false],
+      ],
+    ),
+    QUESTAO(
+      'Um título do sumário está com erro de digitação. Onde corrigir?',
+      'O sumário é gerado a partir dos títulos. Corrija o título de origem e atualize o sumário.',
+      [
+        ['No título de origem, atualizando o sumário depois.', true],
+        ['Direto no texto do sumário.', false],
+        ['Excluindo e recriando o documento.', false],
+        ['No cabeçalho da página.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você precisa de uma única página em paisagem no meio do relatório. Qual recurso usar?',
+      'Quebra de página só vira a folha. Só a quebra de seção cria uma zona com orientação própria.',
+      [
+        ['Quebra de seção antes e depois da página.', true],
+        ['Quebra de página antes da tabela.', false],
+        ['Diminuir as margens da página.', false],
+        ['Inserir a tabela dentro de uma caixa de texto.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você apagou o cabeçalho de uma seção e ele sumiu também das seções anteriores. Por quê?',
+      'A seção estava com Vincular ao Anterior ativo, então as seções compartilhavam o mesmo cabeçalho.',
+      [
+        ['A opção Vincular ao Anterior estava ativa.', true],
+        ['O documento estava corrompido.', false],
+        ['Cabeçalhos são sempre iguais em todo o documento.', false],
+        ['Faltou salvar antes de editar.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual recurso registra cada inserção e exclusão para serem aceitas ou rejeitadas depois?',
+      'Comentário guarda conversa; Controlar Alterações registra as edições.',
+      [
+        ['Controlar Alterações.', true],
+        ['Comentário.', false],
+        ['Histórico de Versões.', false],
+        ['Pincel de Formatação.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual destes itens faz parte da checagem de acessibilidade do capítulo?',
+      'Links precisam de texto descritivo; "clique aqui" não diz para onde leva.',
+      [
+        ['Links com texto descritivo, em vez de "clique aqui".', true],
+        ['Usar apenas cor para indicar prioridade.', false],
+        ['Escrever títulos em caixa alta.', false],
+        ['Trocar listas por símbolos digitados manualmente.', false],
+      ],
+    ),
+  ]),
+
+  'Parte 3 — Word Avançado': FIXACAO('Fixação — Word Avançado', [
+    QUESTAO(
+      'Qual é a função de um arquivo DOTX?',
+      'O modelo guarda a estrutura padrão e gera uma nova cópia a cada uso, sem ser sobrescrito.',
+      [
+        ['Criar novos documentos a partir de uma estrutura padrão.', true],
+        ['Guardar o documento em formato compactado.', false],
+        ['Proteger o documento com senha.', false],
+        ['Converter o documento em PDF automaticamente.', false],
+      ],
+    ),
+    QUESTAO(
+      'Por que registrar a data de emissão com um campo de data automática pode ser um problema?',
+      'O campo pode ser atualizado quando o arquivo for aberto no futuro, mudando a data registrada.',
+      [
+        ['A data pode mudar quando o arquivo for aberto depois.', true],
+        ['Campos de data não funcionam em PDF.', false],
+        ['O Word não aceita datas em português.', false],
+        ['A data automática deixa o arquivo mais pesado.', false],
+      ],
+    ),
+    QUESTAO(
+      'Na fonte de dados da mala direta, um CEP começa com zero. Como ele deve estar armazenado?',
+      'Identificadores que podem começar com zero precisam ser texto, ou o zero inicial se perde.',
+      [
+        ['Como texto, para preservar o zero à esquerda.', true],
+        ['Como número, para permitir ordenação.', false],
+        ['Como data, porque é um dado de endereço.', false],
+        ['Como moeda, para manter oito dígitos.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é o controle de risco mais importante ao testar uma mala direta pela primeira vez?',
+      'O e-book é explícito: nunca use dados reais no primeiro teste; prefira registros fictícios.',
+      [
+        ['Usar registros fictícios em vez de dados reais.', true],
+        ['Enviar direto para dois destinatários de confiança.', false],
+        ['Imprimir todas as cartas para conferir depois.', false],
+        ['Desativar a visualização para agilizar.', false],
+      ],
+    ),
+    QUESTAO(
+      'A proteção de edição do Word substitui o controle de acesso ao arquivo?',
+      'Proteção controla edição, mas não é criptografia nem permissão. Dados sigilosos exigem as políticas da organização.',
+      [
+        ['Não: ela reduz alterações acidentais, mas não substitui permissões.', true],
+        ['Sim: o arquivo fica criptografado.', false],
+        ['Sim, desde que a senha seja forte.', false],
+        ['Não se aplica: o Word não tem proteção.', false],
+      ],
+    ),
+    QUESTAO(
+      'Antes de usar o Inspetor de Documento, qual cuidado o capítulo pede?',
+      'Algumas remoções não podem ser desfeitas. Rode a inspeção sempre em uma cópia.',
+      [
+        ['Fazer uma cópia, porque algumas remoções não podem ser desfeitas.', true],
+        ['Desativar o Controlar Alterações.', false],
+        ['Converter o arquivo para .doc antigo.', false],
+        ['Remover todas as imagens do documento.', false],
+      ],
+    ),
+  ]),
+};
+
+const ANEXOS: Record<string, ActivityAttachmentPolicyDto> = {
+  'Projeto final integrado': {
+    required: true,
+    maxBytes: 1024 * 1024,
+    extensions: ['.docx'],
+    hint:
+      'Envie o documento do Word que você produziu, em .docx, com até 1 MB. Use dados fictícios: ' +
+      'o arquivo é lido para conferir sua entrega.',
+  },
+};
+
+const PERGUNTAS_EXTRAS: Record<string, SeedQuestion[]> = {
+  'Questionário de conclusão': [
+    QUESTAO(
+      'Qual é a diferença entre formatação de caractere e de parágrafo?',
+      'Caractere controla a aparência do trecho selecionado; parágrafo controla o bloco inteiro.',
+      [
+        ['Caractere afeta o trecho selecionado; parágrafo, o bloco inteiro.', true],
+        ['São a mesma coisa em documentos curtos.', false],
+        ['Caractere só funciona com negrito.', false],
+        ['Parágrafo só afeta a primeira linha.', false],
+      ],
+    ),
+    QUESTAO(
+      'Para que serve o recurso Mostrar/Ocultar?',
+      'Ele revela espaços, tabulações e marcas de parágrafo, ajudando a diagnosticar um layout estranho.',
+      [
+        ['Diagnosticar espaços, tabulações e marcas de parágrafo.', true],
+        ['Esconder imagens para imprimir mais rápido.', false],
+        ['Alternar entre DOCX e PDF.', false],
+        ['Ocultar comentários dos revisores.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é a vantagem de uma referência cruzada em vez de digitar "Figura 3"?',
+      'A referência cruzada acompanha mudanças: se a figura mudar de número, o texto acompanha.',
+      [
+        ['Ela acompanha automaticamente mudanças de numeração.', true],
+        ['Ela deixa o texto em negrito.', false],
+        ['Ela reduz o tamanho do arquivo.', false],
+        ['Ela impede que a figura seja movida.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é a saída recomendada da mala direta para revisão antes do envio?',
+      'Concluir em um novo documento permite revisar antes de imprimir ou enviar.',
+      [
+        ['Concluir em um novo documento e revisar.', true],
+        ['Imprimir direto todas as cartas.', false],
+        ['Enviar por e-mail e conferir depois.', false],
+        ['Salvar apenas o documento principal.', false],
+      ],
+    ),
+    QUESTAO(
+      'Quando usar Comparar em vez de Combinar?',
+      'Comparar mostra as diferenças entre original e revisado; Combinar consolida alterações de várias cópias.',
+      [
+        ['Para ver as diferenças entre um original e um revisado.', true],
+        ['Para juntar cinco versões de revisores diferentes.', false],
+        ['Para converter o documento em PDF.', false],
+        ['Para proteger o documento com senha.', false],
+      ],
+    ),
+    QUESTAO(
+      'O pacote final de entrega do projeto inclui o quê?',
+      'DOCX-fonte, PDFs revisados, fonte de dados de teste e checklist de aprovação.',
+      [
+        ['DOCX-fonte, PDF revisado, fonte de teste e checklist.', true],
+        ['Apenas o PDF final.', false],
+        ['Apenas o modelo DOTX.', false],
+        ['O arquivo com as marcações de revisão ativas.', false],
+      ],
+    ),
+  ],
+};
+
 export const MODULE_02_ENRICHMENT: SectionEnrichment = {
   conteudo: CONTEUDO,
   rubricas: RUBRICAS,
+  anexos: ANEXOS,
+  questionarios: QUESTIONARIOS,
+  perguntas: PERGUNTAS_EXTRAS,
 };

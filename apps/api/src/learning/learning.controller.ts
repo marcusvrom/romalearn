@@ -1,6 +1,18 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ActivitySubmissionDto,
   CoursePlayerDto,
   EnrolledCourseDto,
   LessonContentDto,
@@ -17,6 +29,15 @@ import {
   SubmitQuizDto,
 } from './dto/learning.dto';
 import { ProgressService } from './progress.service';
+
+/**
+ * Teto absoluto do upload de entrega, aplicado pelo interceptor.
+ *
+ * Cada aula define um limite próprio e menor; este valor existe para que um
+ * arquivo enorme seja rejeitado durante o recebimento, sem chegar a ocupar
+ * memória do processo.
+ */
+const MAX_ACTIVITY_UPLOAD_BYTES = 5 * 1024 * 1024;
 
 /**
  * Área autenticada de estudo. Toda rota aqui valida a permissão de acesso
@@ -80,13 +101,22 @@ export class LearningController {
 
   @Post('lessons/:lessonId/activity')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Envia a confirmação de uma atividade prática.' })
+  @UseInterceptors(
+    FileInterceptor('arquivo', {
+      // O teto entra aqui, antes de o arquivo ser lido inteiro na memória.
+      // A política da aula, mais restritiva, é conferida logo depois.
+      limits: { fileSize: MAX_ACTIVITY_UPLOAD_BYTES, files: 1 },
+    }),
+  )
+  @ApiOperation({ summary: 'Envia a entrega de uma atividade prática, com anexo opcional.' })
+  @ApiConsumes('multipart/form-data', 'application/json')
   submitActivity(
     @CurrentUser('id') userId: string,
     @Param('lessonId') lessonId: string,
     @Body() dto: SubmitActivityDto,
-  ) {
-    return this.activityService.submit(userId, lessonId, dto);
+    @UploadedFile() arquivo?: Express.Multer.File,
+  ): Promise<ActivitySubmissionDto> {
+    return this.activityService.submit(userId, lessonId, dto, arquivo);
   }
 
   @Post('quizzes/:quizId/attempts')

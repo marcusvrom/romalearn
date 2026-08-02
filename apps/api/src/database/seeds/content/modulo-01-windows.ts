@@ -1,4 +1,5 @@
-import type { SeedLesson } from '../catalog-data';
+import { ActivityAttachmentPolicyDto, LessonType, QuestionType } from '@romalearn/contracts';
+import type { SeedLesson, SeedQuestion } from '../catalog-data';
 import type { SectionEnrichment } from './apply-content';
 import { ActivityRubric, LessonContent } from './content-types';
 
@@ -1137,7 +1138,302 @@ const RUBRICAS: Record<string, Pick<SeedLesson, 'rubric' | 'rubricReference'>> =
   },
 };
 
+/** Uma pergunta de múltipla escolha simples. */
+const QUESTAO = (
+  statement: string,
+  explanation: string,
+  options: [string, boolean][],
+): SeedQuestion => ({
+  statement,
+  type: QuestionType.SINGLE_CHOICE,
+  explanation,
+  options: options.map(([text, isCorrect]) => ({ text, isCorrect })),
+});
+
+/** Questionário curto de fixação, ao fim de uma parte. */
+const FIXACAO = (titulo: string, questions: SeedQuestion[]): SeedLesson => ({
+  title: titulo,
+  type: LessonType.QUIZ,
+  estimatedMinutes: 8,
+  passingScore: 70,
+  summary: 'Confira o que ficou desta parte antes de avançar. Tentativas ilimitadas.',
+  questions,
+});
+
+const QUESTIONARIOS: Record<string, SeedLesson> = {
+  'Parte 1 — Conhecendo o computador': FIXACAO('Fixação — Conhecendo o computador', [
+    QUESTAO(
+      'Qual destes é hardware?',
+      'Hardware é a parte física, que podemos tocar: teclado, mouse, monitor, impressora.',
+      [
+        ['A impressora.', true],
+        ['O navegador.', false],
+        ['O Windows.', false],
+        ['Um arquivo .docx.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é o papel do Windows?',
+      'O Windows é o sistema que organiza programas, arquivos e equipamentos.',
+      [
+        ['Organizar programas, arquivos e equipamentos.', true],
+        ['Criar planilhas e gráficos.', false],
+        ['Guardar a energia do computador.', false],
+        ['Substituir o teclado.', false],
+      ],
+    ),
+    QUESTAO(
+      'O que o botão direito do mouse costuma fazer?',
+      'Ele mostra as opções disponíveis para o item escolhido.',
+      [
+        ['Mostrar opções para o item escolhido.', true],
+        ['Abrir o item selecionado.', false],
+        ['Excluir o item.', false],
+        ['Salvar o arquivo aberto.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você minimizou uma janela. O que aconteceu com o programa?',
+      'Minimizar tira a janela da frente, mas o programa continua aberto na barra de tarefas.',
+      [
+        ['Continua aberto, na barra de tarefas.', true],
+        ['Foi encerrado.', false],
+        ['Foi salvo automaticamente.', false],
+        ['Foi movido para a Lixeira.', false],
+      ],
+    ),
+    QUESTAO(
+      'Está difícil enxergar o texto na tela. O que o capítulo sugere?',
+      'O Windows permite aumentar texto, ponteiro e contraste em Configurações > Acessibilidade.',
+      [
+        ['Ajustar tamanho do texto e do ponteiro em Acessibilidade.', true],
+        ['Comprar um monitor maior antes de continuar.', false],
+        ['Aproximar o rosto da tela.', false],
+        ['Desistir e pedir para outra pessoa usar.', false],
+      ],
+    ),
+    QUESTAO(
+      'Um programa parece travado. Qual é o primeiro passo?',
+      'Aguarde alguns segundos: o programa pode estar terminando uma tarefa. Evite clicar várias vezes.',
+      [
+        ['Aguardar alguns segundos antes de qualquer ação.', true],
+        ['Clicar várias vezes no mesmo botão.', false],
+        ['Desligar o computador pelo botão de energia.', false],
+        ['Desconectar o cabo de força.', false],
+      ],
+    ),
+  ]),
+
+  'Parte 2 — Cuidando dos arquivos': FIXACAO('Fixação — Cuidando dos arquivos', [
+    QUESTAO(
+      'No caminho Documentos > Financeiro > 2026 > Boletos > Energia_Julho_2026.pdf, o que é ".pdf"?',
+      'A extensão é a parte final do nome e indica o formato do arquivo.',
+      [
+        ['A extensão, que indica o formato.', true],
+        ['O nome do arquivo.', false],
+        ['A pasta principal.', false],
+        ['A data de criação.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você renomeou "planilha.xlsx" para "planilha.pdf". O arquivo virou PDF?',
+      'Trocar o final do nome não converte o formato. Use Exportar ou Salvar como PDF.',
+      [
+        ['Não: é preciso exportar ou salvar como PDF pelo programa.', true],
+        ['Sim: a extensão define o formato.', false],
+        ['Sim, desde que o arquivo seja pequeno.', false],
+        ['Só no Windows mais recente.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você vai mover um arquivo, mas ele também precisa continuar na pasta atual. O que fazer?',
+      'Se o item precisa continuar no local atual, a operação correta é copiar, não mover.',
+      [
+        ['Copiar em vez de mover.', true],
+        ['Mover e depois desfazer.', false],
+        ['Criar um atalho e excluir o original.', false],
+        ['Renomear antes de mover.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual nome de arquivo segue o padrão recomendado?',
+      'O padrão é Data_Tipo_Assunto_Versão, com data no formato ano-mês-dia.',
+      [
+        ['2026-07-31_Ata_Reuniao_Comercial_v01.docx', true],
+        ['documento-novo.docx', false],
+        ['ata final2 agora vai.docx', false],
+        ['ATA.DOCX', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é a diferença entre anexo e link?',
+      'Anexo envia uma cópia dentro da mensagem; link entrega o endereço e depende de permissão.',
+      [
+        ['Anexo envia uma cópia; link aponta para o arquivo e depende de permissão.', true],
+        ['São a mesma coisa.', false],
+        ['Anexo é sempre mais seguro que link.', false],
+        ['Link só funciona dentro da empresa.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você gerou o PDF de um relatório. O que fazer com o arquivo editável?',
+      'Mantenha o DOCX ou XLSX como fonte para mudanças futuras e distribua o PDF para leitura.',
+      [
+        ['Guardar o editável como fonte para mudanças futuras.', true],
+        ['Excluir, porque o PDF substitui.', false],
+        ['Renomear com a extensão .pdf.', false],
+        ['Mover para a Lixeira.', false],
+      ],
+    ),
+  ]),
+
+  'Parte 3 — Rapidez, recuperação e segurança': FIXACAO(
+    'Fixação — Rapidez, recuperação e segurança',
+    [
+      QUESTAO(
+        'Qual atalho bloqueia a tela ao se afastar do computador?',
+        'Windows + L bloqueia o computador — o equivalente a fechar a porta ao sair.',
+        [
+          ['Windows + L', true],
+          ['Ctrl + L', false],
+          ['Alt + Tab', false],
+          ['Ctrl + Shift + N', false],
+        ],
+      ),
+      QUESTAO(
+        'Antes de enviar uma captura de tela ao suporte, o que conferir?',
+        'Confira se a imagem não mostra senha, CPF, salário, endereço ou conversa particular.',
+        [
+          ['Se a imagem não mostra dados pessoais ou sensíveis.', true],
+          ['Se a imagem está em preto e branco.', false],
+          ['Se a captura pegou a tela inteira.', false],
+          ['Se o arquivo é maior que 1 MB.', false],
+        ],
+      ),
+      QUESTAO(
+        'Qual afirmação sobre sincronização e backup está correta?',
+        'Sincronização mantém locais conectados: uma exclusão pode se propagar. Backup é uma cópia separada para recuperação.',
+        [
+          ['Sincronização propaga exclusões; backup guarda uma cópia para recuperar.', true],
+          ['São a mesma coisa com nomes diferentes.', false],
+          ['Backup mantém os locais sempre iguais.', false],
+          ['Sincronização substitui o backup.', false],
+        ],
+      ),
+      QUESTAO(
+        'Um arquivo importante sumiu. Qual é a sequência recomendada?',
+        'Pesquise pelo nome, confira a Lixeira do Windows e a do serviço de nuvem, e procure o histórico de versões.',
+        [
+          ['Pesquisar pelo nome, conferir as lixeiras e o histórico de versões.', true],
+          ['Criar imediatamente outro arquivo com o mesmo nome.', false],
+          ['Formatar o computador.', false],
+          ['Esvaziar a Lixeira para reorganizar.', false],
+        ],
+      ),
+      QUESTAO(
+        'Uma mensagem inesperada pede seu código de acesso com urgência. O que fazer?',
+        'Pressa, medo e pedido de código são sinais de golpe. Não responda com dados e confirme por outro canal.',
+        [
+          ['Não responder e confirmar pelo canal oficial.', true],
+          ['Responder rápido para não perder o prazo.', false],
+          ['Encaminhar para um colega decidir.', false],
+          ['Clicar no link para verificar se é verdadeiro.', false],
+        ],
+      ),
+      QUESTAO(
+        'Ao compartilhar uma planilha que o colega só precisa ler, qual permissão usar?',
+        'Use permissão de leitura quando edição não for necessária, e remova o acesso quando terminar.',
+        [
+          ['Somente leitura.', true],
+          ['Edição, por precaução.', false],
+          ['Controle total.', false],
+          ['Link público sem senha.', false],
+        ],
+      ),
+    ],
+  ),
+};
+
+const ANEXOS: Record<string, ActivityAttachmentPolicyDto> = {
+  'Projeto final — Organize um pequeno escritório': {
+    required: false,
+    maxBytes: 1024 * 1024,
+    extensions: ['.png', '.jpg', '.pdf'],
+    hint:
+      'Se quiser, envie uma captura de tela da estrutura de pastas que você montou (.png, .jpg ou ' +
+      '.pdf, até 1 MB). Confira antes se a imagem não mostra nenhum dado pessoal.',
+  },
+};
+
+const PERGUNTAS_EXTRAS: Record<string, SeedQuestion[]> = {
+  'Questionário de conclusão': [
+    QUESTAO(
+      'Qual sequência descreve o que um computador faz?',
+      'Entrada, processamento, armazenamento e saída são os quatro passos descritos no capítulo 1.',
+      [
+        ['Entrada, processamento, armazenamento e saída.', true],
+        ['Ligar, digitar, imprimir e desligar.', false],
+        ['Hardware, software, Windows e internet.', false],
+        ['Abrir, salvar, fechar e excluir.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual atalho cria uma nova pasta no Explorador de Arquivos?',
+      'Ctrl + Shift + N cria uma nova pasta; F2 renomeia o item selecionado.',
+      [
+        ['Ctrl + Shift + N', true],
+        ['F2', false],
+        ['Ctrl + N', false],
+        ['Windows + E', false],
+      ],
+    ),
+    QUESTAO(
+      'Por que datas no formato 2026-07-31 são recomendadas nos nomes de arquivo?',
+      'Nesse formato os arquivos ficam naturalmente em ordem, do mais antigo para o mais novo.',
+      [
+        ['Os arquivos ficam em ordem cronológica automaticamente.', true],
+        ['O Windows exige esse formato.', false],
+        ['Ocupam menos espaço no disco.', false],
+        ['É o único formato aceito em PDF.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é o cuidado principal ao guardar um arquivo na nuvem?',
+      'A nuvem exige conta, permissão e serviço autorizado pela organização.',
+      [
+        ['Exige conta, permissão e serviço autorizado.', true],
+        ['O arquivo fica mais lento para abrir.', false],
+        ['Não é possível recuperar nada.', false],
+        ['A nuvem substitui o backup.', false],
+      ],
+    ),
+    QUESTAO(
+      'Quais são os três cuidados com a informação apresentados no capítulo de segurança?',
+      'Confidencialidade, integridade e disponibilidade são os três cuidados citados.',
+      [
+        ['Confidencialidade, integridade e disponibilidade.', true],
+        ['Velocidade, espaço e organização.', false],
+        ['Senha, antivírus e firewall.', false],
+        ['Backup, nuvem e pendrive.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você já clicou em um link suspeito e informou um dado. O que fazer?',
+      'Contar imediatamente ao responsável: pedir ajuda rápido reduz o problema.',
+      [
+        ['Avisar imediatamente o responsável ou o suporte.', true],
+        ['Esperar para ver se algo acontece.', false],
+        ['Trocar apenas a foto do perfil.', false],
+        ['Apagar a mensagem e não comentar.', false],
+      ],
+    ),
+  ],
+};
+
 export const MODULE_01_ENRICHMENT: SectionEnrichment = {
   conteudo: CONTEUDO,
   rubricas: RUBRICAS,
+  anexos: ANEXOS,
+  questionarios: QUESTIONARIOS,
+  perguntas: PERGUNTAS_EXTRAS,
 };

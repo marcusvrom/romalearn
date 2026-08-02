@@ -80,6 +80,10 @@ export class ApiService {
       .pipe(catchError((error) => throwError(() => toFriendlyError(error))));
   }
 
+  /**
+   * `FormData` é enviado como está: o navegador precisa definir o
+   * `Content-Type` com o boundary do multipart, então não fixamos cabeçalho.
+   */
   post<T>(path: string, body?: unknown): Observable<T> {
     return this.http
       .post<T>(this.url(path), body ?? {}, { withCredentials: true })

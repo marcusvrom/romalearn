@@ -1,4 +1,5 @@
 import {
+  ActivityAttachmentPolicyDto,
   ActivityRubricDto,
   LessonCompletionRule,
   LessonType,
@@ -99,6 +100,16 @@ export class Lesson extends BaseEntity {
    */
   @Column({ type: 'jsonb', nullable: true })
   activityRubric: ActivityRubricDto | null;
+
+  /**
+   * Regras do arquivo que a atividade aceita.
+   *
+   * Nula quando a atividade não pede anexo. Fica na aula porque o formato
+   * esperado é do conteúdo, não do corretor: o curso de Word pede .docx, o de
+   * Excel pede .xlsx ou .csv.
+   */
+  @Column({ type: 'jsonb', nullable: true })
+  activityAttachmentPolicy: ActivityAttachmentPolicyDto | null;
 
   /** Aula liberada como amostra na página de vendas. */
   @Column({ type: 'boolean', default: false })

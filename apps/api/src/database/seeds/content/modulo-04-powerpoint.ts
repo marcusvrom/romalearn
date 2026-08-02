@@ -1,4 +1,5 @@
-import type { SeedLesson } from '../catalog-data';
+import { ActivityAttachmentPolicyDto, LessonType, QuestionType } from '@romalearn/contracts';
+import type { SeedLesson, SeedQuestion } from '../catalog-data';
 import type { SectionEnrichment } from './apply-content';
 import { ActivityRubric, LessonContent } from './content-types';
 
@@ -874,7 +875,299 @@ const RUBRICAS: Record<string, Pick<SeedLesson, 'rubric' | 'rubricReference'>> =
   },
 };
 
+/** Uma pergunta de múltipla escolha simples. */
+const QUESTAO = (
+  statement: string,
+  explanation: string,
+  options: [string, boolean][],
+): SeedQuestion => ({
+  statement,
+  type: QuestionType.SINGLE_CHOICE,
+  explanation,
+  options: options.map(([text, isCorrect]) => ({ text, isCorrect })),
+});
+
+/** Questionário curto de fixação, ao fim de uma parte. */
+const FIXACAO = (titulo: string, questions: SeedQuestion[]): SeedLesson => ({
+  title: titulo,
+  type: LessonType.QUIZ,
+  estimatedMinutes: 8,
+  passingScore: 70,
+  summary: 'Confira o que ficou desta parte antes de avançar. Tentativas ilimitadas.',
+  questions,
+});
+
+const QUESTIONARIOS: Record<string, SeedLesson> = {
+  'Parte 1 — PowerPoint Iniciante': FIXACAO('Fixação — PowerPoint Iniciante', [
+    QUESTAO(
+      'Qual é a função de um layout?',
+      'O layout é um molde com espaços organizados para título, texto e imagem.',
+      [
+        ['Organizar espaços prontos para cada tipo de conteúdo.', true],
+        ['Definir a cor de fundo da apresentação.', false],
+        ['Guardar as notas do apresentador.', false],
+        ['Controlar a ordem dos slides.', false],
+      ],
+    ),
+    QUESTAO(
+      'Seu slide tem duas ideias grandes e o texto ficou apertado. O que fazer?',
+      'Um slide não é uma página de Word: separe as duas ideias em dois slides.',
+      [
+        ['Separar em dois slides.', true],
+        ['Reduzir a fonte até tudo caber.', false],
+        ['Diminuir as margens do slide.', false],
+        ['Transformar o texto em imagem.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual título comunica melhor?',
+      'O título deve entregar a ideia principal, não apenas nomear o assunto.',
+      [
+        ['Pedidos atrasados cresceram em junho.', true],
+        ['Status dos pedidos.', false],
+        ['Indicadores.', false],
+        ['Resultados do mês.', false],
+      ],
+    ),
+    QUESTAO(
+      'Onde ficam as explicações longas que apoiam a fala?',
+      'O corpo do slide traz poucas evidências; o detalhe vai para as notas ou um documento de apoio.',
+      [
+        ['Nas notas do apresentador.', true],
+        ['No corpo do slide, em fonte menor.', false],
+        ['No rodapé de cada slide.', false],
+        ['No nome do arquivo.', false],
+      ],
+    ),
+    QUESTAO(
+      'Quando usar SmartArt em vez de uma tabela?',
+      'SmartArt mostra processo, ciclo ou hierarquia simples; tabela serve para consultar valores exatos.',
+      [
+        ['Para mostrar um processo ou hierarquia simples.', true],
+        ['Para comparar valores exatos.', false],
+        ['Para exibir uma foto do produto.', false],
+        ['Para listar trinta itens.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você encontrou uma imagem na internet que ilustra bem o slide. O que conferir antes de usar?',
+      'É preciso verificar permissão, autoria e regras de uso antes de inserir a imagem.',
+      [
+        ['Permissão, autoria e regras de uso.', true],
+        ['Apenas a resolução da imagem.', false],
+        ['Se a imagem tem fundo branco.', false],
+        ['Se o arquivo é menor que 1 MB.', false],
+      ],
+    ),
+  ]),
+
+  'Parte 2 — PowerPoint Intermediário': FIXACAO('Fixação — PowerPoint Intermediário', [
+    QUESTAO(
+      'Qual pergunta define o objetivo de uma apresentação?',
+      'A bússola é: ao final, o público deve entender que… e deve fazer….',
+      [
+        ['O que o público deve entender e o que deve fazer ao final.', true],
+        ['Quantos slides serão usados.', false],
+        ['Qual tema visual será aplicado.', false],
+        ['Quem vai projetar os slides.', false],
+      ],
+    ),
+    QUESTAO(
+      'Uma afirmação importante aparece sem evidência. O que o capítulo recomenda?',
+      'Toda afirmação importante precisa de uma evidência e de contexto.',
+      [
+        ['Acrescentar uma evidência que sustente a afirmação.', true],
+        ['Colocar a afirmação em negrito.', false],
+        ['Mover a afirmação para o primeiro slide.', false],
+        ['Transformar a afirmação em pergunta.', false],
+      ],
+    ),
+    QUESTAO(
+      'Para que serve o Painel de Seleção?',
+      'Ele ajuda a localizar objetos escondidos, nomeá-los e organizar a ordem de leitura.',
+      [
+        ['Localizar objetos escondidos e organizar a ordem de leitura.', true],
+        ['Escolher o tema da apresentação.', false],
+        ['Inserir gráficos do Excel.', false],
+        ['Gravar a narração dos slides.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você vai usar um vídeo na apresentação. Qual precaução o capítulo pede?',
+      'Teste som, legenda, proporção e reprodução, e leve uma alternativa como imagem ou PDF.',
+      [
+        ['Testar a reprodução e levar uma alternativa de contingência.', true],
+        ['Aumentar o volume ao máximo.', false],
+        ['Converter o vídeo em GIF.', false],
+        ['Colocar o vídeo no primeiro slide.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é a diferença entre transição e animação?',
+      'Transição acontece entre slides; animação acontece em um objeto dentro do slide.',
+      [
+        ['Transição ocorre entre slides; animação, dentro de um slide.', true],
+        ['São o mesmo recurso com nomes diferentes.', false],
+        ['Transição é só para vídeos.', false],
+        ['Animação só funciona no Modo do Apresentador.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual item faz parte da checagem de acessibilidade antes de apresentar?',
+      'Legendas nos vídeos estão na lista de conferência do capítulo.',
+      [
+        ['Legendas nos vídeos.', true],
+        ['Efeitos 3D nos gráficos.', false],
+        ['Transições rápidas entre todos os slides.', false],
+        ['Fonte menor para caber mais conteúdo.', false],
+      ],
+    ),
+  ]),
+
+  'Parte 3 — PowerPoint Avançado': FIXACAO('Fixação — PowerPoint Avançado', [
+    QUESTAO(
+      'O que o Slide Mestre deve guardar?',
+      'O mestre guarda padrões compartilhados, não a mensagem de um arquivo específico.',
+      [
+        ['Padrões visuais compartilhados por toda a apresentação.', true],
+        ['O texto da reunião do mês.', false],
+        ['As notas do apresentador.', false],
+        ['Os dados do gráfico.', false],
+      ],
+    ),
+    QUESTAO(
+      'Por que preferir espaços reservados a caixas de texto soltas?',
+      'Eles preservam posição, tamanho e ordem de leitura quando outra pessoa troca o conteúdo.',
+      [
+        ['Preservam posição, tamanho e ordem de leitura.', true],
+        ['Deixam o arquivo menor.', false],
+        ['Permitem usar mais fontes.', false],
+        ['Evitam a necessidade de tema.', false],
+      ],
+    ),
+    QUESTAO(
+      'Você colou um gráfico do Excel como vínculo. Qual é o principal risco?',
+      'O vínculo depende do arquivo de origem: caminho ou permissão diferentes podem quebrá-lo em outro computador.',
+      [
+        ['O vínculo pode quebrar por caminho ou permissão em outro computador.', true],
+        ['O gráfico perde as cores.', false],
+        ['O arquivo fica sempre maior que 10 MB.', false],
+        ['O Excel deixa de abrir.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual escolha de colagem cria uma fotografia estática do gráfico?',
+      'A imagem não atualiza com a origem: é uma fotografia do estado atual.',
+      [
+        ['Imagem.', true],
+        ['Incorporar.', false],
+        ['Vincular.', false],
+        ['SmartArt.', false],
+      ],
+    ),
+    QUESTAO(
+      'Antes de gravar a apresentação inteira, o que o capítulo recomenda?',
+      'Grave um único slide, reproduza e confira voz, tempo, vídeo e avanço antes de seguir.',
+      [
+        ['Gravar um slide de amostra e conferir o resultado.', true],
+        ['Gravar tudo e editar depois.', false],
+        ['Desativar o microfone para testar a imagem.', false],
+        ['Exportar em MP4 antes de gravar.', false],
+      ],
+    ),
+    QUESTAO(
+      'Para que serve incluir o PDF no pacote de entrega?',
+      'O PDF serve para leitura e como contingência quando o PowerPoint não estiver disponível.',
+      [
+        ['Leitura e contingência, quando o PowerPoint não estiver disponível.', true],
+        ['Permitir que qualquer pessoa edite os slides.', false],
+        ['Preservar as animações.', false],
+        ['Reduzir o tamanho do PPTX.', false],
+      ],
+    ),
+  ]),
+};
+
+const ANEXOS: Record<string, ActivityAttachmentPolicyDto> = {
+  'Projeto final integrado': {
+    required: true,
+    maxBytes: 1024 * 1024,
+    extensions: ['.pptx', '.pdf'],
+    hint:
+      'Envie sua apresentação em .pptx, ou o PDF conferido, com até 1 MB. Use conteúdo fictício ' +
+      'ou autorizado: o arquivo é lido para conferir sua entrega.',
+  },
+};
+
+const PERGUNTAS_EXTRAS: Record<string, SeedQuestion[]> = {
+  'Questionário de conclusão': [
+    QUESTAO(
+      'Qual é a função das notas do apresentador?',
+      'As notas guardam palavras-chave, dados e fontes que apoiam a fala, sem poluir o slide.',
+      [
+        ['Guardar palavras-chave e dados que apoiam a fala.', true],
+        ['Aparecer no slide durante a apresentação.', false],
+        ['Substituir o roteiro decorado.', false],
+        ['Registrar quem editou cada slide.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é a estrutura de narrativa proposta no capítulo 4?',
+      'Abertura, desenvolvimento, conclusão e próximo passo.',
+      [
+        ['Abertura, desenvolvimento, conclusão e próximo passo.', true],
+        ['Capa, índice, conteúdo e agradecimento.', false],
+        ['Problema, solução e preço.', false],
+        ['Introdução, gráficos e perguntas.', false],
+      ],
+    ),
+    QUESTAO(
+      'Para que servem Alinhar e Distribuir?',
+      'Alinhar cria uma borda comum; Distribuir iguala os espaços entre os objetos.',
+      [
+        ['Criar uma borda comum e igualar os espaços entre objetos.', true],
+        ['Aplicar o tema a todos os slides.', false],
+        ['Ordenar os slides por título.', false],
+        ['Reduzir o tamanho das imagens.', false],
+      ],
+    ),
+    QUESTAO(
+      'Ao cortar o eixo de um gráfico para destacar a diferença entre dois valores, o que acontece?',
+      'O e-book é direto: não corte eixos para exagerar diferenças — isso distorce a leitura.',
+      [
+        ['A comparação fica distorcida e a leitura, desonesta.', true],
+        ['O gráfico fica mais fácil de entender.', false],
+        ['Nada muda, é só estética.', false],
+        ['O PowerPoint corrige automaticamente.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual formato é indicado para quem vai assistir sem ter o PowerPoint?',
+      'MP4 permite assistir sem o programa; confira som, imagem, legendas e duração.',
+      [
+        ['MP4.', true],
+        ['PPTX.', false],
+        ['POTX.', false],
+        ['XLSX.', false],
+      ],
+    ),
+    QUESTAO(
+      'Qual é a falha crítica listada nas regras do projeto final?',
+      'Informação privada exposta é uma das falhas críticas que reprovam o projeto.',
+      [
+        ['Informação privada exposta em slide, nota ou gravação.', true],
+        ['Usar menos de dez slides.', false],
+        ['Escolher um tema diferente do padrão.', false],
+        ['Apresentar em menos de cinco minutos.', false],
+      ],
+    ),
+  ],
+};
+
 export const MODULE_04_ENRICHMENT: SectionEnrichment = {
   conteudo: CONTEUDO,
   rubricas: RUBRICAS,
+  anexos: ANEXOS,
+  questionarios: QUESTIONARIOS,
+  perguntas: PERGUNTAS_EXTRAS,
 };

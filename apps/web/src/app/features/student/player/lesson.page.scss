@@ -387,3 +387,33 @@
 .contador--curto {
   color: var(--rl-text-muted);
 }
+
+.anexo {
+  margin-top: var(--rl-space-5);
+}
+
+.devolutiva__anexo {
+  margin-top: var(--rl-space-5);
+  padding: var(--rl-space-4);
+  border-radius: var(--rl-radius-md);
+  background-color: var(--rl-surface-muted);
+
+  h3 {
+    margin-top: 0;
+    font-size: var(--rl-text-base);
+  }
+}
+
+.verificacoes {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+
+  li {
+    color: var(--rl-success-700);
+  }
+}
+
+.verificacoes--falhou {
+  color: var(--rl-danger-700);
+}

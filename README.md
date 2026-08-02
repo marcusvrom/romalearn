@@ -27,11 +27,11 @@ cinco módulos pagos (Windows, Word, Excel, PowerPoint e IA para processos admin
 | Matrícula gratuita                                            | Funcionando                                                   |
 | Checkout, pagamento e webhooks                                | Funcionando com gateway simulado; adapter Mercado Pago pronto |
 | Área do aluno, player, progresso e questionários              | Funcionando                                                   |
-| Atividades práticas com rubrica e correção automática         | Funcionando (regras locais ou provedor de IA)                 |
+| Atividades com rubrica, anexo e correção automática           | Funcionando (regras locais ou provedor de IA)                 |
 | Certificados em PDF e validação pública                       | Funcionando                                                   |
 | Painel administrativo                                         | Funcionando                                                   |
 | E-mails transacionais                                         | Funcionando (console/SMTP)                                    |
-| Testes automatizados                                          | 55 unitários + 68 end-to-end                                  |
+| Testes automatizados                                          | 67 unitários + 69 end-to-end                                  |
 
 ## Arquitetura
 
