@@ -68,6 +68,15 @@ Evoluções planejadas:
 6. resumos em áudio por módulo;
 7. destaque sincronizado do trecho narrado.
 
+### Validação necessária antes do merge
+
+- executar `pnpm lint` e `pnpm build:web`;
+- testar Chrome, Edge, Safari/iOS e Android;
+- confirmar carregamento das vozes em cada sistema;
+- validar teclado, VoiceOver, TalkBack e NVDA;
+- testar pausa, troca de velocidade e retomada após recarregar a página;
+- verificar contraste do player nos temas claro e escuro.
+
 ## Eventos de produto
 
 `ProductAnalyticsService` define eventos sem dados pessoais e desacopla a aplicação de um fornecedor específico. O navegador emite `romalearn:product-event`, que poderá ser conectado a uma solução de analytics após definição de consentimento e política de privacidade.
