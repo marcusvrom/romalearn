@@ -11,9 +11,10 @@ import {
   formatMinutes,
 } from '../../core/format';
 import { LearningService } from '../../core/learning.service';
+import { ProductAnalyticsService } from '../../core/product-analytics.service';
 import { SeoService } from '../../core/seo.service';
 
-/** Página comercial de um curso, com o conteúdo completo à vista. */
+/** Página comercial de um curso, com conteúdo, resultados e decisão de compra transparentes. */
 @Component({
   selector: 'rl-course-page',
   standalone: true,
@@ -28,6 +29,7 @@ export class CoursePage implements OnInit {
   private readonly catalog = inject(CatalogService);
   private readonly learning = inject(LearningService);
   private readonly seo = inject(SeoService);
+  private readonly analytics = inject(ProductAnalyticsService);
   readonly auth = inject(AuthService);
 
   readonly routes = WEB_ROUTES;
@@ -59,6 +61,15 @@ export class CoursePage implements OnInit {
         this.course.set(course);
         this.loading.set(false);
         this.applySeo(course);
+        this.analytics.track({
+          name: 'course_viewed',
+          properties: {
+            courseId: course.id,
+            courseSlug: course.slug,
+            isFree: course.isFree,
+            workloadHours: course.workloadHours,
+          },
+        });
         if (!course.isFree) this.loadOffer(course);
       },
       error: (err: { message: string }) => {
@@ -111,10 +122,14 @@ export class CoursePage implements OnInit {
     });
   }
 
-  /** Matrícula gratuita: exige login, mas não passa por pagamento. */
   enrollFree(): void {
     const course = this.course();
     if (!course) return;
+
+    this.analytics.track({
+      name: 'free_enrollment_started',
+      properties: { courseId: course.id, courseSlug: course.slug },
+    });
 
     if (!this.auth.isAuthenticated()) {
       void this.router.navigate([WEB_ROUTES.register], {
@@ -142,6 +157,17 @@ export class CoursePage implements OnInit {
     const offer = this.offer();
     const course = this.course();
     if (!offer || !course) return;
+
+    this.analytics.track({
+      name: 'checkout_started',
+      properties: {
+        courseId: course.id,
+        courseSlug: course.slug,
+        offerId: offer.id,
+        priceCents: offer.priceCents,
+        currency: offer.currency,
+      },
+    });
 
     if (!this.auth.isAuthenticated()) {
       void this.router.navigate([WEB_ROUTES.login], {

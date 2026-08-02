@@ -19,6 +19,15 @@
   <rl-alert [tone]="message.tone">{{ message.message }}</rl-alert>
   }
 
+  @if (lesson.contentHtml) {
+  <rl-lesson-audio-player
+    [lessonId]="lesson.id"
+    [courseSlug]="courseSlug"
+    [title]="lesson.title"
+    [html]="lesson.contentHtml"
+  />
+  }
+
   <!-- Vídeo -->
   @if (lesson.type === lessonTypes.VIDEO && lesson.videoUrl) {
   <div class="video">
@@ -45,7 +54,6 @@
 
   <!-- Atividade prática -->
   @if (lesson.type === lessonTypes.PRACTICAL_ACTIVITY) {
-  <!-- Devolutiva da entrega anterior -->
   @if (submission(); as entrega) {
   <section class="rl-card devolutiva" [class]="'devolutiva--' + entrega.status.toLowerCase()">
     <header class="devolutiva__head">
@@ -198,7 +206,6 @@
     </header>
 
     @if (quizResult(); as result) {
-    <!-- Resultado da tentativa -->
     <div class="result" [class.result--passed]="result.passed">
       <p class="result__score">{{ result.score }}%</p>
       <p class="result__label">
@@ -237,7 +244,6 @@
       } }
     </div>
     } } @else {
-    <!-- Formulário do questionário -->
     <form class="quiz__form" (ngSubmit)="submitQuiz()">
       @for (question of quiz.questions; track question.id; let index = $index) {
       <fieldset class="question">

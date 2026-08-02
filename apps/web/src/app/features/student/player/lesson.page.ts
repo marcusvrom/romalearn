@@ -22,15 +22,21 @@ import {
 import { AlertComponent, LoadingStateComponent } from '@romalearn/ui';
 import { LESSON_TYPE_LABEL, formatMinutes } from '../../../core/format';
 import { LearningService } from '../../../core/learning.service';
+import { LessonAudioPlayerComponent } from './lesson-audio-player.component';
 import { PlayerStore } from './player.store';
 
-/** Intervalo entre as batidas de progresso enviadas ao backend. */
 const HEARTBEAT_SECONDS = 30;
 
 @Component({
   selector: 'rl-lesson-page',
   standalone: true,
-  imports: [DecimalPipe, FormsModule, LoadingStateComponent, AlertComponent],
+  imports: [
+    DecimalPipe,
+    FormsModule,
+    LoadingStateComponent,
+    AlertComponent,
+    LessonAudioPlayerComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './lesson.page.html',
   styleUrl: './lesson.page.scss',
@@ -56,18 +62,16 @@ export class LessonPage implements OnInit, OnDestroy {
   readonly feedback = signal<{ tone: 'error' | 'success'; message: string } | null>(null);
   readonly completing = signal(false);
 
-  // Atividade prática
   activityNotes = '';
   readonly submission = signal<ActivitySubmissionDto | null>(null);
   readonly submitting = signal(false);
   readonly arquivo = signal<File | null>(null);
 
-  // Questionário
   readonly answers = signal<Record<string, string[]>>({});
   readonly quizResult = signal<QuizAttemptResultDto | null>(null);
   readonly submittingQuiz = signal(false);
 
-  private courseSlug = '';
+  courseSlug = '';
   private heartbeat: ReturnType<typeof setInterval> | null = null;
 
   ngOnInit(): void {
@@ -97,10 +101,7 @@ export class LessonPage implements OnInit, OnDestroy {
       next: (lesson) => {
         this.lesson.set(lesson);
         this.submission.set(lesson.activitySubmission);
-        // Reenviar parte do texto anterior, não de uma folha em branco.
         this.activityNotes = lesson.activitySubmission?.notes ?? '';
-        // O HTML já vem sanitizado pelo backend; aqui apenas o marcamos como
-        // confiável para o Angular renderizar.
         this.safeContent.set(
           lesson.contentHtml ? this.sanitizer.bypassSecurityTrustHtml(lesson.contentHtml) : null,
         );
@@ -115,10 +116,6 @@ export class LessonPage implements OnInit, OnDestroy {
     });
   }
 
-  // ------------------------------------------------------------------
-  // Salvamento automático do progresso
-  // ------------------------------------------------------------------
-
   private startHeartbeat(): void {
     this.heartbeat = setInterval(() => {
       const lesson = this.lesson();
@@ -126,7 +123,6 @@ export class LessonPage implements OnInit, OnDestroy {
 
       this.learning.saveProgress(lesson.id, { elapsedSeconds: HEARTBEAT_SECONDS }).subscribe({
         next: (progress) => this.lesson.set({ ...lesson, progress }),
-        // Falha de rede não interrompe o estudo; a próxima batida tenta de novo.
         error: () => undefined,
       });
     }, HEARTBEAT_SECONDS * 1000);
@@ -137,7 +133,6 @@ export class LessonPage implements OnInit, OnDestroy {
     this.heartbeat = null;
   }
 
-  /** Progresso do vídeo informado pelo elemento nativo. */
   onVideoProgress(event: Event): void {
     const video = event.target as HTMLVideoElement;
     const lesson = this.lesson();
@@ -156,10 +151,6 @@ export class LessonPage implements OnInit, OnDestroy {
         error: () => undefined,
       });
   }
-
-  // ------------------------------------------------------------------
-  // Ações do aluno
-  // ------------------------------------------------------------------
 
   complete(): void {
     const lesson = this.lesson();
@@ -182,7 +173,6 @@ export class LessonPage implements OnInit, OnDestroy {
               : 'Aula concluída. Bom trabalho!',
         });
 
-        // Avança sozinho para a próxima aula, se houver.
         const next = this.store.slugForLesson(lesson.nextLessonId);
         if (next) {
           setTimeout(
@@ -193,7 +183,6 @@ export class LessonPage implements OnInit, OnDestroy {
       },
       error: (err: { message: string }) => {
         this.completing.set(false);
-        // A API explica exatamente o que falta para concluir.
         this.feedback.set({ tone: 'error', message: err.message });
       },
     });
@@ -204,7 +193,6 @@ export class LessonPage implements OnInit, OnDestroy {
     this.arquivo.set(input.files?.[0] ?? null);
   }
 
-  /** Palavras já escritas, para o aluno acompanhar o mínimo pedido. */
   wordCount(): number {
     return this.activityNotes.trim().split(/\s+/).filter(Boolean).length;
   }
@@ -228,7 +216,6 @@ export class LessonPage implements OnInit, OnDestroy {
         this.submitting.set(false);
         this.submission.set(entrega);
         this.arquivo.set(null);
-        // A mensagem definitiva é a da API: ela conhece a rubrica e a nota.
         this.feedback.set({
           tone: entrega.status === ActivityReviewStatus.NEEDS_REVISION ? 'error' : 'success',
           message: entrega.statusMessage,
@@ -245,7 +232,6 @@ export class LessonPage implements OnInit, OnDestroy {
   toggleOption(questionId: string, optionId: string, multiple: boolean): void {
     this.answers.update((current) => {
       const selected = current[questionId] ?? [];
-
       if (!multiple) return { ...current, [questionId]: [optionId] };
 
       return {
@@ -285,7 +271,6 @@ export class LessonPage implements OnInit, OnDestroy {
         this.quizResult.set(result);
         this.store.refresh(this.courseSlug);
 
-        // Aprovado: o backend já concluiu a aula automaticamente.
         if (result.passed) {
           this.learning.lesson(this.courseSlug, lesson.slug).subscribe({
             next: (refreshed) => this.lesson.set(refreshed),
@@ -308,10 +293,6 @@ export class LessonPage implements OnInit, OnDestroy {
   feedbackFor(questionId: string) {
     return this.quizResult()?.questions.find((item) => item.questionId === questionId) ?? null;
   }
-
-  // ------------------------------------------------------------------
-  // Navegação
-  // ------------------------------------------------------------------
 
   navigate(direction: 'previous' | 'next'): void {
     const { previous, next } = this.store.neighbourSlugs(this.lesson());

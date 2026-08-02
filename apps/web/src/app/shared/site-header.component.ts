@@ -167,7 +167,6 @@ import { ThemeToggleComponent } from './theme-toggle.component';
       .brand {
         display: flex;
         align-items: center;
-        gap: var(--rl-space-3);
         text-decoration: none;
         color: var(--rl-text);
         font-weight: var(--rl-weight-bold);
@@ -179,7 +178,6 @@ import { ThemeToggleComponent } from './theme-toggle.component';
         width: 34px;
         height: 34px;
         border-radius: var(--rl-radius-md);
-        background: linear-gradient(135deg, var(--rl-brand-600), var(--rl-accent-600));
         color: #fff;
       }
 
@@ -189,6 +187,7 @@ import { ThemeToggleComponent } from './theme-toggle.component';
         font-size: var(--rl-text-lg);
         font-weight: var(--rl-weight-bold);
         letter-spacing: -0.02em;
+        margin-top: 4px;
       }
 
       .toggle {
