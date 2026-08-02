@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import {
   API_ROUTES,
+  ActivitySubmissionDto,
   CertificateDto,
   CheckoutResultDto,
   CoursePlayerDto,
@@ -49,8 +50,10 @@ export class LearningService {
     return this.api.post(API_ROUTES.learning.complete(lessonId), { confirmed });
   }
 
-  submitActivity(lessonId: string, notes: string): Observable<unknown> {
-    return this.api.post(API_ROUTES.learning.submitActivity(lessonId), { notes });
+  submitActivity(lessonId: string, notes: string): Observable<ActivitySubmissionDto> {
+    return this.api.post<ActivitySubmissionDto>(API_ROUTES.learning.submitActivity(lessonId), {
+      notes,
+    });
   }
 
   submitQuiz(

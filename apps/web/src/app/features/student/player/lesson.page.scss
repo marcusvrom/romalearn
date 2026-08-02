@@ -273,3 +273,117 @@
   margin-top: var(--rl-space-4);
   text-align: center;
 }
+
+// ---------------------------------------------------------------------------
+// Devolutiva da atividade prática
+// ---------------------------------------------------------------------------
+
+.devolutiva {
+  border-left: 4px solid var(--rl-border);
+}
+
+.devolutiva--approved {
+  border-left-color: var(--rl-success-700);
+}
+
+.devolutiva--needs_revision {
+  border-left-color: var(--rl-danger-500);
+}
+
+.devolutiva--pending_human_review {
+  border-left-color: var(--rl-brand-400);
+}
+
+.devolutiva__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--rl-space-4);
+}
+
+.devolutiva__nota {
+  font-size: var(--rl-text-2xl);
+  font-weight: var(--rl-weight-semibold);
+
+  small {
+    font-size: var(--rl-text-base);
+    color: var(--rl-text-muted);
+  }
+}
+
+.devolutiva__mensagem {
+  margin-bottom: var(--rl-space-5);
+}
+
+.devolutiva__critico {
+  padding: var(--rl-space-4);
+  margin-bottom: var(--rl-space-5);
+  border-radius: var(--rl-radius-md);
+  background-color: var(--rl-surface-muted);
+
+  h3 {
+    margin-top: 0;
+    font-size: var(--rl-text-base);
+  }
+
+  ul {
+    margin-bottom: 0;
+    padding-left: var(--rl-space-5);
+  }
+}
+
+.devolutiva__criterios {
+  display: grid;
+  gap: var(--rl-space-4);
+  margin-bottom: var(--rl-space-5);
+}
+
+.criterio__topo {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--rl-space-3);
+  margin-bottom: var(--rl-space-2);
+}
+
+.criterio__titulo {
+  font-weight: var(--rl-weight-medium);
+}
+
+.criterio__nota {
+  color: var(--rl-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.criterio__barra {
+  height: 8px;
+  border-radius: var(--rl-radius-sm);
+  background-color: var(--rl-surface-muted);
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    background-color: var(--rl-brand-500);
+  }
+}
+
+.criterio__comentario {
+  margin-top: var(--rl-space-2);
+  color: var(--rl-text-muted);
+}
+
+.devolutiva__origem {
+  margin-top: var(--rl-space-5);
+  padding-top: var(--rl-space-4);
+  border-top: 1px solid var(--rl-border);
+}
+
+.contador {
+  margin-top: var(--rl-space-2);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.contador--curto {
+  color: var(--rl-text-muted);
+}

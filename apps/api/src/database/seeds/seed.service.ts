@@ -14,7 +14,7 @@ import {
   UserStatus,
 } from '@romalearn/contracts';
 import * as argon2 from 'argon2';
-import { DataSource } from 'typeorm';
+import { DataSource, In } from 'typeorm';
 import { Question, QuestionOption } from '../../assessment/entities/question.entity';
 import { Quiz } from '../../assessment/entities/quiz.entity';
 import { Course, DEFAULT_COMPLETION_CRITERIA } from '../../catalog/entities/course.entity';
@@ -165,6 +165,10 @@ export class SeedService {
     const sectionRepository = this.dataSource.getRepository(Section);
     const lessonRepository = this.dataSource.getRepository(Lesson);
 
+    const slugsDoMaterial = new Set(
+      data.sections.flatMap((section) => section.lessons.map((lesson) => slugify(lesson.title))),
+    );
+
     for (const [sectionIndex, sectionData] of data.sections.entries()) {
       let section = await sectionRepository.findOne({
         where: { courseId: course.id, title: sectionData.title },
@@ -220,6 +224,36 @@ export class SeedService {
         }
       }
     }
+
+    await this.archiveRemovedLessons(course, slugsDoMaterial);
+  }
+
+  /**
+   * Arquiva aulas que saíram do material oficial.
+   *
+   * Quando um capítulo é reescrito ou dividido, a aula antiga continuaria no
+   * banco e seguiria contando no progresso do curso — um aluno nunca
+   * chegaria a 100%. Arquivar em vez de excluir preserva o histórico de quem
+   * já estudou aquela aula.
+   */
+  private async archiveRemovedLessons(course: Course, slugsAtuais: Set<string>): Promise<void> {
+    const existentes = await this.dataSource.getRepository(Lesson).find({
+      where: { courseId: course.id, status: PublicationStatus.PUBLISHED },
+    });
+
+    const removidas = existentes.filter((lesson) => !slugsAtuais.has(lesson.slug));
+    if (removidas.length === 0) return;
+
+    await this.dataSource
+      .getRepository(Lesson)
+      .update(
+        { id: In(removidas.map((lesson) => lesson.id)) },
+        { status: PublicationStatus.ARCHIVED },
+      );
+
+    this.logger.log(
+      `Curso "${course.title}": ${removidas.length} aula(s) fora do material foram arquivadas.`,
+    );
   }
 
   /** Metade do tempo estimado como permanência mínima em aulas de leitura. */

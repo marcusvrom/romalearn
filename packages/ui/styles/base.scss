@@ -441,11 +441,23 @@ img {
     }
   }
 
+  // As tabelas dos capítulos têm até três colunas de texto. No celular elas
+  // rolam dentro da própria caixa em vez de esticar a página inteira.
   table {
+    display: block;
     width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     border-collapse: collapse;
     margin-bottom: var(--rl-space-6);
     font-size: var(--rl-text-base);
+  }
+
+  @media (min-width: 768px) {
+    table {
+      display: table;
+    }
   }
 
   th,

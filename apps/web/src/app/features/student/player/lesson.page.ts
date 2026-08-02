@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  ActivityReviewStatus,
+  ActivitySubmissionDto,
   LessonContentDto,
   LessonType,
   ProgressStatus,
@@ -28,7 +30,7 @@ const HEARTBEAT_SECONDS = 30;
 @Component({
   selector: 'rl-lesson-page',
   standalone: true,
-  imports: [FormsModule, LoadingStateComponent, AlertComponent],
+  imports: [DecimalPipe, FormsModule, LoadingStateComponent, AlertComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './lesson.page.html',
   styleUrl: './lesson.page.scss',
@@ -56,7 +58,8 @@ export class LessonPage implements OnInit, OnDestroy {
 
   // Atividade prática
   activityNotes = '';
-  readonly activitySaved = signal(false);
+  readonly submission = signal<ActivitySubmissionDto | null>(null);
+  readonly submitting = signal(false);
 
   // Questionário
   readonly answers = signal<Record<string, string[]>>({});
@@ -84,12 +87,16 @@ export class LessonPage implements OnInit, OnDestroy {
     this.feedback.set(null);
     this.quizResult.set(null);
     this.answers.set({});
-    this.activitySaved.set(false);
+    this.submission.set(null);
+    this.activityNotes = '';
     this.stopHeartbeat();
 
     this.learning.lesson(courseSlug, lessonSlug).subscribe({
       next: (lesson) => {
         this.lesson.set(lesson);
+        this.submission.set(lesson.activitySubmission);
+        // Reenviar parte do texto anterior, não de uma folha em branco.
+        this.activityNotes = lesson.activitySubmission?.notes ?? '';
         // O HTML já vem sanitizado pelo backend; aqui apenas o marcamos como
         // confiável para o Angular renderizar.
         this.safeContent.set(
@@ -190,9 +197,17 @@ export class LessonPage implements OnInit, OnDestroy {
     });
   }
 
+  /** Palavras já escritas, para o aluno acompanhar o mínimo pedido. */
+  wordCount(): number {
+    return this.activityNotes.trim().split(/\s+/).filter(Boolean).length;
+  }
+
   submitActivity(): void {
     const lesson = this.lesson();
-    if (!lesson || this.activityNotes.trim().length < 10) {
+    if (!lesson) return;
+
+    const notes = this.activityNotes.trim();
+    if (notes.length < 10) {
       this.feedback.set({
         tone: 'error',
         message: 'Escreva um relato com pelo menos 10 caracteres sobre o que você fez.',
@@ -200,16 +215,22 @@ export class LessonPage implements OnInit, OnDestroy {
       return;
     }
 
-    this.learning.submitActivity(lesson.id, this.activityNotes.trim()).subscribe({
-      next: () => {
-        this.activitySaved.set(true);
+    this.submitting.set(true);
+    this.learning.submitActivity(lesson.id, notes).subscribe({
+      next: (entrega) => {
+        this.submitting.set(false);
+        this.submission.set(entrega);
+        // A mensagem definitiva é a da API: ela conhece a rubrica e a nota.
         this.feedback.set({
-          tone: 'success',
-          message: 'Atividade enviada. Agora você pode marcar a aula como concluída.',
+          tone: entrega.status === ActivityReviewStatus.NEEDS_REVISION ? 'error' : 'success',
+          message: entrega.statusMessage,
         });
+        this.scrollToTop();
       },
-      error: (err: { message: string }) =>
-        this.feedback.set({ tone: 'error', message: err.message }),
+      error: (err: { message: string }) => {
+        this.submitting.set(false);
+        this.feedback.set({ tone: 'error', message: err.message });
+      },
     });
   }
 
