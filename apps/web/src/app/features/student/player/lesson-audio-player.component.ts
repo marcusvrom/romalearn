@@ -287,11 +287,13 @@ export class LessonAudioPlayerComponent implements OnChanges, OnDestroy {
 
   constructor() {
     effect(() => {
+      const lessonId = this.lessonId();
+      const courseSlug = this.courseSlug();
       if (this.narration.status() !== 'finished' || this.completedTracked) return;
 
       this.analytics.track('lesson_audio_completed', {
-        lessonId: this.lessonId(),
-        courseSlug: this.courseSlug(),
+        lessonId,
+        courseSlug,
         rate: this.narration.rate(),
       });
       this.completedTracked = true;
