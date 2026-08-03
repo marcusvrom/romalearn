@@ -1,8 +1,25 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { OrderDto } from '@romalearn/contracts';
 import { AlertComponent, LoadingStateComponent } from '@romalearn/ui';
+import { forkJoin } from 'rxjs';
+import { formatCurrency } from '../../../core/format';
 import { SeoService } from '../../../core/seo.service';
-import { AdminCourse, AdminService } from '../admin.service';
+import { AdminCourse, AdminEnrollment, AdminService } from '../admin.service';
+
+interface CourseEnrollmentSummary {
+  course: AdminCourse;
+  total: number;
+  active: number;
+  completed: number;
+  completionRate: number;
+}
+
+interface ProductSalesSummary {
+  productName: string;
+  purchases: number;
+  revenueCents: number;
+}
 
 @Component({
   selector: 'rl-admin-content-analytics-page',
@@ -14,61 +31,103 @@ import { AdminCourse, AdminService } from '../admin.service';
       <div>
         <p class="eyebrow">Analytics</p>
         <h1>Desempenho de cursos e conteúdos</h1>
-        <p>Base para identificar conteúdos mais vistos, mais comprados, com maior conclusão e maior abandono.</p>
+        <p>Compare matrículas, conclusão e compras reais. Visualizações entram quando os eventos forem persistidos no backend.</p>
       </div>
       <a class="rl-button rl-button--secondary" routerLink="/admin/cursos">Gerenciar cursos</a>
     </header>
 
-    @if (loading()) { <rl-loading label="Carregando catálogo…" /> }
+    @if (loading()) { <rl-loading label="Carregando indicadores…" /> }
     @if (!loading() && error(); as message) {
       <rl-alert tone="error" title="Não foi possível carregar">{{ message }}</rl-alert>
     }
     @if (!loading() && !error()) {
       <section class="summary">
         <article class="rl-card"><span>Cursos cadastrados</span><strong>{{ courses().length }}</strong></article>
+        <article class="rl-card"><span>Matrículas analisadas</span><strong>{{ enrollments().length }}</strong></article>
+        <article class="rl-card"><span>Pedidos analisados</span><strong>{{ orders().length }}</strong></article>
         <article class="rl-card"><span>Publicados</span><strong>{{ publishedCount() }}</strong></article>
-        <article class="rl-card"><span>Em preparação</span><strong>{{ courses().length - publishedCount() }}</strong></article>
       </section>
 
-      <section class="rl-card coverage">
-        <div>
-          <h2>Camada analítica planejada</h2>
-          <p>As posições abaixo serão calculadas com eventos reais, sem inferir visualizações ou compras inexistentes.</p>
-        </div>
-        <div class="coverage__grid">
-          @for (item of plannedMetrics; track item.title) {
-            <article>
-              <span aria-hidden="true">{{ item.icon }}</span>
-              <strong>{{ item.title }}</strong>
-              <p>{{ item.description }}</p>
-            </article>
-          }
-        </div>
-      </section>
-
-      <section class="rl-card courses">
-        <h2>Catálogo monitorado</h2>
-        @if (courses().length === 0) {
-          <p class="rl-muted">Nenhum curso cadastrado.</p>
-        } @else {
-          <div class="course-list">
-            @for (course of courses(); track course.id) {
-              <a [routerLink]="['/admin/cursos', course.id]">
-                <span>
-                  <strong>{{ course.title }}</strong>
-                  <small>{{ course.status }}</small>
-                </span>
-                <span>Editar e revisar →</span>
-              </a>
-            }
+      <section class="rankings">
+        <article class="rl-card ranking-card">
+          <div class="section-head">
+            <div>
+              <h2>Cursos com mais matrículas</h2>
+              <p>Ordenação baseada nos registros reais de matrícula.</p>
+            </div>
           </div>
-        }
+          @if (courseRankings().length === 0) {
+            <p class="rl-muted">Nenhuma matrícula registrada.</p>
+          } @else {
+            <div class="ranking-list">
+              @for (item of courseRankings(); track item.course.id; let position = $index) {
+                <a [routerLink]="['/admin/cursos', item.course.id]">
+                  <span class="position">{{ position + 1 }}</span>
+                  <span class="name"><strong>{{ item.course.title }}</strong><small>{{ item.completed }} concluídas · {{ item.active }} ativas</small></span>
+                  <span class="value">{{ item.total }}</span>
+                </a>
+              }
+            </div>
+          }
+        </article>
+
+        <article class="rl-card ranking-card">
+          <div class="section-head">
+            <div>
+              <h2>Produtos mais comprados</h2>
+              <p>Somente pedidos aprovados carregados nesta visão.</p>
+            </div>
+          </div>
+          @if (salesRankings().length === 0) {
+            <p class="rl-muted">Nenhuma compra aprovada registrada.</p>
+          } @else {
+            <div class="ranking-list">
+              @for (item of salesRankings(); track item.productName; let position = $index) {
+                <div class="ranking-row">
+                  <span class="position">{{ position + 1 }}</span>
+                  <span class="name"><strong>{{ item.productName }}</strong><small>{{ formatCurrency(item.revenueCents) }} de receita</small></span>
+                  <span class="value">{{ item.purchases }}</span>
+                </div>
+              }
+            </div>
+          }
+        </article>
       </section>
 
-      <section class="rl-card endpoint">
-        <h2>Contrato necessário para a próxima etapa</h2>
-        <code>GET /admin/analytics/courses?period=30d</code>
-        <p>O retorno deverá conter visualizações, compras, conversão, matrículas, conclusão, abandono, uso de áudio e receita por curso e aula.</p>
+      <section class="rl-card course-table-card">
+        <div class="section-head">
+          <div>
+            <h2>Conclusão por curso</h2>
+            <p>A taxa considera matrículas concluídas sobre o total de matrículas de cada curso.</p>
+          </div>
+        </div>
+        <div class="rl-table-scroll">
+          <table>
+            <thead><tr><th>Curso</th><th>Matrículas</th><th>Ativas</th><th>Concluídas</th><th>Taxa</th><th></th></tr></thead>
+            <tbody>
+              @for (item of courseCompletion(); track item.course.id) {
+                <tr>
+                  <td><strong>{{ item.course.title }}</strong><span>{{ item.course.status }}</span></td>
+                  <td>{{ item.total }}</td>
+                  <td>{{ item.active }}</td>
+                  <td>{{ item.completed }}</td>
+                  <td><span class="rate">{{ item.completionRate }}%</span></td>
+                  <td><a [routerLink]="['/admin/cursos', item.course.id]">Revisar →</a></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="rl-card missing-data">
+        <h2>Dados ainda não disponíveis</h2>
+        <div class="missing-grid">
+          <article><span>👁️</span><strong>Mais e menos vistos</strong><p>Exige persistência server-side de visualização de curso, sessão e origem.</p></article>
+          <article><span>📉</span><strong>Abandono por aula</strong><p>Exige agregação de progresso e último ponto acessado por matrícula.</p></article>
+          <article><span>🔊</span><strong>Uso do modo áudio</strong><p>Os eventos já existem no frontend, mas precisam ser enviados e agregados pela API.</p></article>
+          <article><span>🎯</span><strong>Conversão por curso</strong><p>Depende de relacionar visualizações, checkout e pagamento aprovado.</p></article>
+        </div>
       </section>
     }
   `,
@@ -76,42 +135,102 @@ import { AdminCourse, AdminService } from '../admin.service';
     .page-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--rl-space-5); margin-bottom: var(--rl-space-7); }
     .eyebrow { margin: 0 0 var(--rl-space-1); color: var(--rl-brand-link); font-weight: var(--rl-weight-semibold); }
     h1 { margin: 0; font-size: var(--rl-text-2xl); }
-    .page-head p:last-child { max-width: 72ch; color: var(--rl-text-muted); }
-    .summary { display: grid; gap: var(--rl-space-4); margin-bottom: var(--rl-space-5); }
+    .page-head p:last-child { max-width: 76ch; color: var(--rl-text-muted); }
+    .summary, .rankings { display: grid; gap: var(--rl-space-4); margin-bottom: var(--rl-space-5); }
     .summary article { display: grid; gap: var(--rl-space-2); }
     .summary span { color: var(--rl-text-subtle); font-size: var(--rl-text-sm); }
     .summary strong { font-size: var(--rl-text-2xl); }
-    .coverage, .courses, .endpoint { margin-bottom: var(--rl-space-5); }
-    h2 { margin-top: 0; font-size: var(--rl-text-lg); }
-    .coverage__grid { display: grid; gap: var(--rl-space-3); margin-top: var(--rl-space-4); }
-    .coverage__grid article { display: grid; grid-template-columns: auto 1fr; gap: var(--rl-space-2) var(--rl-space-3); padding: var(--rl-space-4); border-radius: var(--rl-radius-md); background: var(--rl-surface-muted); }
-    .coverage__grid p { grid-column: 2; margin: 0; color: var(--rl-text-muted); }
-    .course-list { display: grid; gap: var(--rl-space-2); }
-    .course-list a { display: flex; align-items: center; justify-content: space-between; gap: var(--rl-space-4); padding: var(--rl-space-3); border: 1px solid var(--rl-border); border-radius: var(--rl-radius-md); color: var(--rl-text); text-decoration: none; }
-    .course-list span:first-child { display: grid; gap: .2rem; }
-    .course-list small { color: var(--rl-text-muted); }
-    .endpoint code { display: block; margin: var(--rl-space-3) 0; padding: var(--rl-space-3); border-radius: var(--rl-radius-md); background: var(--rl-neutral-900); color: white; overflow-x: auto; }
-    @media (min-width: 720px) { .summary { grid-template-columns: repeat(3, minmax(0, 1fr)); } .coverage__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .section-head h2, .section-head p { margin: 0; }
+    .section-head p { margin-top: var(--rl-space-1); color: var(--rl-text-muted); }
+    .ranking-list { display: grid; gap: var(--rl-space-2); margin-top: var(--rl-space-4); }
+    .ranking-list a, .ranking-row { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto; align-items: center; gap: var(--rl-space-3); padding: var(--rl-space-3); border: 1px solid var(--rl-border); border-radius: var(--rl-radius-md); color: var(--rl-text); text-decoration: none; }
+    .position { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--rl-surface-muted); font-weight: var(--rl-weight-bold); }
+    .name { display: grid; gap: .2rem; }
+    .name small { color: var(--rl-text-muted); }
+    .value { font-size: var(--rl-text-lg); font-weight: var(--rl-weight-bold); }
+    .course-table-card, .missing-data { margin-bottom: var(--rl-space-5); }
+    table { width: 100%; min-width: 760px; margin-top: var(--rl-space-4); border-collapse: collapse; }
+    th, td { padding: var(--rl-space-3); border-bottom: 1px solid var(--rl-border); text-align: left; }
+    th { color: var(--rl-text-subtle); font-size: var(--rl-text-xs); text-transform: uppercase; letter-spacing: .05em; }
+    td:first-child { display: grid; gap: .2rem; }
+    td:first-child span { color: var(--rl-text-muted); font-size: var(--rl-text-xs); }
+    td a { color: var(--rl-brand-link); font-weight: var(--rl-weight-semibold); text-decoration: none; }
+    .rate { display: inline-block; min-width: 3.5rem; padding: .2rem .5rem; border-radius: 999px; background: var(--rl-surface-muted); text-align: center; font-weight: var(--rl-weight-semibold); }
+    .missing-grid { display: grid; gap: var(--rl-space-3); margin-top: var(--rl-space-4); }
+    .missing-grid article { display: grid; grid-template-columns: auto 1fr; gap: var(--rl-space-2) var(--rl-space-3); padding: var(--rl-space-4); border-radius: var(--rl-radius-md); background: var(--rl-surface-muted); }
+    .missing-grid p { grid-column: 2; margin: 0; color: var(--rl-text-muted); }
+    @media (min-width: 720px) { .summary { grid-template-columns: repeat(4, minmax(0, 1fr)); } .rankings { grid-template-columns: repeat(2, minmax(0, 1fr)); } .missing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   `],
 })
 export class AdminContentAnalyticsPage implements OnInit {
   private readonly admin = inject(AdminService);
   private readonly seo = inject(SeoService);
+
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly courses = signal<AdminCourse[]>([]);
-  readonly plannedMetrics = [
-    { icon: '👁️', title: 'Mais e menos vistos', description: 'Ranking por visualizações únicas e recorrentes.' },
-    { icon: '🛒', title: 'Mais e menos comprados', description: 'Pedidos aprovados, receita e conversão por curso.' },
-    { icon: '🏁', title: 'Conclusão e abandono', description: 'Progressão por módulo, aula e ponto de saída.' },
-    { icon: '🔊', title: 'Uso do modo áudio', description: 'Aulas ouvidas, conclusão e velocidade preferida.' },
-  ];
+  readonly enrollments = signal<AdminEnrollment[]>([]);
+  readonly orders = signal<OrderDto[]>([]);
+  readonly formatCurrency = formatCurrency;
+
+  readonly courseCompletion = computed<CourseEnrollmentSummary[]>(() => {
+    const enrollments = this.enrollments();
+    return this.courses().map((course) => {
+      const courseEnrollments = enrollments.filter((item) => item.course.id === course.id);
+      const completed = courseEnrollments.filter((item) => item.status === 'COMPLETED').length;
+      const active = courseEnrollments.filter((item) => item.status === 'ACTIVE').length;
+      return {
+        course,
+        total: courseEnrollments.length,
+        active,
+        completed,
+        completionRate: courseEnrollments.length === 0 ? 0 : Math.round((completed / courseEnrollments.length) * 100),
+      };
+    });
+  });
+
+  readonly courseRankings = computed(() =>
+    [...this.courseCompletion()].sort((a, b) => b.total - a.total).slice(0, 5),
+  );
+
+  readonly salesRankings = computed<ProductSalesSummary[]>(() => {
+    const summaries = new Map<string, ProductSalesSummary>();
+    for (const order of this.orders().filter((item) => item.status === 'APPROVED')) {
+      const current = summaries.get(order.productName) ?? {
+        productName: order.productName,
+        purchases: 0,
+        revenueCents: 0,
+      };
+      current.purchases += 1;
+      current.revenueCents += order.totalCents;
+      summaries.set(order.productName, current);
+    }
+    return Array.from(summaries.values()).sort((a, b) => b.purchases - a.purchases).slice(0, 5);
+  });
 
   ngOnInit(): void {
-    this.seo.apply({ title: 'Analytics de conteúdo', description: 'Desempenho de cursos e aulas.', path: '/admin/analytics', noIndex: true });
-    this.admin.listCourses().subscribe({
-      next: (courses) => { this.courses.set(courses); this.loading.set(false); },
-      error: (err: { message: string }) => { this.error.set(err.message); this.loading.set(false); },
+    this.seo.apply({
+      title: 'Analytics de conteúdo',
+      description: 'Desempenho de cursos e aulas.',
+      path: '/admin/analytics',
+      noIndex: true,
+    });
+
+    forkJoin({
+      courses: this.admin.listCourses(),
+      enrollments: this.admin.listEnrollments(),
+      orders: this.admin.listOrders(1),
+    }).subscribe({
+      next: ({ courses, enrollments, orders }) => {
+        this.courses.set(courses);
+        this.enrollments.set(enrollments);
+        this.orders.set(orders.items);
+        this.loading.set(false);
+      },
+      error: (err: { message: string }) => {
+        this.error.set(err.message);
+        this.loading.set(false);
+      },
     });
   }
 
