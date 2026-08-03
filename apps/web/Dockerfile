@@ -6,10 +6,13 @@ RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
 WORKDIR /app
 
-# O pacote de contratos possui um script prepare que roda durante o pnpm install.
-# Por isso, seus fontes e tsconfigs precisam existir antes da instalação.
+# Contracts executa o script prepare durante o pnpm install, então seus
+# fontes e tsconfigs precisam existir antes da instalação.
+# O pacote UI é compilado como código-fonte pelo Angular e seu manifesto
+# precisa estar presente para o pnpm criar suas dependências e links.
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
 COPY packages/contracts ./packages/contracts
+COPY packages/ui/package.json packages/ui/package.json
 COPY apps/api/package.json apps/api/package.json
 COPY apps/web/package.json apps/web/package.json
 
