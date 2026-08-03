@@ -18,6 +18,7 @@ export const BACKOFFICE_NAVIGATION: BackofficeNavGroup[] = [
       { path: '/admin', label: 'Visão geral', icon: '📊', exact: true },
       { path: '/admin/financeiro', label: 'Financeiro', icon: '💳' },
       { path: '/admin/analytics', label: 'Analytics de conteúdo', icon: '📈' },
+      { path: '/admin/insights', label: 'Intelligence Center', icon: '💡', badge: 'Novo' },
     ],
   },
   {
