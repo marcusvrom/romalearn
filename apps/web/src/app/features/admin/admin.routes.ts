@@ -3,10 +3,10 @@ import { UserRole } from '@romalearn/contracts';
 import { staffGuard } from '../../core/guards';
 
 /**
- * Painel administrativo.
+ * Backoffice da RomaLearn.
  *
- * Os guards levam à tela certa; a autorização real é sempre verificada pela
- * API a cada requisição.
+ * Os guards organizam a experiência; a autorização real continua sendo
+ * validada pela API em cada operação sensível.
  */
 export const adminRoutes: Routes = [
   {
@@ -16,6 +16,32 @@ export const adminRoutes: Routes = [
       {
         path: '',
         loadComponent: () => import('./pages/dashboard.page').then((m) => m.AdminDashboardPage),
+      },
+      {
+        path: 'financeiro',
+        canActivate: [staffGuard],
+        data: { roles: [UserRole.ADMIN, UserRole.SUPPORT] },
+        loadComponent: () =>
+          import('./pages/finance-overview.page').then((m) => m.AdminFinanceOverviewPage),
+      },
+      {
+        path: 'analytics',
+        loadComponent: () =>
+          import('./pages/content-analytics.page').then((m) => m.AdminContentAnalyticsPage),
+      },
+      {
+        path: 'insights',
+        canActivate: [staffGuard],
+        data: { roles: [UserRole.ADMIN, UserRole.CONTENT_MANAGER, UserRole.SUPPORT] },
+        loadComponent: () =>
+          import('./pages/insights-center.page').then((m) => m.AdminInsightsCenterPage),
+      },
+      {
+        path: 'atendimento',
+        canActivate: [staffGuard],
+        data: { roles: [UserRole.ADMIN, UserRole.SUPPORT] },
+        loadComponent: () =>
+          import('./pages/support-center.page').then((m) => m.AdminSupportCenterPage),
       },
       {
         path: 'cursos',
