@@ -141,9 +141,26 @@ jobs:
           - application: API
             dockerfile: apps/api/Dockerfile
             cache_scope: ci-api
+            image_tag: romalearn-api:ci
           - application: frontend
             dockerfile: apps/web/Dockerfile
             cache_scope: ci-web
+            image_tag: romalearn-web:ci
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: romalearn
+          POSTGRES_PASSWORD: romalearn
+          POSTGRES_DB: romalearn
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U romalearn"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
 
     steps:
       - uses: actions/checkout@v4
@@ -157,7 +174,33 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           push: false
+          load: true
+          tags: ${{ matrix.image_tag }}
           cache-from: type=gha,scope=${{ matrix.cache_scope }}
           cache-to: type=gha,mode=max,scope=${{ matrix.cache_scope }}
           provenance: false
           sbom: false
+
+      - name: Validar migrations na imagem runtime da API
+        if: matrix.application == 'API'
+        run: |
+          docker run --rm --network host \
+            -e NODE_ENV=production \
+            -e POSTGRES_HOST=127.0.0.1 \
+            -e POSTGRES_PORT=5432 \
+            -e POSTGRES_USER=romalearn \
+            -e POSTGRES_PASSWORD=romalearn \
+            -e POSTGRES_DB=romalearn \
+            "${{ matrix.image_tag }}" \
+            pnpm migration:run:prod
+
+          echo 'Executando novamente para confirmar que não há migrations pendentes...'
+          docker run --rm --network host \
+            -e NODE_ENV=production \
+            -e POSTGRES_HOST=127.0.0.1 \
+            -e POSTGRES_PORT=5432 \
+            -e POSTGRES_USER=romalearn \
+            -e POSTGRES_PASSWORD=romalearn \
+            -e POSTGRES_DB=romalearn \
+            "${{ matrix.image_tag }}" \
+            pnpm migration:run:prod
