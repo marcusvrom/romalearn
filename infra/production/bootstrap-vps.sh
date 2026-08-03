@@ -33,6 +33,7 @@ usermod -aG docker "$DEPLOY_USER"
 install -d -m 0755 -o "$DEPLOY_USER" -g "$DEPLOY_USER" "$APP_DIR"
 install -d -m 0755 -o "$DEPLOY_USER" -g "$DEPLOY_USER" "$APP_DIR/config" "$APP_DIR/backups"
 install -d -m 0700 -o "$DEPLOY_USER" -g "$DEPLOY_USER" "$APP_DIR/secrets"
+install -d -m 0700 -o "$DEPLOY_USER" -g "$DEPLOY_USER" "$APP_DIR/secrets/tls"
 install -d -m 0700 -o "$DEPLOY_USER" -g "$DEPLOY_USER" "/home/$DEPLOY_USER/.ssh"
 touch "/home/$DEPLOY_USER/.ssh/authorized_keys"
 chmod 600 "/home/$DEPLOY_USER/.ssh/authorized_keys"
@@ -42,14 +43,15 @@ ufw default deny incoming
 ufw default allow outgoing
 ufw allow OpenSSH
 ufw allow 80/tcp
+ufw allow 443/tcp
 ufw --force enable
 
 cat >/etc/fail2ban/jail.d/sshd.local <<'EOF'
 [sshd]
 enabled = true
-maxretry = 5
+maxretry = 10
 findtime = 10m
-bantime = 1h
+bantime = 10m
 EOF
 systemctl restart fail2ban
 
@@ -72,5 +74,6 @@ echo 'Provisionamento concluído.'
 echo "Próximos passos:"
 echo "1. Adicione a chave pública do GitHub Actions em /home/$DEPLOY_USER/.ssh/authorized_keys"
 echo "2. Crie os arquivos em $APP_DIR/secrets"
-echo "3. Autentique o usuário $DEPLOY_USER no GHCR"
-echo '4. Cadastre os secrets do environment production no GitHub'
+echo "3. Instale origin.pem e origin-key.pem em $APP_DIR/secrets/tls"
+echo "4. Autentique o usuário $DEPLOY_USER no GHCR"
+echo '5. Cadastre os secrets do environment production no GitHub'
