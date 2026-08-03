@@ -6,8 +6,10 @@ RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/contracts/package.json packages/contracts/package.json
+# O pacote de contratos possui um script prepare que roda durante o pnpm install.
+# Por isso, seus fontes e tsconfigs precisam existir antes da instalação.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
+COPY packages/contracts ./packages/contracts
 COPY apps/api/package.json apps/api/package.json
 COPY apps/web/package.json apps/web/package.json
 
