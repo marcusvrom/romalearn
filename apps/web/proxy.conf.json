@@ -1,0 +1,9 @@
+{
+  "//": "Repassa /api para a API local, para que o mesmo caminho usado em produção (mesma origem, atrás de um reverse proxy) também funcione no ng serve. O navegador não depende disto: em desenvolvimento o front fala direto com a porta 3333 (veja resolveApiBaseUrl), porque este arquivo só é lido quando o dev server inicia.",
+  "/api": {
+    "target": "http://localhost:3333",
+    "secure": false,
+    "changeOrigin": false,
+    "ws": true
+  }
+}

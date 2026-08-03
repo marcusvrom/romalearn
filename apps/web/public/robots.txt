@@ -1,0 +1,13 @@
+# Área pública é indexável; área do aluno e painel administrativo, não.
+User-agent: *
+Allow: /
+Disallow: /painel
+Disallow: /admin
+Disallow: /checkout
+Disallow: /entrar
+Disallow: /criar-conta
+Disallow: /recuperar-senha
+Disallow: /redefinir-senha
+Disallow: /confirmar-email
+
+Sitemap: http://localhost:4200/sitemap.xml

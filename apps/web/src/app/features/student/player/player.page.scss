@@ -1,0 +1,237 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--rl-surface);
+}
+
+.loading-wrapper {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--rl-space-16) var(--rl-space-5);
+  text-align: center;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// ---------------------------------------------------------------------------
+// Barra superior
+// ---------------------------------------------------------------------------
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: var(--rl-space-4);
+  padding: var(--rl-space-3) var(--rl-space-4);
+  background: var(--rl-surface-raised);
+  border-bottom: 1px solid var(--rl-border);
+}
+
+.topbar__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 1px solid var(--rl-border);
+  border-radius: var(--rl-radius-md);
+  background: transparent;
+  color: var(--rl-text);
+  cursor: pointer;
+}
+
+.topbar__title {
+  flex: 1;
+  min-width: 0;
+}
+
+.topbar__back {
+  font-size: var(--rl-text-xs);
+  color: var(--rl-text-muted);
+  text-decoration: none;
+}
+
+.topbar__course {
+  margin: 0;
+  font-weight: var(--rl-weight-semibold);
+  font-size: var(--rl-text-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar__progress {
+  display: none;
+  align-items: center;
+  gap: var(--rl-space-3);
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.topbar__progress rl-progress-bar {
+  flex: 1;
+}
+
+@media (min-width: 768px) {
+  .topbar__progress {
+    display: flex;
+  }
+}
+
+@media (min-width: 1024px) {
+  .topbar__toggle {
+    display: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Corpo
+// ---------------------------------------------------------------------------
+
+.player__body {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 35;
+  width: min(320px, 85vw);
+  padding: var(--rl-space-5);
+  overflow-y: auto;
+  background: var(--rl-surface-raised);
+  border-right: 1px solid var(--rl-border);
+  transform: translateX(-100%);
+  transition: transform var(--rl-transition-base);
+}
+
+.player--sidebar-open .sidebar {
+  transform: translateX(0);
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    position: sticky;
+    top: 68px;
+    height: calc(100vh - 68px);
+    transform: none;
+    width: 340px;
+    flex-shrink: 0;
+  }
+}
+
+.sidebar__summary {
+  padding-bottom: var(--rl-space-4);
+  margin-bottom: var(--rl-space-4);
+  border-bottom: 1px solid var(--rl-border);
+}
+
+.sidebar__summary p {
+  margin: 0;
+}
+
+.sidebar__pending {
+  margin: var(--rl-space-2) 0 0;
+  padding-left: var(--rl-space-5);
+  font-size: var(--rl-text-xs);
+  color: var(--rl-warn-text);
+}
+
+.sidebar__done {
+  margin-top: var(--rl-space-2);
+  color: var(--rl-success-text);
+  font-weight: var(--rl-weight-semibold);
+  font-size: var(--rl-text-sm);
+}
+
+.sidebar__section + .sidebar__section {
+  margin-top: var(--rl-space-5);
+}
+
+.sidebar__section-title {
+  font-size: var(--rl-text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--rl-text-subtle);
+  margin-bottom: var(--rl-space-2);
+}
+
+.sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar__lesson {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rl-space-3);
+  padding: var(--rl-space-3);
+  border-radius: var(--rl-radius-md);
+  color: var(--rl-text-muted);
+  text-decoration: none;
+  font-size: var(--rl-text-sm);
+  min-height: 44px;
+
+  &:hover {
+    background: var(--rl-surface-muted);
+  }
+
+  &.active {
+    background: var(--rl-brand-50);
+    color: var(--rl-brand-on-surface);
+    font-weight: var(--rl-weight-semibold);
+  }
+}
+
+.sidebar__lesson--done .sidebar__status {
+  color: var(--rl-success-text);
+}
+
+.sidebar__status {
+  width: 20px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.sidebar__lesson-title {
+  flex: 1;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: var(--rl-space-6) var(--rl-space-5) var(--rl-space-16);
+}
+
+@media (min-width: 768px) {
+  .content {
+    padding: var(--rl-space-10) var(--rl-space-10) var(--rl-space-20);
+  }
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 34;
+  border: 0;
+  background: rgba(20, 26, 35, 0.5);
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  .backdrop {
+    display: none;
+  }
+}

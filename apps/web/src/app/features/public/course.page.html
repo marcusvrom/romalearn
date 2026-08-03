@@ -1,0 +1,190 @@
+@if (loading()) {
+<div class="rl-container rl-section"><rl-loading label="Carregando o curso…" /></div>
+} @if (!loading() && error()) {
+<div class="rl-container rl-section">
+  <rl-alert tone="error" title="Curso não encontrado">{{ error() }}</rl-alert>
+  <a class="rl-button rl-button--secondary" [routerLink]="routes.catalog">Voltar ao catálogo</a>
+</div>
+} @if (!loading() && !error() && course(); as course) {
+<article>
+  <!-- Cabeçalho -->
+  <header class="head">
+    <div class="rl-container head__inner">
+      <div>
+        <nav class="breadcrumb" aria-label="Você está em">
+          <a [routerLink]="routes.home">Início</a>
+          <span aria-hidden="true">/</span>
+          <a [routerLink]="routes.catalog">Cursos</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{{ course.title }}</span>
+        </nav>
+
+        <div class="badges">
+          @if (course.isFree) {
+          <span class="rl-badge rl-badge--free">Gratuito</span>
+          } @else {
+          <span class="rl-badge rl-badge--brand">Trilha paga</span>
+          }
+          <span class="rl-badge">{{ course.workloadHours }} horas</span>
+          <span class="rl-badge">{{ course.sections.length }} partes</span>
+          <span class="rl-badge">{{ totalLessons(course) }} aulas</span>
+        </div>
+
+        <h1>{{ course.title }}</h1>
+        @if (course.subtitle) {
+        <p class="subtitle">{{ course.subtitle }}</p>
+        }
+        <p class="rl-lead">{{ course.shortDescription }}</p>
+      </div>
+
+      <!-- Cartão de matrícula / compra -->
+      <aside class="rl-card buy" aria-label="Acesso ao curso">
+        @if (course.access?.hasAccess) {
+        <p class="buy__label">Você já tem acesso</p>
+        <a class="rl-button rl-button--primary rl-button--block" [routerLink]="routes.player(course.slug)">
+          Continuar estudando
+        </a>
+        } @if (!course.access?.hasAccess && course.isFree) {
+        <p class="buy__price">Gratuito</p>
+        <p class="rl-small rl-muted">Sem cartão de crédito. Acesso imediato após a matrícula.</p>
+        <button
+          type="button"
+          class="rl-button rl-button--primary rl-button--block"
+          [disabled]="enrolling()"
+          (click)="enrollFree()"
+        >
+          {{ enrolling() ? 'Matriculando…' : 'Fazer matrícula gratuita' }}
+        </button>
+        } @if (!course.access?.hasAccess && !course.isFree && offer(); as offer) {
+        <p class="buy__label">Disponível na trilha completa</p>
+        <p class="buy__price">{{ formatCurrency(offer.priceCents, offer.currency) }}</p>
+        @if (offer.environment === 'SANDBOX') {
+        <p class="rl-small sandbox">Preço de demonstração (ambiente de testes). Nenhuma cobrança real é feita.</p>
+        }
+        <button type="button" class="rl-button rl-button--primary rl-button--block" (click)="goToCheckout()">
+          Comprar a trilha completa
+        </button>
+        <p class="rl-small rl-muted">Acesso vitalício aos módulos da trilha.</p>
+        } @if (!course.access?.hasAccess && !course.isFree && !offer()) {
+        <p class="buy__label">Em breve</p>
+        <p class="rl-small rl-muted">
+          Este módulo ainda não está disponível para compra. Comece pelo módulo gratuito enquanto isso.
+        </p>
+        <a class="rl-button rl-button--secondary rl-button--block" [routerLink]="routes.catalog"> Ver outros cursos </a>
+        } @if (feedback(); as message) {
+        <rl-alert tone="error">{{ message }}</rl-alert>
+        }
+      </aside>
+    </div>
+  </header>
+
+  <div class="rl-container body">
+    <div class="body__main">
+      <!-- Sobre -->
+      @if (course.fullDescription) {
+      <section class="block">
+        <h2>Sobre este curso</h2>
+        <div class="description">
+          @for (paragraph of course.fullDescription.split('\n\n'); track $index) {
+          <p>{{ paragraph }}</p>
+          }
+        </div>
+      </section>
+      }
+
+      <!-- Objetivos -->
+      @if (course.objectives.length > 0) {
+      <section class="block">
+        <h2>O que você vai aprender</h2>
+        <ul class="checks checks--two">
+          @for (objective of course.objectives; track objective) {
+          <li>{{ objective }}</li>
+          }
+        </ul>
+      </section>
+      }
+
+      <!-- Conteúdo -->
+      <section class="block" id="conteudo">
+        <h2>Conteúdo do curso</h2>
+        <p class="rl-muted">
+          {{ course.sections.length }} partes · {{ totalLessons(course) }} aulas · {{ course.workloadHours }} horas
+        </p>
+
+        @if (course.sections.length === 0) {
+        <p class="rl-muted">O conteúdo detalhado será publicado em breve.</p>
+        } @else {
+        <div class="sections">
+          @for (section of course.sections; track section.id; let first = $first) {
+          <details class="section" [open]="first">
+            <summary>
+              <span class="section__title">{{ section.title }}</span>
+              <span class="rl-small rl-muted">{{ section.lessons.length }} aulas</span>
+            </summary>
+
+            @if (section.summary) {
+            <p class="section__summary rl-small rl-muted">{{ section.summary }}</p>
+            }
+
+            <ul class="lessons">
+              @for (lesson of section.lessons; track lesson.id) {
+              <li>
+                <span class="lessons__icon" aria-hidden="true">{{ typeIcon[lesson.type] }}</span>
+                <span class="lessons__title">{{ lesson.title }}</span>
+                <span class="rl-badge">{{ typeLabel[lesson.type] }}</span>
+                @if (lesson.isPreview) {
+                <span class="rl-badge rl-badge--free">Amostra</span>
+                }
+                <span class="rl-small rl-muted">{{ formatMinutes(lesson.estimatedMinutes) }}</span>
+              </li>
+              }
+            </ul>
+          </details>
+          }
+        </div>
+        }
+      </section>
+
+      <!-- Público e pré-requisitos -->
+      <div class="rl-grid rl-grid--2">
+        @if (course.targetAudience.length > 0) {
+        <section class="block">
+          <h2>Para quem é</h2>
+          <ul class="checks">
+            @for (item of course.targetAudience; track item) {
+            <li>{{ item }}</li>
+            }
+          </ul>
+        </section>
+        } @if (course.prerequisites.length > 0) {
+        <section class="block">
+          <h2>Pré-requisitos</h2>
+          <ul class="checks">
+            @for (item of course.prerequisites; track item) {
+            <li>{{ item }}</li>
+            }
+          </ul>
+        </section>
+        }
+      </div>
+
+      <!-- Responsável -->
+      @if (course.instructor; as instructor) {
+      <section class="block">
+        <h2>Quem produziu</h2>
+        <div class="rl-card instructor">
+          <div>
+            <p class="instructor__name">{{ instructor.name }}</p>
+            @if (instructor.title) {
+            <p class="rl-small rl-muted">{{ instructor.title }}</p>
+            } @if (instructor.bio) {
+            <p class="rl-small rl-muted">{{ instructor.bio }}</p>
+            }
+          </div>
+        </div>
+      </section>
+      }
+    </div>
+  </div>
+</article>
+}

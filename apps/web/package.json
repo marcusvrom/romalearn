@@ -1,0 +1,42 @@
+{
+  "name": "@romalearn/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "ng serve --port 4200",
+    "build": "ng build",
+    "serve:ssr": "node dist/web/server/server.mjs",
+    "lint": "eslint \"src/**/*.{ts,html}\" --max-warnings 0",
+    "test": "echo \"@romalearn/web: testes cobertos pela suite e2e da API\"",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@angular/animations": "20.0.6",
+    "@angular/common": "20.0.6",
+    "@angular/compiler": "20.0.6",
+    "@angular/core": "20.0.6",
+    "@angular/forms": "20.0.6",
+    "@angular/platform-browser": "20.0.6",
+    "@angular/platform-server": "20.0.6",
+    "@angular/router": "20.0.6",
+    "@angular/ssr": "20.0.5",
+    "@romalearn/contracts": "workspace:*",
+    "express": "5.0.1",
+    "rxjs": "7.8.1",
+    "tslib": "2.8.1",
+    "zone.js": "0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "20.0.5",
+    "@angular/cli": "20.0.5",
+    "@angular/compiler-cli": "20.0.6",
+    "@eslint/js": "9.20.0",
+    "@types/express": "5.0.0",
+    "@types/node": "22.10.5",
+    "angular-eslint": "20.1.1",
+    "eslint": "9.20.1",
+    "eslint-config-prettier": "9.1.0",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.24.1"
+  }
+}

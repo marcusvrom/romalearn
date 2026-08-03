@@ -1,0 +1,97 @@
+@if (store.loading()) {
+<div class="loading-wrapper"><rl-loading label="Carregando o curso…" /></div>
+} @if (!store.loading() && store.error(); as message) {
+<div class="loading-wrapper">
+  <rl-alert tone="error" title="Não foi possível abrir o curso">{{ message }}</rl-alert>
+  <a class="rl-button rl-button--secondary" [routerLink]="routes.dashboard">Voltar à minha área</a>
+</div>
+} @if (!store.loading() && !store.error() && store.player(); as player) {
+<div class="player" [class.player--sidebar-open]="store.sidebarOpen()">
+  <!-- Barra superior -->
+  <header class="topbar">
+    <button
+      type="button"
+      class="topbar__toggle"
+      [attr.aria-expanded]="store.sidebarOpen()"
+      aria-controls="lista-aulas"
+      (click)="store.toggleSidebar()"
+    >
+      <span aria-hidden="true">☰</span>
+      <span class="rl-visually-hidden">
+        {{ store.sidebarOpen() ? 'Fechar lista de aulas' : 'Abrir lista de aulas' }}
+      </span>
+    </button>
+
+    <div class="topbar__title">
+      <a class="topbar__back" [routerLink]="routes.dashboard">← Minha área</a>
+      <p class="topbar__course">{{ player.course.title }}</p>
+    </div>
+
+    <div class="topbar__progress">
+      <rl-progress-bar [value]="player.progress.percentage" [showLabel]="false" label="Progresso do curso" />
+      <span class="rl-small">{{ player.progress.percentage }}%</span>
+    </div>
+
+    <!-- O player esconde o cabeçalho do site; sem isto o aluno ficaria sem
+         como trocar de tema justamente onde passa mais tempo lendo. -->
+    <rl-theme-toggle />
+  </header>
+
+  <div class="player__body">
+    <!-- Navegação lateral -->
+    <nav id="lista-aulas" class="sidebar" aria-label="Conteúdo do curso">
+      <div class="sidebar__summary">
+        <p class="rl-small rl-muted">
+          {{ player.progress.completedLessons }} de {{ player.progress.totalLessons }} aulas concluídas
+        </p>
+        @if (player.progress.pendingRequirements.length > 0) {
+        <ul class="sidebar__pending">
+          @for (requirement of player.progress.pendingRequirements; track requirement) {
+          <li>{{ requirement }}</li>
+          }
+        </ul>
+        } @else if (player.progress.totalLessons > 0) {
+        <p class="sidebar__done">✓ Curso concluído</p>
+        }
+      </div>
+
+      @for (section of player.sections; track section.id) {
+      <section class="sidebar__section">
+        <h2 class="sidebar__section-title">{{ section.title }}</h2>
+        <ul class="sidebar__list">
+          @for (lesson of section.lessons; track lesson.id) {
+          <li>
+            <a
+              [routerLink]="lessonLink(lesson.slug)"
+              routerLinkActive="active"
+              class="sidebar__lesson"
+              [class.sidebar__lesson--done]="lesson.status === completed"
+              (click)="store.closeSidebar()"
+            >
+              <span class="sidebar__status" aria-hidden="true">
+                {{ lesson.status === completed ? '✓' : typeIcon[lesson.type] }}
+              </span>
+              <span class="sidebar__lesson-title">{{ lesson.title }}</span>
+              @if (lesson.status === completed) {
+              <span class="rl-visually-hidden">(concluída)</span>
+              }
+            </a>
+          </li>
+          }
+        </ul>
+      </section>
+      }
+    </nav>
+
+    <!-- Conteúdo da aula -->
+    <div class="content">
+      <router-outlet />
+    </div>
+  </div>
+
+  <!-- Fundo escuro do painel lateral no celular -->
+  @if (store.sidebarOpen()) {
+  <button type="button" class="backdrop" aria-label="Fechar lista de aulas" (click)="store.closeSidebar()"></button>
+  }
+</div>
+}

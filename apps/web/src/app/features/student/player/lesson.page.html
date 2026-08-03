@@ -1,0 +1,345 @@
+@if (loading()) {
+<rl-loading label="Carregando a aula…" />
+} @if (!loading() && error(); as message) {
+<rl-alert tone="error" title="Não foi possível abrir a aula">{{ message }}</rl-alert>
+} @if (!loading() && !error() && lesson(); as lesson) {
+<article class="lesson">
+  <header class="lesson__head">
+    <div class="lesson__meta">
+      <span class="rl-badge">{{ typeLabel[lesson.type] }}</span>
+      <span class="rl-small rl-muted">{{ formatMinutes(lesson.estimatedMinutes) }}</span>
+      @if (lesson.progress.status === completedStatus) {
+      <span class="rl-badge rl-badge--free">Concluída</span>
+      }
+    </div>
+    <h1>{{ lesson.title }}</h1>
+  </header>
+
+  @if (feedback(); as message) {
+  <rl-alert [tone]="message.tone">{{ message.message }}</rl-alert>
+  }
+
+  @if (lesson.contentHtml) {
+  <rl-lesson-audio-player
+    [lessonId]="lesson.id"
+    [courseSlug]="courseSlug"
+    [title]="lesson.title"
+    [html]="lesson.contentHtml"
+  />
+  }
+
+  <!-- Vídeo -->
+  @if (lesson.type === lessonTypes.VIDEO && lesson.videoUrl) {
+  <div class="video">
+    <video controls preload="metadata" [src]="lesson.videoUrl" (timeupdate)="onVideoProgress($event)">
+      Seu navegador não consegue exibir este vídeo.
+    </video>
+  </div>
+  }
+
+  <!-- PDF / download -->
+  @if ((lesson.type === lessonTypes.PDF || lesson.type === lessonTypes.DOWNLOAD) && lesson.fileUrl) {
+  <div class="rl-card file">
+    <p><strong>Arquivo desta aula</strong></p>
+    <a class="rl-button rl-button--primary" [href]="lesson.fileUrl" target="_blank" rel="noopener">
+      {{ lesson.type === lessonTypes.PDF ? 'Abrir o PDF' : 'Baixar o arquivo' }}
+    </a>
+  </div>
+  }
+
+  <!-- Conteúdo em texto (HTML sanitizado pelo backend) -->
+  @if (safeContent(); as content) {
+  <div class="rl-prose" [innerHTML]="content"></div>
+  }
+
+  <!-- Atividade prática -->
+  @if (lesson.type === lessonTypes.PRACTICAL_ACTIVITY) {
+  @if (submission(); as entrega) {
+  <section class="rl-card devolutiva" [class]="'devolutiva--' + entrega.status.toLowerCase()">
+    <header class="devolutiva__head">
+      <h2>Correção da sua entrega</h2>
+      @if (entrega.score !== null) {
+      <span class="devolutiva__nota" [attr.aria-label]="'Nota ' + entrega.score + ' de 100'">
+        {{ entrega.score | number: '1.0-0' }}<small>/100</small>
+      </span>
+      }
+    </header>
+
+    <p class="devolutiva__mensagem">{{ entrega.statusMessage }}</p>
+
+    @if (entrega.criticalFailures.length) {
+    <div class="devolutiva__critico">
+      <h3>Pontos que precisam ser corrigidos antes de tudo</h3>
+      <ul>
+        @for (falha of entrega.criticalFailures; track falha) {
+        <li>{{ falha }}</li>
+        }
+      </ul>
+    </div>
+    } @if (entrega.criteria.length) {
+    <div class="devolutiva__criterios">
+      @for (criterio of entrega.criteria; track criterio.criterionId) {
+      <div class="criterio">
+        <div class="criterio__topo">
+          <span class="criterio__titulo">{{ criterio.title }}</span>
+          <span class="criterio__nota">{{ criterio.score | number: '1.0-0' }}%</span>
+        </div>
+        <div
+          class="criterio__barra"
+          role="img"
+          [attr.aria-label]="criterio.title + ': ' + criterio.score + ' de 100, peso ' + criterio.weight + '%'"
+        >
+          <span [style.width.%]="criterio.score"></span>
+        </div>
+        @if (criterio.comment) {
+        <p class="criterio__comentario rl-small">{{ criterio.comment }}</p>
+        }
+      </div>
+      }
+    </div>
+    } @if (entrega.strengths.length) {
+    <h3>O que ficou bom</h3>
+    <ul class="rl-small">
+      @for (ponto of entrega.strengths; track ponto) {
+      <li>{{ ponto }}</li>
+      }
+    </ul>
+    } @if (entrega.improvements.length) {
+    <h3>O que melhorar</h3>
+    <ul class="rl-small">
+      @for (ponto of entrega.improvements; track ponto) {
+      <li>{{ ponto }}</li>
+      }
+    </ul>
+    } @if (entrega.attachment; as anexo) {
+    <div class="devolutiva__anexo">
+      <h3>Arquivo entregue</h3>
+      <p class="rl-small">
+        <a [href]="anexo.url" target="_blank" rel="noopener">{{ anexo.filename }}</a>
+      </p>
+      <ul class="rl-small verificacoes">
+        @for (check of anexo.checks; track check.label) {
+        <li [class.verificacoes--falhou]="!check.passed">
+          <span aria-hidden="true">{{ check.passed ? '✓' : '✕' }}</span>
+          {{ check.label }}
+        </li>
+        }
+      </ul>
+    </div>
+    }
+
+    <p class="rl-small rl-muted devolutiva__origem">
+      Tentativa {{ entrega.attemptNumber }}. @if (entrega.gradedBy === 'HUMAN') { Corrigida pela equipe. } @else if
+      (entrega.gradedBy) { Correção automática conferida com a rubrica desta atividade. Se algo não fizer sentido, envie
+      de novo ou fale com o suporte. }
+    </p>
+  </section>
+  }
+
+  <section class="rl-card activity">
+    <h2>{{ submission() ? 'Reenviar sua atividade' : 'Envie sua atividade' }}</h2>
+    <p class="rl-small rl-muted">
+      Conte com suas palavras o que você fez, o que funcionou e o que ainda ficou com dúvida. Use apenas dados fictícios
+      ou autorizados.
+    </p>
+
+    @if (lesson.activityRubric; as rubrica) {
+    <p class="rl-small rl-muted">
+      Sua entrega é avaliada em {{ rubrica.criteria.length }} critérios, e a aprovação pede {{ rubrica.passingScore }}%.
+      Escreva pelo menos {{ rubrica.minWords }} palavras, falando de cada critério. Não há limite de tentativas.
+    </p>
+    }
+
+    <label class="rl-label" for="relato">Seu relato</label>
+    <textarea
+      id="relato"
+      class="rl-textarea"
+      [(ngModel)]="activityNotes"
+      name="relato"
+      rows="10"
+      placeholder="Ex.: criei a pasta de estudos, salvei o documento com nome descritivo e gerei o PDF…"
+    ></textarea>
+
+    @if (lesson.activityRubric; as rubrica) {
+    <p class="rl-small rl-muted contador" [class.contador--curto]="wordCount() < rubrica.minWords">
+      {{ wordCount() }} de {{ rubrica.minWords }} palavras
+    </p>
+    } @if (lesson.activityAttachmentPolicy; as anexo) {
+    <div class="rl-field anexo">
+      <label class="rl-label" for="arquivo">
+        Arquivo da entrega
+        <span class="rl-small rl-muted">{{ anexo.required ? '(obrigatório)' : '(opcional)' }}</span>
+      </label>
+      <p class="rl-small rl-muted">{{ anexo.hint }}</p>
+      <input
+        id="arquivo"
+        type="file"
+        class="rl-input"
+        [attr.accept]="anexo.extensions.join(',')"
+        (change)="escolherArquivo($event)"
+      />
+      @if (arquivo(); as escolhido) {
+      <p class="rl-small">Selecionado: {{ escolhido.name }}</p>
+      }
+    </div>
+    }
+
+    <button type="button" class="rl-button rl-button--secondary" [disabled]="submitting()" (click)="submitActivity()">
+      {{ submitting() ? 'Enviando…' : submission() ? 'Enviar nova versão' : 'Enviar atividade' }}
+    </button>
+  </section>
+  }
+
+  <!-- Questionário -->
+  @if (lesson.quiz; as quiz) {
+  <section class="quiz">
+    <header class="quiz__head">
+      <h2>{{ quiz.title }}</h2>
+      @if (quiz.description) {
+      <p class="rl-small rl-muted">{{ quiz.description }}</p>
+      }
+      <p class="rl-small rl-muted">
+        Nota mínima: {{ quiz.passingScore }}% @if (quiz.maxAttempts) { · Tentativas: {{ quiz.attemptsUsed }} de {{
+        quiz.maxAttempts }} } @else { · Tentativas ilimitadas } @if (quiz.bestScore !== null) { · Melhor nota: {{
+        quiz.bestScore }}% }
+      </p>
+    </header>
+
+    @if (quizResult(); as result) {
+    <div class="result" [class.result--passed]="result.passed">
+      <p class="result__score">{{ result.score }}%</p>
+      <p class="result__label">
+        {{ result.passed ? 'Aprovado! Você alcançou a nota mínima.' : 'Ainda não foi desta vez. Revise o conteúdo e
+        tente novamente.' }}
+      </p>
+      @if (!result.passed) {
+      <button type="button" class="rl-button rl-button--secondary" (click)="retryQuiz()">Tentar de novo</button>
+      }
+    </div>
+
+    @if (result.questions.length > 0) {
+    <div class="feedback">
+      @for (question of quiz.questions; track question.id) { @if (feedbackFor(question.id); as item) {
+      <div class="feedback__item" [class.feedback__item--wrong]="!item.correct">
+        <p class="feedback__statement">
+          <span aria-hidden="true">{{ item.correct ? '✓' : '✕' }}</span>
+          {{ question.statement }}
+        </p>
+        <ul class="feedback__options">
+          @for (option of question.options; track option.id) {
+          <li
+            [class.is-correct]="item.correctOptionIds.includes(option.id)"
+            [class.is-selected]="item.selectedOptionIds.includes(option.id)"
+          >
+            {{ option.text }} @if (item.correctOptionIds.includes(option.id)) {
+            <span class="rl-badge rl-badge--free">Correta</span>
+            }
+          </li>
+          }
+        </ul>
+        @if (item.explanation) {
+        <p class="feedback__explanation">{{ item.explanation }}</p>
+        }
+      </div>
+      } }
+    </div>
+    } } @else {
+    <form class="quiz__form" (ngSubmit)="submitQuiz()">
+      @for (question of quiz.questions; track question.id; let index = $index) {
+      <fieldset class="question">
+        <legend>
+          <span class="question__number">{{ index + 1 }}.</span>
+          {{ question.statement }}
+        </legend>
+        @if (question.type === 'MULTIPLE_CHOICE') {
+        <p class="rl-small rl-muted">Pode haver mais de uma resposta correta.</p>
+        }
+
+        <ul class="options">
+          @for (option of question.options; track option.id) {
+          <li>
+            <label class="option" [class.option--checked]="isSelected(question.id, option.id)">
+              <input
+                [type]="question.type === 'MULTIPLE_CHOICE' ? 'checkbox' : 'radio'"
+                [name]="'questao-' + question.id"
+                [checked]="isSelected(question.id, option.id)"
+                (change)="toggleOption(question.id, option.id, question.type === 'MULTIPLE_CHOICE')"
+              />
+              <span>{{ option.text }}</span>
+            </label>
+          </li>
+          }
+        </ul>
+      </fieldset>
+      }
+
+      <button type="submit" class="rl-button rl-button--primary" [disabled]="submittingQuiz()">
+        {{ submittingQuiz() ? 'Enviando…' : 'Enviar respostas' }}
+      </button>
+    </form>
+    }
+  </section>
+  }
+
+  <!-- Materiais de apoio -->
+  @if (lesson.materials.length > 0) {
+  <section class="materials">
+    <h2>Materiais de apoio</h2>
+    <ul>
+      @for (material of lesson.materials; track material.id) {
+      <li class="rl-card material">
+        <div>
+          <p class="material__title">{{ material.title }}</p>
+          @if (material.description) {
+          <p class="rl-small rl-muted">{{ material.description }}</p>
+          }
+        </div>
+        <a class="rl-button rl-button--secondary rl-button--small" [href]="material.url" target="_blank" rel="noopener">
+          Abrir
+        </a>
+      </li>
+      }
+    </ul>
+  </section>
+  }
+
+  <!-- Conclusão e navegação -->
+  <footer class="actions">
+    <button
+      type="button"
+      class="rl-button rl-button--secondary"
+      [disabled]="!hasNeighbour('previous')"
+      (click)="navigate('previous')"
+    >
+      ← Aula anterior
+    </button>
+
+    @if (lesson.progress.status === completedStatus) {
+    <span class="actions__done">✓ Aula concluída</span>
+    } @else {
+    <button type="button" class="rl-button rl-button--primary" [disabled]="completing()" (click)="complete()">
+      {{ completing() ? 'Registrando…' : 'Marcar como concluída' }}
+    </button>
+    }
+
+    <button
+      type="button"
+      class="rl-button rl-button--secondary"
+      [disabled]="!hasNeighbour('next')"
+      (click)="navigate('next')"
+    >
+      Próxima aula →
+    </button>
+  </footer>
+
+  @if (lesson.progress.status !== completedStatus) {
+  <p class="actions__hint rl-small rl-muted">
+    @switch (lesson.completionRule) { @case ('MINIMUM_TIME') { Esta aula é concluída depois de um tempo mínimo de
+    leitura. Continue por aqui e o progresso é salvo sozinho. } @case ('VIDEO_WATCH_RATIO') { Esta aula é concluída
+    depois que você assistir à maior parte do vídeo. } @case ('QUIZ_PASSED') { Esta aula é concluída quando você
+    alcançar a nota mínima no questionário. } @case ('ACTIVITY_SUBMITTED') { Esta aula é concluída depois que você
+    enviar a atividade prática acima. } @default { Marque a aula como concluída quando terminar. } }
+  </p>
+  }
+</article>
+}

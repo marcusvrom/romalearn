@@ -1,0 +1,48 @@
+{
+  "name": "romalearn",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "deps": "node infra/scripts/garantir-dependencias.mjs",
+    "contracts": "pnpm --filter @romalearn/contracts build",
+    "preparar": "pnpm deps && pnpm contracts",
+    "build": "pnpm -r --filter \"./packages/**\" build && pnpm --filter @romalearn/api build && pnpm --filter @romalearn/web build",
+    "build:api": "pnpm --filter @romalearn/api build",
+    "build:web": "pnpm --filter @romalearn/web build",
+    "dev": "pnpm preparar && pnpm --parallel --filter @romalearn/api --filter @romalearn/web dev",
+    "dev:api": "pnpm preparar && pnpm --filter @romalearn/api dev",
+    "dev:web": "pnpm preparar && pnpm --filter @romalearn/web dev",
+    "lint": "pnpm preparar && pnpm -r lint",
+    "format": "prettier --write \"**/*.{ts,html,scss,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,html,scss,json,md}\"",
+    "test": "pnpm preparar && pnpm -r test",
+    "test:api": "pnpm preparar && pnpm --filter @romalearn/api test",
+    "test:e2e": "pnpm preparar && pnpm --filter @romalearn/api test:e2e",
+    "migration:run": "pnpm preparar && pnpm --filter @romalearn/api migration:run",
+    "migration:revert": "pnpm preparar && pnpm --filter @romalearn/api migration:revert",
+    "seed": "pnpm preparar && pnpm --filter @romalearn/api seed",
+    "seed:demo": "pnpm preparar && pnpm --filter @romalearn/api seed:demo",
+    "seed:all": "pnpm seed && pnpm seed:demo",
+    "infra:up": "docker compose -f infra/docker-compose.yml up -d",
+    "infra:down": "docker compose -f infra/docker-compose.yml down",
+    "infra:reset": "docker compose -f infra/docker-compose.yml down -v",
+    "verificar:exemplos": "node infra/scripts/verificar-exemplos.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.20.0",
+    "prettier": "3.4.2",
+    "typescript": "5.8.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "argon2",
+      "esbuild",
+      "unrs-resolver"
+    ]
+  }
+}

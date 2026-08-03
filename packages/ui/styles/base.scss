@@ -1,0 +1,568 @@
+/**
+ * Estilos base e utilitários do design system.
+ *
+ * Mobile-first: o padrão vale para telas pequenas; media queries só
+ * acrescentam. Foco sempre visível e área de toque mínima de 44px, conforme
+ * WCAG 2.2 (2.4.11 e 2.5.8).
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--rl-font-sans);
+  font-size: var(--rl-text-base);
+  line-height: var(--rl-leading-normal);
+  color: var(--rl-text);
+  background-color: var(--rl-surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 0 var(--rl-space-4);
+  font-family: var(--rl-font-display);
+  line-height: var(--rl-leading-tight);
+  font-weight: var(--rl-weight-bold);
+  // A Sora é larga por natureza; fechar um pouco o espaçamento nos tamanhos
+  // grandes evita que o título pareça esparramado.
+  letter-spacing: -0.015em;
+  color: var(--rl-text);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--rl-text-4xl);
+}
+h2 {
+  font-size: var(--rl-text-3xl);
+}
+h3 {
+  font-size: var(--rl-text-xl);
+}
+
+p {
+  margin: 0 0 var(--rl-space-4);
+}
+
+a {
+  color: var(--rl-brand-link);
+  text-underline-offset: 3px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Foco visível em qualquer elemento interativo. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--rl-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--rl-radius-sm);
+}
+
+/* Link "pular para o conteúdo": aparece só ao receber foco pelo teclado. */
+.rl-skip-link {
+  position: absolute;
+  left: var(--rl-space-4);
+  top: -100px;
+  z-index: 100;
+  padding: var(--rl-space-3) var(--rl-space-4);
+  background: var(--rl-brand-700);
+  color: var(--rl-text-on-brand);
+  border-radius: var(--rl-radius-md);
+  font-weight: var(--rl-weight-semibold);
+  transition: top var(--rl-transition-fast);
+
+  &:focus {
+    top: var(--rl-space-4);
+  }
+}
+
+.rl-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Layout
+// ---------------------------------------------------------------------------
+
+.rl-container {
+  width: 100%;
+  max-width: var(--rl-container);
+  margin-inline: auto;
+  padding-inline: var(--rl-space-5);
+}
+
+.rl-container--narrow {
+  max-width: var(--rl-container-narrow);
+}
+
+.rl-section {
+  padding-block: var(--rl-space-16);
+}
+
+@media (min-width: 768px) {
+  .rl-section {
+    padding-block: var(--rl-space-24);
+  }
+}
+
+.rl-section--muted {
+  background-color: var(--rl-surface-muted);
+}
+
+.rl-grid {
+  display: grid;
+  gap: var(--rl-space-6);
+}
+
+@media (min-width: 640px) {
+  .rl-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .rl-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .rl-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.rl-stack > * + * {
+  margin-top: var(--rl-space-4);
+}
+
+// ---------------------------------------------------------------------------
+// Tipografia auxiliar
+// ---------------------------------------------------------------------------
+
+.rl-eyebrow {
+  display: inline-block;
+  font-size: var(--rl-text-sm);
+  font-weight: var(--rl-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rl-brand-link);
+  margin-bottom: var(--rl-space-3);
+}
+
+.rl-lead {
+  font-size: var(--rl-text-lg);
+  color: var(--rl-text-muted);
+  max-width: 62ch;
+}
+
+.rl-muted {
+  color: var(--rl-text-muted);
+}
+
+.rl-small {
+  font-size: var(--rl-text-sm);
+}
+
+// ---------------------------------------------------------------------------
+// Botões
+// ---------------------------------------------------------------------------
+
+.rl-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rl-space-2);
+  /* Área de toque confortável (WCAG 2.5.8). */
+  min-height: 44px;
+  padding: var(--rl-space-3) var(--rl-space-6);
+  border: 1px solid transparent;
+  border-radius: var(--rl-radius-md);
+  font: inherit;
+  font-weight: var(--rl-weight-semibold);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--rl-transition-fast),
+    border-color var(--rl-transition-fast),
+    transform var(--rl-transition-fast);
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):active {
+    transform: translateY(1px);
+  }
+}
+
+.rl-button--primary {
+  background-color: var(--rl-brand-600);
+  color: var(--rl-text-on-brand);
+
+  &:not(:disabled):hover {
+    background-color: var(--rl-brand-link);
+  }
+}
+
+.rl-button--secondary {
+  background-color: transparent;
+  border-color: var(--rl-border-strong);
+  color: var(--rl-text);
+
+  &:not(:disabled):hover {
+    border-color: var(--rl-brand-600);
+    color: var(--rl-brand-link);
+  }
+}
+
+.rl-button--ghost {
+  background-color: transparent;
+  color: var(--rl-brand-link);
+  padding-inline: var(--rl-space-3);
+}
+
+.rl-button--danger {
+  background-color: var(--rl-danger-500);
+  color: var(--rl-neutral-0);
+
+  &:not(:disabled):hover {
+    background-color: var(--rl-danger-text);
+  }
+}
+
+.rl-button--block {
+  width: 100%;
+}
+
+.rl-button--small {
+  min-height: 36px;
+  padding: var(--rl-space-2) var(--rl-space-4);
+  font-size: var(--rl-text-sm);
+}
+
+// Chamada principal de uma página — usado no topo da landing.
+.rl-button--lg {
+  min-height: 52px;
+  padding: var(--rl-space-4) var(--rl-space-8);
+  font-size: var(--rl-text-lg);
+}
+
+// O halo só aparece no hover da chamada principal: constante, viraria ruído.
+.rl-button--primary.rl-button--lg:not(:disabled):hover {
+  box-shadow: var(--rl-glow);
+}
+
+// ---------------------------------------------------------------------------
+// Cartões e superfícies
+// ---------------------------------------------------------------------------
+
+.rl-card {
+  background-color: var(--rl-surface-raised);
+  border: 1px solid var(--rl-border);
+  border-radius: var(--rl-radius-lg);
+  padding: var(--rl-space-6);
+  box-shadow: var(--rl-shadow-sm);
+}
+
+.rl-card--interactive {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    box-shadow var(--rl-transition-base),
+    border-color var(--rl-transition-base),
+    transform var(--rl-transition-base) var(--rl-ease-out);
+
+  &:hover {
+    // O cartão sobe um pouco: o suficiente para confirmar que é clicável,
+    // pouco o bastante para não empurrar a grade ao lado.
+    transform: translateY(-4px);
+    box-shadow: var(--rl-shadow-lg);
+    border-color: var(--rl-brand-300);
+  }
+}
+
+.rl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rl-space-1);
+  padding: var(--rl-space-1) var(--rl-space-3);
+  border-radius: var(--rl-radius-full);
+  font-size: var(--rl-text-xs);
+  font-weight: var(--rl-weight-semibold);
+  background-color: var(--rl-surface-sunken);
+  color: var(--rl-text-muted);
+}
+
+.rl-badge--free {
+  background-color: var(--rl-success-100);
+  color: var(--rl-success-text);
+}
+.rl-badge--brand {
+  background-color: var(--rl-brand-100);
+  color: var(--rl-brand-on-surface);
+}
+.rl-badge--warn {
+  background-color: var(--rl-warn-100);
+  color: var(--rl-warn-text);
+}
+.rl-badge--danger {
+  background-color: var(--rl-danger-100);
+  color: var(--rl-danger-text);
+}
+
+// ---------------------------------------------------------------------------
+// Formulários
+// ---------------------------------------------------------------------------
+
+.rl-field {
+  display: block;
+  margin-bottom: var(--rl-space-5);
+}
+
+.rl-label {
+  display: block;
+  margin-bottom: var(--rl-space-2);
+  font-weight: var(--rl-weight-medium);
+  font-size: var(--rl-text-sm);
+}
+
+.rl-input,
+.rl-select,
+.rl-textarea {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--rl-space-3);
+  font: inherit;
+  color: var(--rl-text);
+  background-color: var(--rl-surface);
+  border: 1px solid var(--rl-border-strong);
+  border-radius: var(--rl-radius-md);
+
+  &::placeholder {
+    color: var(--rl-text-subtle);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--rl-danger-500);
+  }
+}
+
+.rl-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.rl-hint {
+  display: block;
+  margin-top: var(--rl-space-2);
+  font-size: var(--rl-text-sm);
+  color: var(--rl-text-muted);
+}
+
+.rl-error {
+  display: block;
+  margin-top: var(--rl-space-2);
+  font-size: var(--rl-text-sm);
+  color: var(--rl-danger-text);
+  font-weight: var(--rl-weight-medium);
+}
+
+.rl-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rl-space-3);
+  font-size: var(--rl-text-sm);
+
+  input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Conteúdo de aula (HTML sanitizado no backend)
+// ---------------------------------------------------------------------------
+
+.rl-prose {
+  max-width: 72ch;
+  font-size: var(--rl-text-lg);
+
+  h2 {
+    font-size: var(--rl-text-2xl);
+    margin-top: var(--rl-space-10);
+  }
+
+  h3 {
+    font-size: var(--rl-text-xl);
+    margin-top: var(--rl-space-8);
+  }
+
+  ul,
+  ol {
+    padding-left: var(--rl-space-6);
+    margin-bottom: var(--rl-space-4);
+  }
+
+  li + li {
+    margin-top: var(--rl-space-2);
+  }
+
+  blockquote {
+    margin: var(--rl-space-6) 0;
+    padding: var(--rl-space-4) var(--rl-space-5);
+    border-left: 4px solid var(--rl-brand-400);
+    background-color: var(--rl-surface-muted);
+    border-radius: 0 var(--rl-radius-md) var(--rl-radius-md) 0;
+    color: var(--rl-text-muted);
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // As tabelas dos capítulos têm até três colunas de texto. No celular elas
+  // rolam dentro da própria caixa em vez de esticar a página inteira.
+  table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-collapse: collapse;
+    margin-bottom: var(--rl-space-6);
+    font-size: var(--rl-text-base);
+  }
+
+  @media (min-width: 768px) {
+    table {
+      display: table;
+    }
+  }
+
+  th,
+  td {
+    padding: var(--rl-space-3);
+    border: 1px solid var(--rl-border);
+    text-align: left;
+  }
+
+  th {
+    background-color: var(--rl-surface-muted);
+  }
+
+  code {
+    font-family: var(--rl-font-mono);
+    font-size: 0.9em;
+    padding: 2px 5px;
+    background-color: var(--rl-surface-muted);
+    border-radius: var(--rl-radius-sm);
+  }
+
+  // Bloco de código dos cursos de programação.
+  //
+  // Sem esta regra o trecho herdava o estilo de código *inline*: cada linha
+  // ganhava seu próprio fundo arredondado e o conjunto não parecia um bloco.
+  // A rolagem própria evita que uma linha longa estique a página inteira —
+  // código não quebra em qualquer lugar como texto corrido.
+  pre {
+    margin: var(--rl-space-6) 0;
+    padding: var(--rl-space-4) var(--rl-space-5);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: var(--rl-surface-sunken);
+    border: 1px solid var(--rl-border);
+    border-radius: var(--rl-radius-md);
+    // O tamanho do código não acompanha o corpo do texto da aula, que é
+    // maior: em monoespaçada, o mesmo corpo fica grande demais.
+    font-size: var(--rl-text-sm);
+    line-height: var(--rl-leading-normal);
+    tab-size: 4;
+
+    code {
+      display: block;
+      padding: 0;
+      font-size: inherit;
+      background: none;
+      border-radius: 0;
+      // Preserva a indentação, que em Python é o próprio significado.
+      white-space: pre;
+    }
+  }
+}
+
+// Tabelas largas rolam sozinhas em vez de estourar a página no celular.
+.rl-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// ---------------------------------------------------------------------------
+// Revelação ao rolar (diretiva `rlReveal`)
+// ---------------------------------------------------------------------------
+
+// `.rl-revelavel` é aplicada pela diretiva, no navegador, só depois que existe
+// um observador para revelar o elemento. Sem JavaScript a classe nunca entra e
+// o conteúdo aparece normalmente — a animação é acréscimo, não condição.
+.rl-revelavel {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--rl-transition-slow) var(--rl-ease-out),
+    transform var(--rl-transition-slow) var(--rl-ease-out);
+  transition-delay: var(--rl-reveal-delay, 0ms);
+}
+
+.rl-revelado {
+  opacity: 1;
+  transform: none;
+}
+
+// A regra global de movimento reduzido zera a duração da transição, o que
+// deixaria o elemento parado em opacidade 0. Aqui ele simplesmente aparece.
+@media (prefers-reduced-motion: reduce) {
+  .rl-revelavel {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,664 @@
+// ---------------------------------------------------------------------------
+// Hero
+// ---------------------------------------------------------------------------
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: radial-gradient(circle at 15% 10%, var(--rl-brand-50), transparent 55%),
+    radial-gradient(
+      circle at 85% 0%,
+      color-mix(in srgb, var(--rl-accent-400) 18%, transparent),
+      transparent 45%
+    );
+  padding-block: var(--rl-space-16) var(--rl-space-20);
+}
+
+/*
+ * Brilho que respira atrás do título. Fica em `::before` de um elemento
+ * próprio, e não no `.hero`, para que a animação não force o navegador a
+ * repintar a seção inteira a cada quadro.
+ */
+.hero__glow {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  z-index: -1;
+  width: min(900px, 120vw);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--rl-brand-500) 22%, transparent),
+    transparent 62%
+  );
+  filter: blur(40px);
+  animation: respirar 14s var(--rl-ease-in-out) infinite;
+}
+
+@keyframes respirar {
+  0%,
+  100% {
+    opacity: 0.65;
+    scale: 1;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.12;
+  }
+}
+
+// O painel lateral virou a seção "O que você vai construir": ele tinha peso
+// de rodapé de cartão e carregava a promessa mais forte da página. Sem ele o
+// topo fica em uma coluna só, e o título ganha a largura que merece.
+.hero__inner {
+  position: relative;
+  display: grid;
+  gap: var(--rl-space-10);
+  align-items: start;
+}
+
+// Com uma coluna só, o texto encostado à esquerda deixava metade da tela
+// vazia. Centralizado, o topo fica equilibrado sobre a malha — que também é
+// simétrica — e o título passa a ocupar o eixo da página.
+.hero__content {
+  text-align: center;
+  justify-items: center;
+}
+
+// A medida de leitura vale para os textos, não para a faixa inteira: presa ao
+// bloco todo, ela apertava a linha dos botões e os empilhava.
+.hero__content h1 {
+  max-width: 22ch;
+  margin-inline: auto;
+}
+
+.hero__content .rl-lead {
+  margin-inline: auto;
+}
+
+// Sem o painel ao lado, o título pode crescer: ele é a primeira coisa que o
+// aluno lê e agora tem espaço para isso.
+@media (min-width: 720px) {
+  .hero__content h1 {
+    font-size: clamp(var(--rl-text-4xl), 5.5vw, 3.5rem);
+  }
+}
+
+/*
+ * Só o trecho final do título recebe o degradê. Aplicá-lo na frase inteira
+ * afinaria a leitura logo no primeiro contato, que é onde o aluno decide se
+ * fica ou sai.
+ */
+.hero__highlight {
+  background: linear-gradient(115deg, var(--rl-gradient-title-from), var(--rl-gradient-title-to));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/*
+ * Navegadores sem `background-clip: text` deixariam o texto invisível. Aqui a
+ * cor volta ao normal e o degradê some.
+ */
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero__highlight {
+    background: none;
+    color: var(--rl-gradient-title-from);
+  }
+}
+
+.hero__content h1 {
+  margin-bottom: var(--rl-space-5);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rl-space-3);
+  margin: var(--rl-space-8) 0 var(--rl-space-6);
+}
+
+// No topo os botões e a lista de garantias acompanham o texto centralizado.
+.hero__content .hero__actions,
+.hero__content .hero__points {
+  justify-content: center;
+}
+
+.hero__actions--center {
+  justify-content: center;
+}
+
+.hero__points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rl-space-4);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: var(--rl-text-sm);
+  color: var(--rl-text-muted);
+
+  li::before {
+    content: '✓';
+    color: var(--rl-accent-text);
+    font-weight: var(--rl-weight-bold);
+    margin-right: var(--rl-space-2);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Seções
+// ---------------------------------------------------------------------------
+
+.section-head {
+  max-width: 62ch;
+  margin-bottom: var(--rl-space-10);
+}
+
+// ---------------------------------------------------------------------------
+// O que você vai construir
+// ---------------------------------------------------------------------------
+
+.build {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+// Continua a luz do topo por baixo desta seção, para que ela leia como parte
+// da abertura da página e não como mais um bloco de lista.
+.build::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: 50%;
+  z-index: -1;
+  width: min(1100px, 130vw);
+  aspect-ratio: 2;
+  translate: -50% 0;
+  background: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--rl-brand-500) 12%, transparent),
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+.builds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--rl-space-5);
+}
+
+@media (min-width: 720px) {
+  .builds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1040px) {
+  .builds {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.build-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--rl-space-6);
+  border: 1px solid var(--rl-border);
+  border-radius: var(--rl-radius-lg);
+  background: var(--rl-surface-raised);
+  box-shadow: var(--rl-shadow-sm);
+  transition:
+    transform var(--rl-transition-base) var(--rl-ease-out),
+    box-shadow var(--rl-transition-base),
+    border-color var(--rl-transition-base);
+}
+
+.build-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--rl-brand-300);
+  box-shadow: var(--rl-shadow-lg);
+}
+
+.build-card__icon {
+  font-size: 1.75rem;
+  line-height: 1;
+  margin-bottom: var(--rl-space-4);
+}
+
+.build-card__source {
+  margin: 0 0 var(--rl-space-2);
+  font-size: var(--rl-text-xs);
+  font-weight: var(--rl-weight-semibold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--rl-brand-link);
+}
+
+.build-card h3 {
+  font-size: var(--rl-text-lg);
+  margin-bottom: var(--rl-space-3);
+}
+
+.build-card__text {
+  color: var(--rl-text-muted);
+  margin-bottom: var(--rl-space-4);
+}
+
+// Empurra a lista para a base para que os cartões da linha fiquem alinhados
+// mesmo com descrições de tamanhos diferentes.
+.build-card__parts {
+  list-style: none;
+  margin: auto 0 0;
+  padding-top: var(--rl-space-4);
+  border-top: 1px solid var(--rl-border);
+  font-size: var(--rl-text-sm);
+  color: var(--rl-text-muted);
+
+  li {
+    position: relative;
+    padding-left: var(--rl-space-5);
+  }
+
+  li + li {
+    margin-top: var(--rl-space-2);
+  }
+
+  li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--rl-accent-text);
+    font-weight: var(--rl-weight-bold);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Onde essas competências são usadas
+// ---------------------------------------------------------------------------
+
+.sectors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--rl-space-4);
+}
+
+@media (min-width: 640px) {
+  .sectors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1040px) {
+  .sectors {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.sector {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rl-space-4);
+  padding: var(--rl-space-5);
+  border: 1px solid var(--rl-border);
+  border-radius: var(--rl-radius-lg);
+  background: var(--rl-surface-raised);
+
+  h3 {
+    font-size: var(--rl-text-base);
+    margin-bottom: var(--rl-space-1);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.sector__icon {
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+// O aviso de que a trilha não garante emprego. Fica visível de propósito, e
+// não escondido num rodapé: a promessa que não fazemos é parte do argumento.
+.honesty {
+  max-width: 72ch;
+  margin: var(--rl-space-8) 0 0;
+  padding: var(--rl-space-4) var(--rl-space-5);
+  border-left: 3px solid var(--rl-border-strong);
+  color: var(--rl-text-muted);
+}
+
+.checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    position: relative;
+    padding-left: var(--rl-space-6);
+    margin-bottom: var(--rl-space-3);
+    color: var(--rl-text-muted);
+  }
+
+  li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--rl-accent-text);
+    font-weight: var(--rl-weight-bold);
+  }
+}
+
+@media (min-width: 720px) {
+  .checks--two {
+    columns: 2;
+    column-gap: var(--rl-space-8);
+  }
+}
+
+.pairs {
+  margin-bottom: var(--rl-space-5);
+}
+
+.note {
+  max-width: 68ch;
+  font-style: italic;
+}
+
+.free {
+  display: grid;
+  gap: var(--rl-space-10);
+  align-items: center;
+}
+
+@media (min-width: 960px) {
+  .free {
+    grid-template-columns: 1.6fr 1fr;
+  }
+}
+
+.program {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rl-space-5);
+  margin-top: var(--rl-space-8);
+  border-color: var(--rl-brand-300);
+  background: var(--rl-brand-50);
+}
+
+@media (min-width: 720px) {
+  .program {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.benefit__icon {
+  font-size: 1.9rem;
+  margin-bottom: var(--rl-space-2);
+}
+
+.benefit h3 {
+  font-size: var(--rl-text-base);
+}
+
+// ---------------------------------------------------------------------------
+// Passos
+// ---------------------------------------------------------------------------
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--rl-space-5);
+}
+
+@media (min-width: 720px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1040px) {
+  .steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.step__number {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: var(--rl-space-4);
+  border-radius: var(--rl-radius-full);
+  background: var(--rl-brand-600);
+  color: #fff;
+  font-weight: var(--rl-weight-bold);
+}
+
+.step h3 {
+  font-size: var(--rl-text-base);
+}
+
+// ---------------------------------------------------------------------------
+// Prática e certificado
+// ---------------------------------------------------------------------------
+
+.practice {
+  display: grid;
+  gap: var(--rl-space-10);
+  align-items: center;
+}
+
+@media (min-width: 960px) {
+  .practice {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.practice__label {
+  font-size: var(--rl-text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rl-text-subtle);
+  margin-bottom: var(--rl-space-4);
+}
+
+.practice__row {
+  display: flex;
+  align-items: center;
+  gap: var(--rl-space-3);
+  padding: var(--rl-space-3);
+  border-radius: var(--rl-radius-md);
+  font-size: var(--rl-text-sm);
+  color: var(--rl-text-muted);
+
+  span {
+    width: 20px;
+    text-align: center;
+  }
+}
+
+.practice__row--done {
+  color: var(--rl-text);
+
+  span {
+    color: var(--rl-accent-text);
+  }
+}
+
+.practice__row--current {
+  background: var(--rl-brand-50);
+  color: var(--rl-brand-on-surface);
+  font-weight: var(--rl-weight-semibold);
+}
+
+.certificate {
+  border-color: var(--rl-brand-300);
+  text-align: center;
+  padding: var(--rl-space-10) var(--rl-space-6);
+}
+
+.certificate__title {
+  font-size: var(--rl-text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rl-brand-link);
+  margin-bottom: var(--rl-space-4);
+}
+
+.certificate__name {
+  font-size: var(--rl-text-2xl);
+  font-weight: var(--rl-weight-bold);
+  border-bottom: 1px solid var(--rl-border);
+  padding-bottom: var(--rl-space-3);
+  margin-bottom: var(--rl-space-3);
+}
+
+.certificate__code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rl-space-4);
+  margin-top: var(--rl-space-6);
+}
+
+.certificate__qr {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--rl-border-strong);
+  border-radius: var(--rl-radius-sm);
+  font-size: var(--rl-text-xs);
+  font-weight: var(--rl-weight-bold);
+}
+
+// ---------------------------------------------------------------------------
+// Comparação
+// ---------------------------------------------------------------------------
+
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--rl-surface-raised);
+  border-radius: var(--rl-radius-lg);
+  overflow: hidden;
+  min-width: 520px;
+
+  th,
+  td {
+    padding: var(--rl-space-4);
+    border-bottom: 1px solid var(--rl-border);
+    text-align: left;
+    font-size: var(--rl-text-sm);
+  }
+
+  thead th {
+    background: var(--rl-surface-sunken);
+    font-size: var(--rl-text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  tbody th {
+    font-weight: var(--rl-weight-medium);
+    color: var(--rl-text-muted);
+  }
+
+  td {
+    text-align: center;
+    width: 160px;
+  }
+}
+
+.yes {
+  color: var(--rl-accent-text);
+  font-weight: var(--rl-weight-bold);
+  font-size: var(--rl-text-lg);
+}
+
+.no {
+  color: var(--rl-text-subtle);
+}
+
+// ---------------------------------------------------------------------------
+// FAQ
+// ---------------------------------------------------------------------------
+
+.faq__item {
+  border: 1px solid var(--rl-border);
+  border-radius: var(--rl-radius-md);
+  margin-bottom: var(--rl-space-3);
+  background: var(--rl-surface-raised);
+
+  summary {
+    padding: var(--rl-space-4) var(--rl-space-5);
+    cursor: pointer;
+    font-weight: var(--rl-weight-semibold);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--rl-space-4);
+    min-height: 44px;
+    align-items: center;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::after {
+    content: '+';
+    color: var(--rl-brand-600);
+    font-size: var(--rl-text-xl);
+    line-height: 1;
+  }
+
+  &[open] summary::after {
+    content: '−';
+  }
+
+  p {
+    padding: 0 var(--rl-space-5) var(--rl-space-5);
+    margin: 0;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Chamada final
+// ---------------------------------------------------------------------------
+
+.cta {
+  background: linear-gradient(135deg, var(--rl-brand-700), var(--rl-brand-900));
+  color: #fff;
+  padding-block: var(--rl-space-16);
+}
+
+.cta__inner {
+  text-align: center;
+
+  h2 {
+    color: #fff;
+  }
+
+  p {
+    color: color-mix(in srgb, #fff 82%, transparent);
+    max-width: 52ch;
+    margin-inline: auto;
+  }
+}

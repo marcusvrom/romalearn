@@ -1,0 +1,442 @@
+<!-- ------------------------------------------------------------------ -->
+<!-- Hero                                                                -->
+<!-- ------------------------------------------------------------------ -->
+<section class="hero">
+  <!-- Camadas decorativas: malha animada e brilho. Ambas fora do leitor de tela. -->
+  <rl-hero-canvas />
+  <div class="hero__glow" aria-hidden="true"></div>
+
+  <div class="rl-container hero__inner">
+    <div class="hero__content">
+      <p class="rl-eyebrow">Trilha profissionalizante em português</p>
+      <h1>
+        Aprenda tecnologia com calma e chegue
+        <span class="hero__highlight">preparado ao mercado de trabalho</span>
+      </h1>
+      <p class="rl-lead">
+        Uma trilha pensada para quem está começando: do primeiro contato com o computador ao uso responsável de
+        inteligência artificial na rotina administrativa. Linguagem simples, exemplos do dia a dia e prática guiada em
+        cada capítulo.
+      </p>
+
+      <div class="hero__actions">
+        <a class="rl-button rl-button--primary rl-button--lg" [routerLink]="routes.register">
+          Começar pelo módulo gratuito
+        </a>
+        <a class="rl-button rl-button--secondary rl-button--lg" [routerLink]="routes.catalog"> Ver todos os cursos </a>
+      </div>
+
+      <ul class="hero__points">
+        <li>Sem cartão de crédito para o módulo gratuito</li>
+        <li>Progresso salvo automaticamente</li>
+        <li>Certificado com validação pública</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- O que você vai construir                                            -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section build" id="o-que-voce-constroi">
+  <div class="rl-container">
+    <div class="section-head build__head" rlReveal>
+      <p class="rl-eyebrow">O que você vai construir</p>
+      <h2>No fim, você tem trabalho pronto para mostrar — não só um certificado</h2>
+      <p class="rl-lead">
+        Cada módulo termina em um projeto avaliado por critérios. O que sai de lá são arquivos e materiais de verdade,
+        feitos com dados fictícios, que você pode abrir numa entrevista ou usar como modelo no primeiro dia de trabalho.
+      </p>
+    </div>
+
+    <ul class="builds">
+      @for (item of buildOutcomes; track item.title; let i = $index) {
+      <li class="build-card" [rlReveal]="i * 70">
+        <span class="build-card__icon" aria-hidden="true">{{ item.icon }}</span>
+        <p class="build-card__source">{{ item.source }}</p>
+        <h3>{{ item.title }}</h3>
+        <p class="rl-small build-card__text">{{ item.text }}</p>
+        <ul class="build-card__parts">
+          @for (part of item.parts; track part) {
+          <li>{{ part }}</li>
+          }
+        </ul>
+      </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Onde essas competências são usadas                                  -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section rl-section--muted" id="onde-se-usa">
+  <div class="rl-container">
+    <div class="section-head" rlReveal>
+      <p class="rl-eyebrow">Onde isso é usado</p>
+      <h2>As mesmas ferramentas aparecem em quase toda rotina de trabalho</h2>
+      <p class="rl-lead">
+        Documentos, planilhas, apresentações e sistemas online não são exclusividade da área de tecnologia. Estes são os
+        setores que o próprio material cita como exemplo de onde essas competências entram no dia a dia.
+      </p>
+    </div>
+
+    <ul class="sectors" rlReveal>
+      @for (sector of workSectors; track sector.name) {
+      <li class="sector">
+        <span class="sector__icon" aria-hidden="true">{{ sector.icon }}</span>
+        <div>
+          <h3>{{ sector.name }}</h3>
+          <p class="rl-small rl-muted">{{ sector.example }}</p>
+        </div>
+      </li>
+      }
+    </ul>
+
+    <p class="rl-small honesty" rlReveal>
+      Uma observação honesta: a trilha melhora seu preparo e as evidências do que você sabe fazer. Ela não garante
+      emprego, salário nem aprovação em processo seletivo — e ninguém que prometa isso está sendo sincero com você.
+    </p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Por que competências digitais importam                              -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section" id="por-que">
+  <div class="rl-container">
+    <div class="section-head" rlReveal>
+      <p class="rl-eyebrow">Por que isso importa</p>
+      <h2>O trabalho já é digital, mesmo fora da área de tecnologia</h2>
+      <p class="rl-lead">
+        Rotinas de escritório, comércio, escola, saúde e atendimento usam arquivos, documentos, planilhas, apresentações
+        e sistemas online. Saber usar essas ferramentas é útil mesmo quando o nome do cargo não tem a palavra
+        “tecnologia”.
+      </p>
+    </div>
+
+    <div class="rl-grid rl-grid--2 pairs" rlReveal>
+      <div class="rl-card">
+        <h3>Conhecimento digital</h3>
+        <ul class="checks">
+          <li>Organizar pastas, nomes e versões</li>
+          <li>Criar relatórios e exportar em PDF</li>
+          <li>Acompanhar despesas com fórmulas</li>
+          <li>Apresentar ideias com clareza</li>
+        </ul>
+      </div>
+      <div class="rl-card">
+        <h3>Habilidade humana</h3>
+        <ul class="checks">
+          <li>Atenção e responsabilidade</li>
+          <li>Escrita clara e objetiva</li>
+          <li>Análise e conferência</li>
+          <li>Comunicação e julgamento</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="rl-small rl-muted note">
+      Tecnologia é uma caixa de ferramentas. As habilidades humanas ajudam a entender o problema, escolher a ferramenta
+      e conferir se o resultado faz sentido.
+    </p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Módulo gratuito                                                     -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section rl-section--muted" id="modulo-gratuito">
+  <div class="rl-container free" rlReveal>
+    <div>
+      <p class="rl-eyebrow">Comece por aqui</p>
+      <h2>Módulo gratuito: Carreira Digital e Destaque Profissional</h2>
+      <p class="rl-lead">
+        A porta de entrada da trilha. Mostra como transformar o que você aprende em evidências, presença e evolução
+        profissional — e ensina os primeiros passos de LinkedIn, networking online e uso responsável de inteligência
+        artificial no trabalho.
+      </p>
+
+      <ul class="checks checks--two">
+        <li>Mercado de trabalho e conhecimentos tecnológicos</li>
+        <li>Desenvolvimento de competências digitais</li>
+        <li>LinkedIn e presença profissional</li>
+        <li>Networking online e candidaturas</li>
+        <li>Currículo e miniportfólio</li>
+        <li>Uso de inteligência artificial no trabalho</li>
+        <li>Plano profissional de 30 dias</li>
+        <li>Apresentação da trilha completa</li>
+      </ul>
+
+      <div class="hero__actions">
+        <a class="rl-button rl-button--primary" [routerLink]="routes.register"> Fazer matrícula gratuita </a>
+        @if (freeCourse(); as course) {
+        <a class="rl-button rl-button--secondary" [routerLink]="routes.course(course.slug)">
+          Ver o conteúdo do módulo
+        </a>
+        }
+      </div>
+    </div>
+
+    @if (freeCourse(); as course) {
+    <rl-course-card [course]="course" [link]="routes.course(course.slug)" />
+    }
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Trilha paga                                                          -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section" id="trilha">
+  <div class="rl-container">
+    <div class="section-head" rlReveal>
+      <p class="rl-eyebrow">Trilha completa</p>
+      <h2>Cinco módulos, do básico ao avançado</h2>
+      <p class="rl-lead">
+        Cada módulo vai do iniciante ao avançado, com projeto final e material oficial em PDF. Você pode estudar na
+        ordem sugerida ou ir direto ao problema que precisa resolver.
+      </p>
+    </div>
+
+    @if (loading()) {
+    <rl-loading label="Carregando os módulos…" />
+    } @else if (paidCourses().length > 0) {
+    <div class="rl-grid rl-grid--3">
+      @for (course of paidCourses(); track course.id) {
+      <rl-course-card [course]="course" [link]="routes.course(course.slug)" />
+      }
+    </div>
+
+    @if (program(); as trilha) {
+    <div class="program rl-card">
+      <div>
+        <h3>{{ trilha.title }}</h3>
+        <p class="rl-muted">{{ trilha.shortDescription }}</p>
+        <p class="rl-small rl-muted">Carga horária total estimada: {{ trilha.totalWorkloadHours }} horas.</p>
+      </div>
+      <a class="rl-button rl-button--primary" [routerLink]="routes.program(trilha.slug)"> Ver a trilha completa </a>
+    </div>
+    } } @else {
+    <p class="rl-muted">Os módulos serão publicados em breve.</p>
+    }
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Benefícios                                                           -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section rl-section--muted">
+  <div class="rl-container">
+    <div class="section-head" rlReveal>
+      <p class="rl-eyebrow">O que esperar</p>
+      <h2>Resultados que você consegue mostrar</h2>
+    </div>
+
+    <div class="rl-grid rl-grid--4">
+      @for (benefit of benefits; track benefit.title) {
+      <div class="rl-card benefit" [rlReveal]="$index * 80">
+        <p class="benefit__icon" aria-hidden="true">{{ benefit.icon }}</p>
+        <h3>{{ benefit.title }}</h3>
+        <p class="rl-small rl-muted">{{ benefit.text }}</p>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Como funciona                                                        -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section" id="como-funciona">
+  <div class="rl-container">
+    <div class="section-head" rlReveal>
+      <p class="rl-eyebrow">Como funciona</p>
+      <h2>Quatro passos até o certificado</h2>
+    </div>
+
+    <ol class="steps">
+      @for (step of steps; track step.number) {
+      <li class="rl-card step" [rlReveal]="$index * 80">
+        <span class="step__number" aria-hidden="true">{{ step.number }}</span>
+        <h3>{{ step.title }}</h3>
+        <p class="rl-small rl-muted">{{ step.text }}</p>
+      </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Atividades práticas                                                  -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section rl-section--muted" id="atividades">
+  <div class="rl-container practice" rlReveal>
+    <div>
+      <p class="rl-eyebrow">Prática em primeiro lugar</p>
+      <h2>Você aprende fazendo, não só lendo</h2>
+      <p class="rl-lead">
+        Abrir a página não conclui a aula. Cada tipo de conteúdo tem uma exigência própria: tempo de leitura, envio da
+        atividade prática ou aprovação no questionário — sempre conferido pelo sistema, não só marcado por você.
+      </p>
+      <ul class="checks">
+        <li>Atividades com dados fictícios, seguras para praticar</li>
+        <li>Questionários com explicação da resposta certa</li>
+        <li>Projeto final integrando o que foi estudado no módulo</li>
+        <li>Materiais oficiais em PDF para consultar quando precisar</li>
+      </ul>
+    </div>
+
+    <div class="rl-card practice__demo" aria-hidden="true">
+      <p class="practice__label">Exemplo de aula</p>
+      <div class="practice__row practice__row--done"><span>✓</span> Capítulo 1 — O Excel como caderno inteligente</div>
+      <div class="practice__row practice__row--done">
+        <span>✓</span> Capítulo 2 — Formatação e contas que se atualizam
+      </div>
+      <div class="practice__row practice__row--current"><span>▸</span> Atividade prática — Controle de compras</div>
+      <div class="practice__row"><span>○</span> Questionário de conclusão</div>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Certificados                                                         -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section" id="certificados">
+  <div class="rl-container practice" rlReveal>
+    <div class="rl-card certificate" aria-hidden="true">
+      <p class="certificate__title">Certificado de conclusão</p>
+      <p class="certificate__name">Nome do aluno</p>
+      <p class="rl-small rl-muted">Microsoft Excel para Administração · 18 horas</p>
+      <div class="certificate__code">
+        <span class="rl-badge rl-badge--brand">Código: ABCD-EFGH-JKLM</span>
+        <span class="certificate__qr">QR</span>
+      </div>
+    </div>
+
+    <div>
+      <p class="rl-eyebrow">Certificados verificáveis</p>
+      <h2>Um certificado que qualquer pessoa pode conferir</h2>
+      <p class="rl-lead">
+        Ao concluir um curso, o certificado em PDF é emitido automaticamente, com carga horária, data de conclusão e um
+        código público de validação. O QR Code leva direto à página de verificação.
+      </p>
+      <ul class="checks">
+        <li>Emitido uma única vez por curso concluído</li>
+        <li>Dados congelados no momento da emissão</li>
+        <li>Página pública mostra apenas o necessário — sem e-mail, CPF ou telefone</li>
+        <li>Pode ser revogado pela instituição, e a validação reflete isso na hora</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Comparação                                                           -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section rl-section--muted" id="comparacao">
+  <div class="rl-container">
+    <div class="section-head" rlReveal>
+      <p class="rl-eyebrow">Comparação</p>
+      <h2>O que tem no gratuito e o que tem na trilha completa</h2>
+    </div>
+
+    <div class="rl-table-scroll" rlReveal>
+      <table class="compare">
+        <caption class="rl-visually-hidden">
+          Comparação entre o módulo gratuito e a trilha completa
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Conteúdo</th>
+            <th scope="col">Módulo gratuito</th>
+            <th scope="col">Trilha completa</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of comparison; track row.feature) {
+          <tr>
+            <th scope="row">{{ row.feature }}</th>
+            <td>
+              @if (row.free) {
+              <span class="yes" aria-label="Incluído">✓</span>
+              } @else {
+              <span class="no" aria-label="Não incluído">—</span>
+              }
+            </td>
+            <td>
+              @if (row.paid) {
+              <span class="yes" aria-label="Incluído">✓</span>
+              } @else {
+              <span class="no" aria-label="Não incluído">—</span>
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Depoimentos (só aparece quando houver depoimentos reais)             -->
+<!-- ------------------------------------------------------------------ -->
+@if (testimonials().length > 0) {
+<section class="rl-section" id="depoimentos">
+  <div class="rl-container">
+    <div class="section-head" rlReveal>
+      <p class="rl-eyebrow">Quem já estudou</p>
+      <h2>Depoimentos de alunos</h2>
+    </div>
+    <div class="rl-grid rl-grid--3">
+      @for (item of testimonials(); track item.name) {
+      <figure class="rl-card">
+        <blockquote>{{ item.quote }}</blockquote>
+        <figcaption>
+          <strong>{{ item.name }}</strong>
+          <span class="rl-small rl-muted">{{ item.role }}</span>
+        </figcaption>
+      </figure>
+      }
+    </div>
+  </div>
+</section>
+}
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Perguntas frequentes                                                 -->
+<!-- ------------------------------------------------------------------ -->
+<section class="rl-section" id="perguntas">
+  <div class="rl-container rl-container--narrow">
+    <div class="section-head" rlReveal>
+      <p class="rl-eyebrow">Perguntas frequentes</p>
+      <h2>Dúvidas comuns de quem está começando</h2>
+    </div>
+
+    <div class="faq" rlReveal>
+      @for (faq of faqs; track faq.question) {
+      <details class="faq__item">
+        <summary>{{ faq.question }}</summary>
+        <p class="rl-muted">{{ answerFor(faq) }}</p>
+      </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<!-- Chamada final                                                        -->
+<!-- ------------------------------------------------------------------ -->
+<section class="cta">
+  <div class="rl-container rl-container--narrow cta__inner" rlReveal>
+    <h2>Comece hoje pelo módulo gratuito</h2>
+    <p>
+      Crie sua conta, faça a matrícula gratuita e dê o primeiro passo. Quando quiser avançar, a trilha completa está
+      esperando por você.
+    </p>
+    <div class="hero__actions hero__actions--center">
+      <a class="rl-button rl-button--primary" [routerLink]="routes.register">Criar minha conta</a>
+      <a class="rl-button rl-button--secondary" [routerLink]="routes.catalog">Ver os cursos</a>
+    </div>
+  </div>
+</section>

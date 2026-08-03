@@ -1,0 +1,247 @@
+/**
+ * Tokens do design system.
+ *
+ * Identidade provisória, pensada para ser substituída sem tocar nos
+ * componentes: basta trocar os valores abaixo (ou sobrescrever as custom
+ * properties em um tema). Nome, cores e URLs da plataforma nunca são
+ * escritos direto nos componentes.
+ *
+ * Contraste: os pares texto/fundo abaixo foram escolhidos para atender ao
+ * mínimo AA da WCAG 2.2 (4.5:1 para texto normal, 3:1 para texto grande).
+ */
+
+/**
+ * Papéis semânticos do tema escuro.
+ *
+ * O tema escuro é alcançado por dois caminhos — a preferência do sistema e a
+ * escolha explícita no seletor do cabeçalho — e os dois precisam produzir
+ * exatamente as mesmas cores. Definir os valores uma única vez aqui evita que
+ * um caminho receba um ajuste e o outro fique para trás.
+ */
+@mixin tema-escuro {
+  --rl-surface: var(--rl-neutral-900);
+  --rl-surface-muted: #1a212c;
+  --rl-surface-raised: var(--rl-neutral-800);
+  --rl-border: #2c3648;
+  --rl-border-strong: #3b4759;
+
+  --rl-text: var(--rl-neutral-50);
+  --rl-text-muted: var(--rl-neutral-200);
+  --rl-text-subtle: var(--rl-neutral-300);
+
+  --rl-brand-50: #1b2440;
+  --rl-brand-100: #22305a;
+  --rl-focus-ring: var(--rl-brand-300);
+
+  // Links e rótulos de marca precisam clarear no escuro: o tom 700 foi
+  // escolhido contra fundo branco e não alcança 4.5:1 sobre o neutro 900.
+  --rl-brand-link: var(--rl-brand-300);
+  --rl-brand-on-surface: var(--rl-brand-200);
+  --rl-success-text: #4ade80;
+  --rl-warn-text: #fbbf24;
+  --rl-danger-text: #fca5a5;
+  --rl-accent-text: var(--rl-accent-400);
+  --rl-surface-sunken: #202836;
+
+  --rl-gradient-title-from: var(--rl-brand-300);
+  --rl-gradient-title-to: var(--rl-accent-400);
+
+  --rl-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --rl-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --rl-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  // No escuro o brilho substitui a sombra como sinal de elevação.
+  --rl-glow: 0 0 60px -12px rgba(59, 96, 246, 0.55);
+  --rl-scrim: rgba(0, 0, 0, 0.72);
+  --rl-hairline: rgba(255, 255, 255, 0.08);
+
+  color-scheme: dark;
+}
+
+:root {
+  color-scheme: light;
+
+  // ----- Cor: marca -------------------------------------------------
+  --rl-brand-50: #eef4ff;
+  --rl-brand-100: #dbe6ff;
+  --rl-brand-200: #bed0ff;
+  --rl-brand-300: #92b0ff;
+  --rl-brand-400: #5f85fb;
+  --rl-brand-500: #3b60f6;
+  --rl-brand-600: #2543ea;
+  --rl-brand-700: #1d34d7;
+  --rl-brand-800: #1e2fae;
+  --rl-brand-900: #1e2f89;
+
+  // ----- Cor: apoio -------------------------------------------------
+  --rl-accent-400: #22c1a4;
+  --rl-accent-500: #12a58b;
+  --rl-accent-600: #0d8571;
+
+  --rl-warn-100: #fef3c7;
+  --rl-warn-500: #d97706;
+  --rl-warn-700: #b45309;
+
+  --rl-danger-100: #fee2e2;
+  --rl-danger-500: #dc2626;
+  --rl-danger-700: #b91c1c;
+
+  --rl-success-100: #dcfce7;
+  --rl-success-500: #16a34a;
+  --rl-success-700: #15803d;
+
+  // ----- Cor: neutros -----------------------------------------------
+  --rl-neutral-0: #ffffff;
+  --rl-neutral-25: #fbfcfe;
+  --rl-neutral-50: #f5f7fb;
+  --rl-neutral-100: #eaeef5;
+  --rl-neutral-200: #d7dee9;
+  --rl-neutral-300: #b5c0d0;
+  --rl-neutral-400: #8b98ab;
+  --rl-neutral-500: #64748b;
+  --rl-neutral-600: #4b5768;
+  --rl-neutral-700: #374151;
+  --rl-neutral-800: #232b38;
+  --rl-neutral-900: #141a23;
+
+  // ----- Papéis semânticos -----------------------------------------
+  --rl-surface: var(--rl-neutral-0);
+  --rl-surface-muted: var(--rl-neutral-50);
+  --rl-surface-raised: var(--rl-neutral-0);
+  --rl-border: var(--rl-neutral-200);
+  --rl-border-strong: var(--rl-neutral-300);
+
+  --rl-text: var(--rl-neutral-900);
+  // Um degrau mais escuro do que a leitura "natural" da escala. O texto de
+  // apoio carrega quase toda a landing e as descrições de curso; no tom
+  // anterior ele passava raspando no mínimo da WCAG sobre as superfícies mais
+  // fundas (4,09:1 no cabeçalho de tabela) e cansava antes disso.
+  --rl-text-muted: var(--rl-neutral-700);
+  --rl-text-subtle: var(--rl-neutral-600);
+  --rl-text-on-brand: var(--rl-neutral-0);
+
+  // Tom da marca usado sobre superfície (links, rótulos). Separado da escala
+  // porque o tema escuro precisa clarear só este papel, não a escala inteira.
+  --rl-brand-link: var(--rl-brand-700);
+  --rl-brand-on-surface: var(--rl-brand-800);
+
+  // Texto de estado. A escala fixa (--rl-*-700) foi calibrada contra fundo
+  // claro e não sobrevive ao tema escuro; estes papéis, sim. Os mesmos tons
+  // continuam servindo de fundo com texto branco, e por isso a escala não é
+  // redefinida no escuro.
+  --rl-success-text: var(--rl-success-700);
+  --rl-warn-text: var(--rl-warn-700);
+  --rl-danger-text: var(--rl-danger-700);
+
+  // Verde-azulado da marca em versão legível. O tom 600 da escala serve de
+  // fundo e de detalhe grande, mas como texto miúdo — os ✓ das listas — fica
+  // em 3,9:1 sobre as superfícies fundas. Este tom passa em qualquer uma.
+  --rl-accent-text: #096052;
+
+  // Degradê do fecho do título. Precisa ser token, e não valor fixo no
+  // componente: as pontas da escala que funcionam sobre branco somem no
+  // escuro (o tom 600 da marca fica em 2,55:1 sobre o fundo escuro).
+  --rl-gradient-title-from: var(--rl-brand-700);
+  --rl-gradient-title-to: var(--rl-accent-text);
+
+  // Faixa mais funda que a superfície: cabeçalho de tabela, trilho de
+  // progresso, etiqueta neutra.
+  --rl-surface-sunken: var(--rl-neutral-100);
+
+  --rl-focus-ring: var(--rl-brand-600);
+
+  // Véu do menu do celular e fio de separação sobre superfícies escuras.
+  --rl-scrim: rgba(20, 26, 35, 0.55);
+  --rl-hairline: rgba(20, 26, 35, 0.06);
+
+  // ----- Tipografia -------------------------------------------------
+
+  // Corpo de texto: a fonte do sistema. Ela já está no aparelho, aparece sem
+  // download nenhum e é a que o aluno lê o dia inteiro em todo o resto — a
+  // mais confortável para páginas longas de capítulo. ('Inter' aparecia aqui
+  // sem nunca ser carregada; era uma promessa que o navegador ignorava.)
+  --rl-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+
+  // Títulos e logotipo. É onde a marca fala, e onde vale pagar o download de
+  // 25 KB da Sora; o corpo do texto continua sem custo nenhum.
+  --rl-font-display: 'Sora', var(--rl-font-sans);
+
+  --rl-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  // Escala fluida: confortável no celular, sem quebrar no desktop.
+  --rl-text-xs: 0.75rem;
+  --rl-text-sm: 0.875rem;
+  --rl-text-base: 1rem;
+  --rl-text-lg: 1.125rem;
+  --rl-text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --rl-text-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --rl-text-3xl: clamp(1.875rem, 1.5rem + 1.8vw, 2.75rem);
+  --rl-text-4xl: clamp(2.25rem, 1.7rem + 2.6vw, 3.5rem);
+
+  --rl-leading-tight: 1.2;
+  --rl-leading-snug: 1.4;
+  --rl-leading-normal: 1.65;
+
+  --rl-weight-regular: 400;
+  --rl-weight-medium: 500;
+  --rl-weight-semibold: 600;
+  --rl-weight-bold: 700;
+
+  // ----- Espaçamento (escala de 4px) --------------------------------
+  --rl-space-1: 0.25rem;
+  --rl-space-2: 0.5rem;
+  --rl-space-3: 0.75rem;
+  --rl-space-4: 1rem;
+  --rl-space-5: 1.25rem;
+  --rl-space-6: 1.5rem;
+  --rl-space-8: 2rem;
+  --rl-space-10: 2.5rem;
+  --rl-space-12: 3rem;
+  --rl-space-16: 4rem;
+  --rl-space-20: 5rem;
+  --rl-space-24: 6rem;
+
+  // ----- Bordas e sombras -------------------------------------------
+  --rl-radius-sm: 6px;
+  --rl-radius-md: 10px;
+  --rl-radius-lg: 16px;
+  --rl-radius-xl: 24px;
+  --rl-radius-full: 999px;
+
+  --rl-shadow-sm: 0 1px 2px rgba(20, 26, 35, 0.06);
+  --rl-shadow-md: 0 4px 12px rgba(20, 26, 35, 0.08);
+  --rl-shadow-lg: 0 12px 32px rgba(20, 26, 35, 0.12);
+  --rl-glow: 0 24px 60px -24px rgba(37, 67, 234, 0.35);
+
+  // ----- Layout ------------------------------------------------------
+  --rl-container: 1140px;
+  --rl-container-narrow: 760px;
+  --rl-header-height: 68px;
+
+  --rl-transition-fast: 120ms ease;
+  --rl-transition-base: 200ms ease;
+  --rl-transition-slow: 420ms ease;
+
+  // Curvas com desaceleração longa: dão peso ao movimento sem alongar a
+  // espera. Usadas na gaveta do menu e nas revelações da landing.
+  --rl-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --rl-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/**
+ * Tema escuro pela preferência do sistema.
+ *
+ * `:not([data-theme='light'])` respeita a escolha explícita do aluno: quem
+ * pediu claro continua no claro mesmo com o sistema no escuro.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include tema-escuro;
+  }
+}
+
+/** Tema escuro escolhido no seletor do cabeçalho. */
+:root[data-theme='dark'] {
+  @include tema-escuro;
+}

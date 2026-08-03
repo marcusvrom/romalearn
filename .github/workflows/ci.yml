@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '10.33.0'
+
+jobs:
+  verify:
+    name: Lint, testes e build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: romalearn
+          POSTGRES_PASSWORD: romalearn
+          POSTGRES_DB: romalearn
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U romalearn"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Preparar banco de testes
+        run: |
+          PGPASSWORD=romalearn psql -h localhost -U romalearn -d romalearn \
+            -c "CREATE DATABASE romalearn_test;"
+
+      - name: Compilar contratos compartilhados
+        run: pnpm --filter @romalearn/contracts build
+
+      - name: Verificar formatação
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Testes unitários
+        run: pnpm --filter @romalearn/api test
+
+      - name: Testes de integração e end-to-end
+        run: pnpm --filter @romalearn/api test:e2e
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: '5432'
+          POSTGRES_USER: romalearn
+          POSTGRES_PASSWORD: romalearn
+          POSTGRES_TEST_DB: romalearn_test
+
+      - name: Build da API
+        run: pnpm --filter @romalearn/api build
+
+      - name: Build do front-end
+        run: pnpm --filter @romalearn/web build
+
+      # Falha o build se algum segredo tiver sido commitado por engano.
+      - name: Conferir ausência de arquivos .env
+        run: |
+          if git ls-files | grep -E '^\.env$|^\.env\.[^e]'; then
+            echo "Arquivo .env encontrado no repositório."
+            exit 1
+          fi
+          echo "Nenhum arquivo .env versionado."
