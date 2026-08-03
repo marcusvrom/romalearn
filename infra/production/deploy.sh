@@ -63,8 +63,8 @@ find "$BACKUP_DIR" -type f -name 'pre-deploy-*.dump' -mtime +14 -delete
 echo 'Baixando imagens da aplicação...'
 compose pull api web
 
-echo 'Executando migrations...'
-compose run --rm --no-deps api pnpm migration:run
+echo 'Executando migrations compiladas...'
+compose run --rm --no-deps api pnpm migration:run:prod
 
 echo 'Atualizando containers...'
 compose up -d --remove-orphans
