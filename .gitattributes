@@ -1,0 +1,11 @@
+# Mantém scripts e arquivos operacionais com finais de linha Unix.
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+Dockerfile text eol=lf
+*.conf text eol=lf
+
+# Arquivos Windows podem continuar com CRLF quando necessário.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
