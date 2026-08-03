@@ -6,21 +6,23 @@ Adicionar uma trilha inicial de desenvolvimento de software à RomaLearn sem tra
 
 ## Sequência recomendada
 
-1. Lógica de Programação e Algoritmos — gratuito;
-2. Git e GitHub na Prática;
+1. Git e GitHub na Prática — gratuito;
+2. Lógica de Programação e Algoritmos — pago;
 3. HTML e CSS do Zero;
 4. JavaScript — Fundamentos;
-5. especialização em Python ou Java.
+5. especialização inicial em Python ou Java.
+
+O curso gratuito de Git/GitHub reduz a barreira de entrada e já entrega uma evidência profissional: um repositório organizado. Lógica permanece como base acadêmica da trilha, mas passa a compor a oferta paga.
 
 ## Cursos incluídos na Beta
 
-### Lógica de Programação e Algoritmos
-
-Porta de entrada gratuita. Trabalha decomposição, variáveis, operadores, decisões, repetições, funções, testes e projeto final.
-
 ### Git e GitHub na Prática
 
-Versionamento, branches, pull requests, documentação e criação de um repositório profissional.
+Porta de entrada gratuita. Trabalha versionamento, branches, pull requests, documentação e criação de um repositório profissional.
+
+### Lógica de Programação e Algoritmos
+
+Curso pago de fundamentos. Trabalha decomposição, variáveis, operadores, decisões, repetições, funções, testes e projeto final.
 
 ### HTML e CSS do Zero
 
@@ -40,48 +42,58 @@ JDK/JVM, sintaxe, métodos, classes, objetos, encapsulamento, interfaces, coleç
 
 ## Estratégia comercial da Beta
 
-- Lógica é gratuito e funciona como aquisição e diagnóstico;
-- demais cursos recebem ofertas SANDBOX para homologação;
+- Git e GitHub é gratuito e funciona como aquisição, ativação e criação da primeira evidência profissional;
+- Lógica de Programação possui oferta SANDBOX de R$ 59 para homologação;
+- os demais cursos recebem ofertas SANDBOX para homologação;
 - valores atuais são provisórios e não devem ser tratados como preço final;
-- todas as ofertas pagas permitem até seis parcelas no ambiente de testes;
+- ofertas antigas incompatíveis são arquivadas automaticamente pelo seed;
 - a publicação em produção exige revisão comercial e troca do ambiente da oferta.
 
-## Estrutura pedagógica mínima
+## Estrutura pedagógica
 
 Cada curso possui:
 
 - primeira aula liberada como amostra;
-- explicações conceituais;
+- conteúdo estruturado com objetivo, explicação, exemplo, prática, erros comuns e checklist;
 - práticas intermediárias;
-- projeto final;
+- projeto final com rubrica pública;
+- questionário de conclusão;
 - carga horária e pré-requisitos explícitos;
 - progressão orientada a evidências profissionais.
 
 ## Projetos finais
 
-- Lógica: organizador de tarefas;
 - Git/GitHub: repositório profissional;
+- Lógica: organizador de tarefas;
 - HTML/CSS: landing page publicada;
 - JavaScript: painel consumindo API;
 - Python: organizador de relatórios;
 - Java: sistema de gestão de biblioteca.
 
+## Consistência do seed
+
+Depois de cadastrar o catálogo, o seed executa uma etapa de estabilização que:
+
+- aplica a política gratuito/pago definida para cada curso;
+- cria ou reativa a oferta correta;
+- arquiva a oferta antiga incompatível;
+- normaliza rubricas dos projetos finais conforme o contrato do corretor;
+- mantém a execução idempotente durante a homologação.
+
 ## Antes da venda oficial
 
-1. aprofundar o conteúdo de cada aula;
-2. adicionar exemplos executáveis e arquivos de apoio;
-3. incluir questionários de conclusão;
-4. revisar acessibilidade e narração técnica;
-5. validar exercícios com alunos iniciantes;
+1. executar lint, build, testes e seed em banco vazio;
+2. revisar tecnicamente todos os exemplos;
+3. adicionar repositórios iniciais e soluções comentadas;
+4. validar atividades e rubricas com alunos iniciantes;
+5. revisar acessibilidade e narração técnica;
 6. criar capas e identidade visual;
-7. revisar carga horária real;
-8. definir preços e bundles;
+7. confirmar carga horária observada na Beta;
+8. definir preços, bundles e política de parcelamento;
 9. revisar direitos autorais e referências;
-10. testar o seed em banco vazio.
+10. validar certificado e checkout ponta a ponta.
 
 ## Execução
-
-O comando padrão passa a incluir o catálogo administrativo e o catálogo técnico:
 
 ```bash
 pnpm seed
