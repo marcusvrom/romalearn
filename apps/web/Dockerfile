@@ -8,11 +8,10 @@ WORKDIR /app
 
 # Contracts executa o script prepare durante o pnpm install, então seus
 # fontes e tsconfigs precisam existir antes da instalação.
-# O pacote UI é compilado como código-fonte pelo Angular e seu manifesto
-# precisa estar presente para o pnpm criar suas dependências e links.
+# O UI é consumido como código-fonte e reutiliza as dependências Angular do
+# frontend no prebuild, evitando uma segunda instância do compilador/roteador.
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
 COPY packages/contracts ./packages/contracts
-COPY packages/ui/package.json packages/ui/package.json
 COPY apps/api/package.json apps/api/package.json
 COPY apps/web/package.json apps/web/package.json
 
