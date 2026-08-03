@@ -126,6 +126,13 @@ administrador local, o módulo gratuito, os cinco módulos pagos, a trilha compl
 partes e capítulos extraída dos e-books oficiais, a oferta gratuita, uma oferta de teste em
 ambiente sandbox e os questionários de conclusão.
 
+Em produção, o deploy executa automaticamente `pnpm seed:content:prod` depois
+das migrations e antes de atualizar os containers. Esse comando usa o
+entrypoint compilado `dist/database/seeds/run-content-seed.js` e distribui
+catálogo, cursos, aulas, avaliações, produtos e ofertas, mas preserva todas as
+contas. A CI executa o mesmo seed duas vezes na imagem runtime para validar sua
+presença e idempotência antes da publicação.
+
 O Módulo 5 (IA para Processos Administrativos) fica cadastrado como **rascunho e sem capítulos**:
 o e-book ainda não está disponível e o conteúdo não foi inventado.
 

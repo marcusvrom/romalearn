@@ -66,6 +66,9 @@ compose pull api web
 echo 'Executando migrations compiladas...'
 compose run --rm --no-deps api pnpm migration:run:prod
 
+echo 'Distribuindo catálogo e conteúdo dos cursos...'
+compose run --rm --no-deps api pnpm seed:content:prod
+
 echo 'Atualizando containers...'
 compose up -d --remove-orphans
 

@@ -181,7 +181,7 @@ jobs:
           provenance: false
           sbom: false
 
-      - name: Validar migrations na imagem runtime da API
+      - name: Validar migrations e seed de conteúdo na imagem runtime da API
         if: matrix.application == 'API'
         run: |
           docker run --rm --network host \
@@ -193,6 +193,28 @@ jobs:
             -e POSTGRES_DB=romalearn \
             "${{ matrix.image_tag }}" \
             pnpm migration:run:prod
+
+          echo 'Distribuindo o conteúdo pela imagem compilada...'
+          docker run --rm --network host \
+            -e NODE_ENV=production \
+            -e POSTGRES_HOST=127.0.0.1 \
+            -e POSTGRES_PORT=5432 \
+            -e POSTGRES_USER=romalearn \
+            -e POSTGRES_PASSWORD=romalearn \
+            -e POSTGRES_DB=romalearn \
+            "${{ matrix.image_tag }}" \
+            pnpm seed:content:prod
+
+          echo 'Executando o seed novamente para confirmar idempotência...'
+          docker run --rm --network host \
+            -e NODE_ENV=production \
+            -e POSTGRES_HOST=127.0.0.1 \
+            -e POSTGRES_PORT=5432 \
+            -e POSTGRES_USER=romalearn \
+            -e POSTGRES_PASSWORD=romalearn \
+            -e POSTGRES_DB=romalearn \
+            "${{ matrix.image_tag }}" \
+            pnpm seed:content:prod
 
           echo 'Executando novamente para confirmar que não há migrations pendentes...'
           docker run --rm --network host \
