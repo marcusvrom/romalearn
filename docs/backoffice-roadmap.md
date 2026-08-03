@@ -13,6 +13,8 @@ A implementação deve evoluir em etapas e nunca exibir métricas inventadas. Qu
 - visão financeira com receita, pedidos pendentes e falhas de webhook;
 - base de analytics de conteúdo;
 - base da central de atendimento;
+- gráficos acessíveis de negócio e suporte;
+- Intelligence Center determinístico inicial;
 - reutilização dos dados e permissões existentes;
 - documentação dos próximos contratos de API.
 
@@ -78,7 +80,8 @@ Os eventos devem ser agregáveis por aluno anônimo, sessão, curso, aula, campa
 - `support_tags`;
 - `support_notes`;
 - `support_attachments`;
-- `support_sla_events`.
+- `support_sla_events`;
+- `support_satisfaction_surveys`.
 
 ### Recursos
 
@@ -92,6 +95,7 @@ Os eventos devem ser agregáveis por aluno anônimo, sessão, curso, aula, campa
 - histórico completo do aluno;
 - vinculação com pedidos, cursos, acessos e certificados;
 - pesquisa e filtros;
+- CSAT pós-atendimento;
 - auditoria.
 
 WebSocket ou SSE pode ser adicionado quando houver necessidade de atualização em tempo real. A primeira versão pode usar atualização periódica para reduzir complexidade.
@@ -110,18 +114,56 @@ WebSocket ou SSE pode ser adicionado quando houver necessidade de atualização 
 
 ## Fase 6 — Intelligence Center
 
-O Intelligence Center deve ser baseado em agregados confiáveis e explicar a origem de cada conclusão.
+O Intelligence Center deve transformar métricas confiáveis em recomendações acionáveis, explicando a origem de cada conclusão.
 
-Exemplos:
+### Primeira versão implementada
 
-- queda de conversão de um curso;
-- aumento de recusa em cartão;
-- aula com abandono anormal;
-- aumento de chamados sobre um mesmo tema;
-- oportunidade de bundle;
-- curso com alta visualização e baixa compra.
+- rota `/admin/insights`;
+- filtros por domínio;
+- severidade e prioridade;
+- evidência que originou cada insight;
+- ação recomendada;
+- links para investigação;
+- regras determinísticas sem custo de IA;
+- nenhuma ação sensível executada automaticamente.
 
-A IA nunca deve alterar preços, reembolsar pedidos, publicar conteúdo ou responder ao aluno sem autorização humana explícita.
+### Domínios planejados
+
+- financeiro;
+- conversão;
+- conteúdo e aprendizagem;
+- suporte e satisfação;
+- operação e infraestrutura;
+- marketing e campanhas;
+- acessibilidade;
+- segurança e auditoria.
+
+### Exemplos de regras
+
+- falha de webhook com risco de acesso não liberado;
+- aumento de pagamentos pendentes;
+- curso com baixa conclusão;
+- curso publicado sem matrícula;
+- produto com tração para bundle;
+- curso com alta visualização e baixa compra;
+- aumento de chamados por categoria;
+- queda de CSAT;
+- SLA de primeira resposta deteriorando;
+- crescimento de reembolsos ou chargebacks;
+- baixa adesão ao áudio ou abandono em uma aula específica.
+
+### Evolução técnica
+
+1. regras determinísticas versionadas;
+2. metas e limites configuráveis;
+3. comparação com períodos anteriores;
+4. detecção estatística de anomalias;
+5. feedback humano: útil, ignorado ou resolvido;
+6. criação opcional de tarefa a partir do insight;
+7. IA somente para resumir, agrupar e explicar;
+8. trilha de auditoria da regra, dados e decisão.
+
+A IA nunca deve alterar preços, reembolsar pedidos, publicar conteúdo, bloquear usuários ou responder ao aluno sem autorização humana explícita.
 
 ## Perfis e permissões
 
@@ -153,18 +195,20 @@ Campanhas, cupons, ofertas, funis e analytics comerciais, sem acesso a dados sen
 - datas e valores com fuso e moeda explícitos;
 - filtros refletidos na URL;
 - estados vazios e de erro claros;
-- tabelas acessíveis e responsivas;
+- tabelas e gráficos acessíveis e responsivos;
 - dados pessoais minimizados;
 - retenção e anonimização alinhadas à LGPD;
-- métricas agregadas em vez de consultas pesadas em tempo real.
+- métricas agregadas em vez de consultas pesadas em tempo real;
+- insights sempre acompanhados de evidência e regra identificável.
 
 ## Ordem recomendada
 
-1. validar a fundação visual e rotas;
-2. implementar agregados financeiros;
+1. validar a fundação visual, gráficos e rotas;
+2. implementar agregados financeiros e parcelas;
 3. persistir eventos de visualização e funil;
 4. criar analytics de cursos e aulas;
 5. implementar entidades e API de suporte;
-6. adicionar chat e SLA;
+6. adicionar chat, SLA e satisfação;
 7. ampliar edição editorial;
-8. criar Intelligence Center somente após dados confiáveis.
+8. evoluir o Intelligence Center com histórico, metas e anomalias;
+9. adicionar IA opcional apenas após dados confiáveis.
