@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { OrderDto, WebhookEventDto } from '@romalearn/contracts';
 import { AlertComponent, LoadingStateComponent } from '@romalearn/ui';
-import { ORDER_STATUS_LABEL, formatCurrency, formatDateTime } from '../../../core/format';
+import {
+  ORDER_STATUS_LABEL,
+  PAYMENT_METHOD_LABEL,
+  formatCurrency,
+  formatDateTime,
+} from '../../../core/format';
 import { SeoService } from '../../../core/seo.service';
 import { AdminService } from '../admin.service';
 
@@ -30,6 +35,7 @@ import { AdminService } from '../admin.service';
                 <th scope="col">Produto</th>
                 <th scope="col">Data</th>
                 <th scope="col">Valor</th>
+                <th scope="col">Pagamento</th>
                 <th scope="col">Situação</th>
                 <th scope="col">Ação</th>
               </tr>
@@ -41,6 +47,14 @@ import { AdminService } from '../admin.service';
                   <td>{{ order.productName }}</td>
                   <td>{{ formatDateTime(order.createdAt) }}</td>
                   <td>{{ formatCurrency(order.totalCents, order.currency) }}</td>
+                  <td>
+                    @if (order.payment; as payment) {
+                      <strong>{{ paymentMethodLabel[payment.method] ?? payment.method }}</strong>
+                      <span class="rl-small rl-muted block">{{ payment.gateway }}</span>
+                    } @else {
+                      <span class="rl-small rl-muted">Sem cobrança</span>
+                    }
+                  </td>
                   <td>
                     <span class="rl-badge" [class.rl-badge--free]="order.status === 'APPROVED'">
                       {{ statusLabel[order.status] }}
@@ -62,7 +76,7 @@ import { AdminService } from '../admin.service';
                 </tr>
               } @empty {
                 <tr>
-                  <td colspan="6" class="rl-muted">Nenhum pedido registrado.</td>
+                  <td colspan="7" class="rl-muted">Nenhum pedido registrado.</td>
                 </tr>
               }
             </tbody>
@@ -133,53 +147,14 @@ import { AdminService } from '../admin.service';
   `,
   styles: [
     `
-      h1 {
-        font-size: var(--rl-text-2xl);
-        margin-bottom: var(--rl-space-6);
-      }
-
-      .block {
-        margin-bottom: var(--rl-space-10);
-      }
-
-      .block h2 {
-        font-size: var(--rl-text-lg);
-        margin-bottom: var(--rl-space-3);
-      }
-
-      .table {
-        width: 100%;
-        min-width: 760px;
-        border-collapse: collapse;
-        background: var(--rl-surface-raised);
-        border-radius: var(--rl-radius-lg);
-        overflow: hidden;
-      }
-
-      th,
-      td {
-        padding: var(--rl-space-4);
-        text-align: left;
-        border-bottom: 1px solid var(--rl-border);
-        font-size: var(--rl-text-sm);
-        vertical-align: top;
-      }
-
-      thead th {
-        background: var(--rl-surface-sunken);
-        font-size: var(--rl-text-xs);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .code {
-        font-family: var(--rl-font-mono);
-        font-size: var(--rl-text-xs);
-      }
-
-      .block {
-        overflow-wrap: anywhere;
-      }
+      h1 { font-size: var(--rl-text-2xl); margin-bottom: var(--rl-space-6); }
+      .block { margin-bottom: var(--rl-space-10); overflow-wrap: anywhere; }
+      .block h2 { font-size: var(--rl-text-lg); margin-bottom: var(--rl-space-3); }
+      .table { width: 100%; min-width: 880px; border-collapse: collapse; background: var(--rl-surface-raised); border-radius: var(--rl-radius-lg); overflow: hidden; }
+      th, td { padding: var(--rl-space-4); text-align: left; border-bottom: 1px solid var(--rl-border); font-size: var(--rl-text-sm); vertical-align: top; }
+      thead th { background: var(--rl-surface-sunken); font-size: var(--rl-text-xs); text-transform: uppercase; letter-spacing: 0.05em; }
+      .code { font-family: var(--rl-font-mono); font-size: var(--rl-text-xs); }
+      .block { display: block; }
     `,
   ],
 })
@@ -193,6 +168,7 @@ export class AdminOrdersPage implements OnInit {
   readonly feedback = signal<{ tone: 'success' | 'error'; message: string } | null>(null);
 
   readonly statusLabel = ORDER_STATUS_LABEL;
+  readonly paymentMethodLabel = PAYMENT_METHOD_LABEL;
   readonly formatCurrency = formatCurrency;
   readonly formatDateTime = formatDateTime;
 
@@ -227,7 +203,6 @@ export class AdminOrdersPage implements OnInit {
   }
 
   refund(order: OrderDto): void {
-    // Ação sensível: o motivo é obrigatório e fica registrado na auditoria.
     const reason = globalThis.prompt(`Informe o motivo do reembolso do pedido ${order.reference}:`);
     if (!reason?.trim()) return;
 
