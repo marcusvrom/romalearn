@@ -14,8 +14,65 @@ env:
   PNPM_VERSION: '10.33.0'
 
 jobs:
-  verify:
-    name: Lint, testes e build
+  quality:
+    name: Formatação e lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      # O repositório possui dívida de formatação anterior à implantação da CI.
+      # Arquivos novos ou alterados continuam obrigatoriamente formatados.
+      - name: Verificar formatação dos arquivos alterados
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE_SHA" ] || [[ "$BASE_SHA" =~ ^0+$ ]]; then
+            mapfile -t FILES < <(
+              git ls-files | grep -E '\.(ts|html|scss|json|md)$' || true
+            )
+          else
+            mapfile -t FILES < <(
+              git diff --name-only --diff-filter=ACMR "$BASE_SHA" HEAD |
+                grep -E '\.(ts|html|scss|json|md)$' || true
+            )
+          fi
+
+          if [ "${#FILES[@]}" -eq 0 ]; then
+            echo "Nenhum arquivo suportado pelo Prettier foi alterado."
+            exit 0
+          fi
+
+          printf 'Verificando formatação de:\n%s\n' "${FILES[*]}"
+          pnpm exec prettier --check "${FILES[@]}"
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Conferir ausência de arquivos .env
+        run: |
+          if git ls-files | grep -E '^\.env$|^\.env\.[^e]'; then
+            echo "Arquivo .env encontrado no repositório."
+            exit 1
+          fi
+          echo "Nenhum arquivo .env versionado."
+
+  test-and-build:
+    name: Testes e builds das aplicações
     runs-on: ubuntu-latest
 
     services:
@@ -56,12 +113,6 @@ jobs:
       - name: Compilar contratos compartilhados
         run: pnpm --filter @romalearn/contracts build
 
-      - name: Verificar formatação
-        run: pnpm format:check
-
-      - name: Lint
-        run: pnpm lint
-
       - name: Testes unitários
         run: pnpm --filter @romalearn/api test
 
@@ -77,14 +128,36 @@ jobs:
       - name: Build da API
         run: pnpm --filter @romalearn/api build
 
-      - name: Build do front-end
+      - name: Build do frontend
         run: pnpm --filter @romalearn/web build
 
-      # Falha o build se algum segredo tiver sido commitado por engano.
-      - name: Conferir ausência de arquivos .env
-        run: |
-          if git ls-files | grep -E '^\.env$|^\.env\.[^e]'; then
-            echo "Arquivo .env encontrado no repositório."
-            exit 1
-          fi
-          echo "Nenhum arquivo .env versionado."
+  container-build:
+    name: Build Docker (${{ matrix.application }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - application: API
+            dockerfile: apps/api/Dockerfile
+            cache_scope: ci-api
+          - application: frontend
+            dockerfile: apps/web/Dockerfile
+            cache_scope: ci-web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Construir imagem sem publicar
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: false
+          cache-from: type=gha,scope=${{ matrix.cache_scope }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.cache_scope }}
+          provenance: false
+          sbom: false

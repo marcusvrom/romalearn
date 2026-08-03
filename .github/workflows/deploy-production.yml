@@ -5,12 +5,6 @@ on:
     workflows: ['CI']
     branches: [main]
     types: [completed]
-  workflow_dispatch:
-    inputs:
-      commit_sha:
-        description: 'SHA da main a publicar; vazio usa o HEAD atual'
-        required: false
-        type: string
 
 concurrency:
   group: romalearn-production
@@ -23,9 +17,7 @@ permissions:
 jobs:
   publish-and-deploy:
     name: Publicar imagens e atualizar VPS
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -38,20 +30,11 @@ jobs:
       VPS_HOST: 169.58.119.107
 
     steps:
-      - name: Resolver versão
+      - name: Resolver versão validada
         id: version
         env:
-          MANUAL_SHA: ${{ inputs.commit_sha }}
           WORKFLOW_SHA: ${{ github.event.workflow_run.head_sha }}
-        run: |
-          if [ -n "$MANUAL_SHA" ]; then
-            SHA="$MANUAL_SHA"
-          elif [ -n "$WORKFLOW_SHA" ]; then
-            SHA="$WORKFLOW_SHA"
-          else
-            SHA="${GITHUB_SHA}"
-          fi
-          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+        run: echo "sha=$WORKFLOW_SHA" >> "$GITHUB_OUTPUT"
 
       - name: Checkout da versão validada
         uses: actions/checkout@v4
