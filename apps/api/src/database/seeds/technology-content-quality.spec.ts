@@ -1,5 +1,6 @@
 import { LessonType } from '@romalearn/contracts';
 import { calculateProgramWorkload } from '../../catalog/program-workload';
+import { getCourseIntroduction } from './content/course-introductions';
 import { renderLessonContent } from './content/render-content';
 import { CONTEUDO_TECNICO, conteudoDaAulaTecnica } from './content/tecnologia';
 import { TECHNOLOGY_COURSES } from './technology-catalog-data';
@@ -57,7 +58,7 @@ describe('qualidade editorial da trilha de tecnologia', () => {
     expect(workload).toEqual({ minimum: 150, maximum: 158 });
   });
 
-  it('mantém as 49 leituras autorais completas, reconhecíveis e sem preenchimento genérico', () => {
+  it('mantém as 55 leituras autorais completas, reconhecíveis e sem preenchimento genérico', () => {
     const readingLessons = TECHNOLOGY_COURSES.flatMap((course) =>
       course.sections.flatMap((section) =>
         section.lessons
@@ -66,13 +67,13 @@ describe('qualidade editorial da trilha de tecnologia', () => {
       ),
     );
 
-    expect(readingLessons).toHaveLength(49);
+    expect(readingLessons).toHaveLength(55);
     expect(
       Object.values(CONTEUDO_TECNICO).reduce(
         (total, lessons) => total + Object.keys(lessons).length,
         0,
       ),
-    ).toBe(49);
+    ).toBe(55);
 
     const problems = new Set<string>();
     const outcomes = new Set<string>();
@@ -104,6 +105,33 @@ describe('qualidade editorial da trilha de tecnologia', () => {
 
     expect(problems.size).toBe(readingLessons.length);
     expect(outcomes.size).toBe(readingLessons.length);
+  });
+
+  it('abre cada curso com uma chegada histórica, narrável e sem código obrigatório', () => {
+    for (const course of TECHNOLOGY_COURSES) {
+      const introduction = getCourseIntroduction(course.slug);
+      const firstSection = course.sections[0];
+      const firstLesson = firstSection.lessons[0];
+      const authored = CONTEUDO_TECNICO[course.slug]?.[firstLesson.title];
+
+      expect(firstSection.title).toBe('Antes de começar');
+      expect(firstSection.lessons).toHaveLength(1);
+      expect(firstLesson).toMatchObject({
+        title: introduction.lessonTitle,
+        type: LessonType.RICH_TEXT,
+        estimatedMinutes: introduction.estimatedMinutes,
+      });
+      expect(authored?.blocks.some((block) => block.kind === 'steps')).toBe(true);
+      expect(
+        authored?.blocks.some(
+          (block) => block.kind === 'list' && block.items.some((item) => item.includes('https://')),
+        ),
+      ).toBe(true);
+      expect(authored?.blocks.some((block) => block.kind === 'code')).toBe(false);
+      expect(
+        firstSection.lessons.some((lesson) => lesson.type === LessonType.PRACTICAL_ACTIVITY),
+      ).toBe(false);
+    }
   });
 
   it('posiciona toda prática depois de conteúdo que prepara o aluno', () => {

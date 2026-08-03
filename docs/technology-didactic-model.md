@@ -2,7 +2,7 @@
 
 ## Como o conteúdo é escrito
 
-As 49 leituras dos seis cursos técnicos são **escritas uma a uma**, em
+As 55 leituras dos seis cursos técnicos são **escritas uma a uma**, em
 `apps/api/src/database/seeds/content/tecnologia/`, um arquivo por curso. Elas
 usam o mesmo modelo de blocos dos módulos de Office (`ContentBlock`), acrescido
 de blocos `code` e `output` — um curso de programação sem código legível não
@@ -34,6 +34,28 @@ disfarçada.
   erro de sintaxe ensina errado.
 - **Erros comuns, reflexões e checklist são específicos da aula** — nunca uma
   lista genérica repetida.
+
+### Contrato da aula “Antes de começar”
+
+Cada curso publicado abre com uma aula introdutória autoral de aproximadamente
+18 minutos. Ela não instala ambiente, não exige código e não pede entrega. Sua
+função é dar ao aluno uma chegada segura antes da primeira parte prática.
+
+Toda introdução precisa:
+
+- contar a origem da disciplina ou ferramenta sem inventar um único criador
+  quando a história é coletiva;
+- apresentar o problema histórico que motivou a solução;
+- conectar a solução a aplicações reconhecíveis no cotidiano;
+- distinguir ideias que costumam ser confundidas, como Git e GitHub ou Java e
+  JavaScript;
+- propor uma exploração pequena, reversível e guiada;
+- terminar com reflexão, checklist e links para fontes primárias ou oficiais;
+- funcionar como áudio-livro, com períodos curtos, tabelas narráveis e cada
+  passo compreensível sem depender de uma imagem.
+
+A primeira prática continua nas partes seguintes. A introdução serve para o
+aluno reconhecer o terreno, formar uma pergunta e saber por que vale aprender.
 
 ### Storytelling da jornada
 

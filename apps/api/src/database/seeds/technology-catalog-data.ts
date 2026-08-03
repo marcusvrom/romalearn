@@ -1,4 +1,5 @@
 import { CourseLevel, LessonType } from '@romalearn/contracts';
+import { getCourseIntroduction } from './content/course-introductions';
 
 export interface TechnologySeedLesson {
   title: string;
@@ -743,6 +744,28 @@ const TECHNOLOGY_COURSE_DEFINITIONS: TechnologySeedCourse[] = [
 ];
 
 /** Catálogo sempre exportado na mesma ordem em que aparece para o aluno. */
-export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [...TECHNOLOGY_COURSE_DEFINITIONS].sort(
-  (left, right) => left.order - right.order,
-);
+export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [...TECHNOLOGY_COURSE_DEFINITIONS]
+  .sort((left, right) => left.order - right.order)
+  .map((course) => {
+    const introduction = getCourseIntroduction(course.slug);
+    return {
+      ...course,
+      sections: [
+        {
+          title: 'Antes de começar',
+          summary:
+            'Uma chegada tranquila: origem, problema resolvido, aplicações cotidianas e um primeiro passo sem pressa.',
+          lessons: [
+            {
+              title: introduction.lessonTitle,
+              type: LessonType.RICH_TEXT,
+              estimatedMinutes: introduction.estimatedMinutes,
+              summary: introduction.summary,
+              topics: introduction.topics,
+            },
+          ],
+        },
+        ...course.sections,
+      ],
+    };
+  });

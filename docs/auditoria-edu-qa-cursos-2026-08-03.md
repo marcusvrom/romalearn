@@ -6,7 +6,7 @@
 com alunos e especialistas antes da venda ampla.**
 
 O catálogo possui uma base editorial acima da média: 11 cursos com conteúdo
-publicável, 95 leituras estruturadas, 29 práticas e projetos, 26 questionários
+publicável, 106 leituras estruturadas, 29 práticas e projetos, 26 questionários
 e 173 questões com feedback. O módulo de Inteligência Artificial permanece
 honestamente em rascunho, sem conteúdo inventado.
 
@@ -65,23 +65,25 @@ essenciais, a etapa de escolha e a evidência produzida em cada curso.
 
 ## Achados e correções obrigatórias
 
-| Prioridade | Local e evidência                                                                         | Impacto no aluno                                                                    | Correção efetuada                                                                               | Critério de aceite                                                                         |
-| ---------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| P0         | Programa publicado incluía relações com curso em rascunho.                                | Um card vazio de IA poderia prometer conteúdo inexistente.                          | A API filtra cursos não publicados ao montar qualquer trilha.                                   | Nenhum curso `DRAFT` aparece em programa público.                                          |
-| P0         | O seed técnico criava texto genérico antes de sobrescrevê-lo com as 49 leituras autorais. | Uma falha intermediária podia deixar conteúdo repetitivo no banco.                  | O seed agora exige diretamente a aula autoral e falha se ela não existir.                       | 49 títulos no catálogo correspondem a 49 conteúdos únicos; ausência interrompe o seed.     |
-| P1         | Git/Lógica tinham ordem e política comercial divergentes entre fontes.                    | O aluno recebia orientações conflitantes sobre por onde começar.                    | Git gratuito é etapa 1; Lógica paga é etapa 2 em código, documentação e interface.              | O teste editorial compara a ordem do catálogo com a jornada canônica.                      |
-| P1         | Python e Java apareciam como sequência e suas horas eram somadas.                         | A trilha parecia maior e mais obrigatória do que realmente é.                       | As duas rotas compartilham um grupo alternativo; a API calcula 150–158 h.                       | A interface mostra “Escolha uma rota” e a faixa varia conforme a opção.                    |
-| P1         | O leitor removia todo elemento `code` e ignorava tabelas.                                 | Termos técnicos desapareciam das frases e comparações ficavam incompletas no áudio. | Código inline é preservado, tabelas são verbalizadas e blocos longos são divididos.             | Uma aula pode ser percorrida em áudio sem perder termos, colunas ou contexto do exemplo.   |
-| P1         | Conteúdo autoral técnico era apresentado como resumo de um e-book inexistente.            | A origem declarada era enganosa e reduzia confiança editorial.                      | A referência agora identifica material original RomaLearn e orienta documentação oficial.       | Nenhuma aula técnica afirma vir de e-book; módulos Office continuam com páginas de origem. |
-| P1         | Projetos técnicos recebiam temporariamente uma rubrica incompatível com o corretor.       | Uma interrupção do seed podia impedir ou distorcer a correção.                      | A rubrica nasce no contrato final: cinco critérios, 100 pontos, 120 palavras e falhas críticas. | O primeiro seed já grava uma `ActivityRubricDto` válida.                                   |
-| P2         | Questionários técnicos tinham apenas três questões finais.                                | Cobertura fraca permitia aprovação por acerto casual.                               | Cada curso técnico passa a ter seis questões com explicação.                                    | Seis ou mais itens, uma resposta correta e feedback por item.                              |
-| P2         | Áreas técnicas já publicadas ainda apareciam como “planejadas”.                           | A descoberta do catálogo contradizia a oferta disponível.                           | Fundamentos, Web e Backend foram marcados como disponíveis.                                     | Taxonomia e catálogo público exibem o mesmo estado.                                        |
+| Prioridade | Local e evidência                                                                         | Impacto no aluno                                                                     | Correção efetuada                                                                               | Critério de aceite                                                                         |
+| ---------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| P0         | Programa publicado incluía relações com curso em rascunho.                                | Um card vazio de IA poderia prometer conteúdo inexistente.                           | A API filtra cursos não publicados ao montar qualquer trilha.                                   | Nenhum curso `DRAFT` aparece em programa público.                                          |
+| P0         | O seed técnico criava texto genérico antes de sobrescrevê-lo com as 49 leituras autorais. | Uma falha intermediária podia deixar conteúdo repetitivo no banco.                   | O seed agora exige diretamente a aula autoral e falha se ela não existir.                       | 55 títulos no catálogo correspondem a 55 conteúdos únicos; ausência interrompe o seed.     |
+| P1         | Git/Lógica tinham ordem e política comercial divergentes entre fontes.                    | O aluno recebia orientações conflitantes sobre por onde começar.                     | Git gratuito é etapa 1; Lógica paga é etapa 2 em código, documentação e interface.              | O teste editorial compara a ordem do catálogo com a jornada canônica.                      |
+| P1         | Python e Java apareciam como sequência e suas horas eram somadas.                         | A trilha parecia maior e mais obrigatória do que realmente é.                        | As duas rotas compartilham um grupo alternativo; a API calcula 150–158 h.                       | A interface mostra “Escolha uma rota” e a faixa varia conforme a opção.                    |
+| P1         | O leitor removia todo elemento `code` e ignorava tabelas.                                 | Termos técnicos desapareciam das frases e comparações ficavam incompletas no áudio.  | Código inline é preservado, tabelas são verbalizadas e blocos longos são divididos.             | Uma aula pode ser percorrida em áudio sem perder termos, colunas ou contexto do exemplo.   |
+| P1         | Conteúdo autoral técnico era apresentado como resumo de um e-book inexistente.            | A origem declarada era enganosa e reduzia confiança editorial.                       | A referência agora identifica material original RomaLearn e orienta documentação oficial.       | Nenhuma aula técnica afirma vir de e-book; módulos Office continuam com páginas de origem. |
+| P1         | Projetos técnicos recebiam temporariamente uma rubrica incompatível com o corretor.       | Uma interrupção do seed podia impedir ou distorcer a correção.                       | A rubrica nasce no contrato final: cinco critérios, 100 pontos, 120 palavras e falhas críticas. | O primeiro seed já grava uma `ActivityRubricDto` válida.                                   |
+| P2         | Questionários técnicos tinham apenas três questões finais.                                | Cobertura fraca permitia aprovação por acerto casual.                                | Cada curso técnico passa a ter seis questões com explicação.                                    | Seis ou mais itens, uma resposta correta e feedback por item.                              |
+| P2         | Áreas técnicas já publicadas ainda apareciam como “planejadas”.                           | A descoberta do catálogo contradizia a oferta disponível.                            | Fundamentos, Web e Backend foram marcados como disponíveis.                                     | Taxonomia e catálogo público exibem o mesmo estado.                                        |
+| P1         | Os cursos começavam diretamente pelo primeiro capítulo técnico.                           | Iniciantes eram convidados a produzir antes de compreender origem, propósito e mapa. | Os 11 cursos abrem com “Antes de começar”: história, problema, aplicações e exploração guiada.  | A primeira seção contém uma leitura autoral, fontes e passos sem prática ou entrega.       |
 
 ## Pontos fortes por família
 
 ### Carreira e produtividade
 
-- 46 leituras ligadas aos e-books oficiais, com capítulo e páginas;
+- 46 leituras ligadas aos e-books oficiais, com capítulo e páginas, mais cinco
+  introduções autorais com fontes oficiais;
 - avaliações distribuídas: quatro questionários por curso;
 - rubricas, exemplos de entrega forte e fraca e regras de anexo;
 - progressão do uso básico do computador à comunicação de resultados;
@@ -89,7 +91,7 @@ essenciais, a etapa de escolha e a evidência produzida em cada curso.
 
 ### Desenvolvimento de software
 
-- 49 leituras escritas uma a uma, todas abertas por um problema concreto;
+- 55 leituras escritas uma a uma, todas abertas por um problema concreto;
 - exemplos de código, resultados esperados, erros comuns, reflexão e checklist;
 - três práticas por curso e projeto final conectado ao portfólio;
 - carga e pré-requisitos declarados;

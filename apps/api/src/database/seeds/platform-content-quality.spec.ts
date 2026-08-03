@@ -1,5 +1,6 @@
 import { LessonType } from '@romalearn/contracts';
 import { SEED_COURSES, SEED_PROGRAM } from './catalog-data';
+import { getCourseIntroduction } from './content/course-introductions';
 
 describe('qualidade editorial da trilha administrativa', () => {
   const publishedCourses = SEED_COURSES.filter((course) => course.sections.length > 0);
@@ -13,14 +14,14 @@ describe('qualidade editorial da trilha administrativa', () => {
     expect(draft).toMatchObject({ workloadHours: 0, sections: [] });
   });
 
-  it('garante conteúdo estruturado e referência de origem em todas as 46 leituras', () => {
+  it('garante conteúdo estruturado e referência de origem em todas as 51 leituras', () => {
     const readings = publishedCourses.flatMap((course) =>
       course.sections.flatMap((section) =>
         section.lessons.filter((lesson) => lesson.type === LessonType.RICH_TEXT),
       ),
     );
 
-    expect(readings).toHaveLength(46);
+    expect(readings).toHaveLength(51);
     for (const lesson of readings) {
       expect(lesson.content).toBeDefined();
       expect(lesson.content?.blocks.length ?? 0).toBeGreaterThanOrEqual(7);
@@ -28,7 +29,37 @@ describe('qualidade editorial da trilha administrativa', () => {
       expect(lesson.content?.reference.module.length ?? 0).toBeGreaterThan(0);
       expect(lesson.content?.reference.chapter.length ?? 0).toBeGreaterThan(0);
       expect(lesson.content?.reference.pages.length ?? 0).toBeGreaterThan(0);
-      expect(lesson.content?.reference.sourceType).not.toBe('ORIGINAL');
+      if (lesson.content?.reference.sourceType === 'ORIGINAL') {
+        expect(lesson.content.reference.module).toBe('RomaLearn');
+      } else {
+        expect(lesson.content?.reference.sourceType).not.toBe('ORIGINAL');
+      }
+    }
+  });
+
+  it('abre cada curso com história, aplicação e um primeiro passo sem entrega', () => {
+    for (const course of publishedCourses) {
+      const introduction = getCourseIntroduction(course.slug);
+      const firstSection = course.sections[0];
+      const firstLesson = firstSection.lessons[0];
+
+      expect(firstSection.title).toBe('Antes de começar');
+      expect(firstSection.lessons).toHaveLength(1);
+      expect(firstLesson).toMatchObject({
+        title: introduction.lessonTitle,
+        type: LessonType.RICH_TEXT,
+        estimatedMinutes: introduction.estimatedMinutes,
+      });
+      expect(firstLesson.content?.reference.sourceType).toBe('ORIGINAL');
+      expect(firstLesson.content?.blocks.some((block) => block.kind === 'steps')).toBe(true);
+      expect(
+        firstLesson.content?.blocks.some(
+          (block) => block.kind === 'list' && block.items.some((item) => item.includes('https://')),
+        ),
+      ).toBe(true);
+      expect(
+        firstSection.lessons.some((lesson) => lesson.type === LessonType.PRACTICAL_ACTIVITY),
+      ).toBe(false);
     }
   });
 

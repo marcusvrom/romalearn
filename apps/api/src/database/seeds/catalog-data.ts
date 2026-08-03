@@ -12,6 +12,10 @@ import {
   LessonContent,
 } from './content/content-types';
 import { enrichSections } from './content/apply-content';
+import {
+  administrativeIntroductionContent,
+  getCourseIntroduction,
+} from './content/course-introductions';
 import { MODULE_01_ENRICHMENT } from './content/modulo-01-windows';
 import { MODULE_02_ENRICHMENT } from './content/modulo-02-word';
 import { MODULE_03_ENRICHMENT } from './content/modulo-03-excel';
@@ -103,11 +107,41 @@ const CONFIRM_ACTIVITY =
   'Faça a prática com dados fictícios, guarde o arquivo na sua pasta de estudos e descreva ' +
   'abaixo o que você fez e o que ainda ficou com dúvida.';
 
+/**
+ * Cada curso publicável começa com contexto e observação guiada. A primeira
+ * prática continua dentro do e-book, depois que o aluno já entendeu o mapa.
+ */
+function withCourseIntroduction(course: SeedCourse): SeedCourse {
+  const introduction = getCourseIntroduction(course.slug);
+
+  return {
+    ...course,
+    sections: [
+      {
+        title: 'Antes de começar',
+        summary:
+          'Uma chegada tranquila: origem, problema resolvido, aplicações cotidianas e um primeiro passo sem pressa.',
+        lessons: [
+          {
+            title: introduction.lessonTitle,
+            type: LessonType.RICH_TEXT,
+            estimatedMinutes: introduction.estimatedMinutes,
+            summary: introduction.summary,
+            topics: introduction.topics,
+            content: administrativeIntroductionContent(course.slug),
+          },
+        ],
+      },
+      ...course.sections,
+    ],
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Módulo Extra Gratuito
 // ---------------------------------------------------------------------------
 
-const FREE_MODULE: SeedCourse = {
+const FREE_MODULE: SeedCourse = withCourseIntroduction({
   slug: 'carreira-digital-e-destaque-profissional',
   title: 'Carreira Digital e Destaque Profissional',
   subtitle: 'Tecnologia, LinkedIn, networking e inteligência artificial no trabalho',
@@ -147,13 +181,13 @@ const FREE_MODULE: SeedCourse = {
   order: 0,
   ebookTitle: 'Módulo Extra Gratuito — Carreira Digital e Destaque Profissional (Edição 2026)',
   sections: FREE_MODULE_SECTIONS,
-};
+});
 
 // ---------------------------------------------------------------------------
 // Módulo 1 — Introdução à Computação e Windows
 // ---------------------------------------------------------------------------
 
-const MODULE_01: SeedCourse = {
+const MODULE_01: SeedCourse = withCourseIntroduction({
   slug: 'introducao-a-computacao-e-windows',
   title: 'Introdução à Computação e ao Windows',
   subtitle: 'Aprenda com calma, pratique sem medo',
@@ -390,13 +424,13 @@ const MODULE_01: SeedCourse = {
     ],
     MODULE_01_ENRICHMENT,
   ),
-};
+});
 
 // ---------------------------------------------------------------------------
 // Módulos 2 a 4 — mesma estrutura de três níveis + projeto final
 // ---------------------------------------------------------------------------
 
-const MODULE_02: SeedCourse = {
+const MODULE_02: SeedCourse = withCourseIntroduction({
   slug: 'microsoft-word-para-administracao',
   title: 'Microsoft Word para Administração',
   subtitle: 'Do iniciante ao avançado',
@@ -602,9 +636,9 @@ const MODULE_02: SeedCourse = {
     ],
     MODULE_02_ENRICHMENT,
   ),
-};
+});
 
-const MODULE_03: SeedCourse = {
+const MODULE_03: SeedCourse = withCourseIntroduction({
   slug: 'microsoft-excel-para-administracao',
   title: 'Microsoft Excel para Administração',
   subtitle: 'Do iniciante ao avançado',
@@ -799,9 +833,9 @@ const MODULE_03: SeedCourse = {
     ],
     MODULE_03_ENRICHMENT,
   ),
-};
+});
 
-const MODULE_04: SeedCourse = {
+const MODULE_04: SeedCourse = withCourseIntroduction({
   slug: 'microsoft-powerpoint-para-administracao',
   title: 'Microsoft PowerPoint para Administração',
   subtitle: 'Do iniciante ao avançado',
@@ -1007,7 +1041,7 @@ const MODULE_04: SeedCourse = {
     ],
     MODULE_04_ENRICHMENT,
   ),
-};
+});
 
 /**
  * Módulo 5 — ainda sem e-book oficial disponível.
