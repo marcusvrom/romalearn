@@ -529,6 +529,120 @@ img {
       white-space: pre;
     }
   }
+
+  // Infográfico textual: conserva uma ordem linear para audiolivro e leitores
+  // de tela, mas vira um fluxo visual quando há espaço horizontal.
+  .rl-learning-flow {
+    margin: var(--rl-space-7) 0;
+    padding: var(--rl-space-5);
+    border: 1px solid var(--rl-brand-400);
+    border-radius: var(--rl-radius-lg);
+    background: var(--rl-surface-muted);
+  }
+
+  .rl-learning-flow__title {
+    margin-bottom: var(--rl-space-4);
+    color: var(--rl-text);
+    font-weight: var(--rl-weight-semibold);
+  }
+
+  .rl-learning-flow__steps {
+    display: grid;
+    gap: var(--rl-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: learning-flow;
+  }
+
+  .rl-learning-flow__step {
+    position: relative;
+    display: grid;
+    gap: var(--rl-space-2);
+    min-width: 0;
+    margin: 0;
+    padding: var(--rl-space-4);
+    padding-top: calc(var(--rl-space-4) + 1.5rem);
+    border: 1px solid var(--rl-border);
+    border-radius: var(--rl-radius-md);
+    background: var(--rl-surface-raised);
+    counter-increment: learning-flow;
+
+    &::before {
+      content: counter(learning-flow);
+      position: absolute;
+      top: var(--rl-space-3);
+      left: var(--rl-space-4);
+      display: grid;
+      width: 1.5rem;
+      height: 1.5rem;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--rl-brand-600);
+      color: var(--rl-neutral-0);
+      font-size: var(--rl-text-sm);
+      font-weight: var(--rl-weight-bold);
+    }
+  }
+
+  .rl-learning-flow__label {
+    color: var(--rl-brand-link);
+    font-size: var(--rl-text-base);
+  }
+
+  .rl-learning-flow__text {
+    color: var(--rl-text-muted);
+    font-size: var(--rl-text-sm);
+    line-height: var(--rl-leading-normal);
+  }
+
+  .rl-guided-thinking {
+    margin: var(--rl-space-5) 0 var(--rl-space-6);
+    padding: var(--rl-space-5);
+    border-left: 4px solid var(--rl-brand-600);
+    border-radius: 0 var(--rl-radius-md) var(--rl-radius-md) 0;
+    background: var(--rl-brand-50);
+    font-size: var(--rl-text-base);
+
+    p,
+    ol {
+      margin-bottom: var(--rl-space-3);
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .rl-guided-thinking__title {
+    color: var(--rl-text);
+  }
+
+  .rl-guided-thinking__steps {
+    padding-left: var(--rl-space-5);
+  }
+
+  .rl-guided-thinking__starter {
+    padding-top: var(--rl-space-3);
+    border-top: 1px solid var(--rl-border);
+  }
+
+  @media (min-width: 720px) {
+    .rl-learning-flow__steps {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+    }
+
+    .rl-learning-flow__step:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      right: calc(var(--rl-space-3) * -1);
+      color: var(--rl-brand-600);
+      font-weight: var(--rl-weight-bold);
+      transform: translate(50%, -50%);
+    }
+  }
 }
 
 // Tabelas largas rolam sozinhas em vez de estourar a página no celular.

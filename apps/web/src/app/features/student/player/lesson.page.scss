@@ -63,6 +63,27 @@
   margin-bottom: var(--rl-space-4);
 }
 
+.activity__response-guide {
+  margin: var(--rl-space-5) 0;
+  padding: var(--rl-space-4) var(--rl-space-5);
+  border: 1px solid var(--rl-border);
+  border-radius: var(--rl-radius-md);
+  background: var(--rl-surface-raised);
+
+  p:first-child {
+    margin-top: 0;
+  }
+
+  p:last-child,
+  ol {
+    margin-bottom: 0;
+  }
+
+  ol {
+    padding-left: var(--rl-space-5);
+  }
+}
+
 .quiz {
   margin: var(--rl-space-10) 0;
   padding: var(--rl-space-6);

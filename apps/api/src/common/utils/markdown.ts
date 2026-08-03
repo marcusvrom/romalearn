@@ -56,6 +56,12 @@ const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
     code: ['class'],
     span: ['class'],
     div: ['class'],
+    figure: ['class'],
+    figcaption: ['class'],
+    ol: ['class'],
+    li: ['class'],
+    p: ['class'],
+    strong: ['class'],
   },
   allowedSchemes: ['http', 'https', 'mailto'],
   // Bloqueia data: em imagens para evitar payloads embutidos.

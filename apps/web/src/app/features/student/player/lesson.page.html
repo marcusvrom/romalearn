@@ -17,9 +17,7 @@
 
   @if (feedback(); as message) {
   <rl-alert [tone]="message.tone">{{ message.message }}</rl-alert>
-  }
-
-  @if (lesson.contentHtml) {
+  } @if (lesson.contentHtml) {
   <rl-lesson-audio-player
     [lessonId]="lesson.id"
     [courseSlug]="courseSlug"
@@ -53,8 +51,7 @@
   }
 
   <!-- Atividade prática -->
-  @if (lesson.type === lessonTypes.PRACTICAL_ACTIVITY) {
-  @if (submission(); as entrega) {
+  @if (lesson.type === lessonTypes.PRACTICAL_ACTIVITY) { @if (submission(); as entrega) {
   <section class="rl-card devolutiva" [class]="'devolutiva--' + entrega.status.toLowerCase()">
     <header class="devolutiva__head">
       <h2>Correção da sua entrega</h2>
@@ -150,14 +147,28 @@
     </p>
     }
 
-    <label class="rl-label" for="relato">Seu relato</label>
+    <div class="activity__response-guide">
+      <p><strong>Monte o relato sem adivinhar o formato</strong></p>
+      <ol>
+        <li><strong>Situação:</strong> qual problema ou cenário você recebeu?</li>
+        <li><strong>Ação:</strong> o que você fez, em qual ordem e por quê?</li>
+        <li><strong>Teste:</strong> qual resultado esperava e o que realmente aconteceu?</li>
+        <li><strong>Evidência:</strong> como conferiu e o que ainda melhoraria?</li>
+      </ol>
+      <p class="rl-small rl-muted">
+        Exemplo de início: “Recebi um cenário com dados fictícios. Primeiro identifiquei ____. Depois fiz ____. Testei
+        com ____ e conferi o resultado por ____.”
+      </p>
+    </div>
+
+    <label class="rl-label" for="relato">Seu relato, seguindo o roteiro acima</label>
     <textarea
       id="relato"
       class="rl-textarea"
       [(ngModel)]="activityNotes"
       name="relato"
       rows="10"
-      placeholder="Ex.: criei a pasta de estudos, salvei o documento com nome descritivo e gerei o PDF…"
+      placeholder="Situação: …&#10;Ação e decisões: …&#10;Testes e resultado: …&#10;Evidências, dúvidas e melhoria: …"
     ></textarea>
 
     @if (lesson.activityRubric; as rubrica) {

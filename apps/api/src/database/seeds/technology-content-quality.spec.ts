@@ -5,6 +5,7 @@ import { renderLessonContent } from './content/render-content';
 import { CONTEUDO_TECNICO, conteudoDaAulaTecnica } from './content/tecnologia';
 import { TECHNOLOGY_COURSES } from './technology-catalog-data';
 import { TECHNOLOGY_REFINEMENTS, buildProjectRubric } from './technology-content-refinements';
+import { buildTechnologyActivityContent } from './technology-content-expansion.service';
 import { TECHNOLOGY_JOURNEY } from './technology-learning-journey';
 
 describe('qualidade editorial da trilha de tecnologia', () => {
@@ -101,10 +102,37 @@ describe('qualidade editorial da trilha de tecnologia', () => {
       expect(markdown).not.toContain('do e-book');
       expect(markdown).toContain('## Pare e pense');
       expect(markdown).toContain('## Antes de seguir, confira');
+      expect(markdown).toContain('class="rl-learning-flow"');
+      expect(markdown).toContain('class="rl-guided-thinking"');
+      expect(markdown).toContain('Caso para analisar:');
+      expect(markdown).toContain('Modelo para começar:');
     }
 
     expect(problems.size).toBe(readingLessons.length);
     expect(outcomes.size).toBe(readingLessons.length);
+  });
+
+  it('guia todas as práticas com fluxo, casos de teste, reflexão e entrega', () => {
+    const activities = TECHNOLOGY_COURSES.flatMap((course) =>
+      course.sections.flatMap((section) =>
+        section.lessons.filter((lesson) => lesson.type === LessonType.PRACTICAL_ACTIVITY),
+      ),
+    );
+
+    expect(activities.length).toBeGreaterThanOrEqual(12);
+    for (const activity of activities) {
+      const markdown = buildTechnologyActivityContent(
+        activity.title,
+        activity.activityInstructions ?? '',
+      );
+
+      expect(markdown).toContain('class="rl-learning-flow"');
+      expect(markdown).toContain('## Como desenvolver');
+      expect(markdown).toContain('## Reflexão obrigatória');
+      expect(markdown).toContain('class="rl-guided-thinking"');
+      expect(markdown).toContain('## Antes de enviar');
+      expect(markdown).toContain('1.');
+    }
   });
 
   it('abre cada curso com uma chegada histórica, narrável e sem código obrigatório', () => {
