@@ -63,7 +63,11 @@ Recursos implementados:
 - compatibilidade com SSR;
 - controles acessíveis por teclado e áreas de status;
 - foco visível e respeito a `prefers-reduced-motion` no player;
-- remoção de scripts, iframes, código e elementos ocultos da narração;
+- remoção de scripts, iframes, elementos ocultos e código em bloco da narração;
+- preservação de termos técnicos escritos como código dentro de frases;
+- transformação de tabelas em linhas narráveis com seus cabeçalhos;
+- legenda narrável antes de todo exemplo de código;
+- divisão de parágrafos longos em trechos retomáveis;
 - analytics de início, perfil, velocidade e conclusão, sem dados pessoais.
 
 ### Decisão sobre velocidade padrão
@@ -149,11 +153,16 @@ Cada curso técnico deve conter:
 
 ### Sequência sugerida
 
-1. Lógica de programação e algoritmos;
-2. Git e GitHub para iniciantes;
-3. HTML e CSS;
-4. JavaScript;
-5. TypeScript;
-6. escolha de especialização: frontend, Java, Python ou dados;
-7. APIs, bancos de dados, testes e Docker;
+1. Git e GitHub para iniciantes — porta gratuita e caderno de bordo;
+2. Lógica de programação e algoritmos — fundação para resolver problemas;
+3. HTML e CSS — estrutura, acessibilidade e apresentação;
+4. JavaScript — comportamento, estado e dados;
+5. escolha de especialização: Python ou Java;
+6. continuidade futura em TypeScript, frontend, APIs ou dados;
+7. bancos de dados, testes e Docker;
 8. projeto integrador.
+
+A ordem pedagógica e a estratégia comercial são coerentes: Git é gratuito e
+vem primeiro porque prepara o repositório usado no restante da jornada; Lógica
+é a fundação conceitual paga. Python e Java formam rotas alternativas na mesma
+etapa, portanto a carga da trilha é exibida como faixa, não como a soma das duas.

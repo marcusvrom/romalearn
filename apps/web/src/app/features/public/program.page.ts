@@ -1,11 +1,31 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ProductDto, ProgramSummaryDto, WEB_ROUTES } from '@romalearn/contracts';
+import {
+  ProductDto,
+  ProgramCourseSummaryDto,
+  ProgramSummaryDto,
+  WEB_ROUTES,
+} from '@romalearn/contracts';
 import { AlertComponent, CourseCardComponent, LoadingStateComponent } from '@romalearn/ui';
 import { AuthService } from '../../core/auth.service';
 import { CatalogService } from '../../core/catalog.service';
 import { formatCurrency } from '../../core/format';
 import { SeoService } from '../../core/seo.service';
+
+interface JourneyStageView {
+  stage: number;
+  title: string;
+  description: string;
+  isChoice: boolean;
+  courses: ProgramCourseSummaryDto[];
+}
 
 /** Página comercial da trilha completa. */
 @Component({
@@ -33,7 +53,13 @@ import { SeoService } from '../../core/seo.service';
 
             <div class="badges">
               <span class="rl-badge rl-badge--brand">{{ program.courses.length }} módulos</span>
-              <span class="rl-badge">{{ program.totalWorkloadHours }} horas</span>
+              <span class="rl-badge">
+                @if (program.maximumWorkloadHours > program.totalWorkloadHours) {
+                  {{ program.totalWorkloadHours }}–{{ program.maximumWorkloadHours }} horas
+                } @else {
+                  {{ program.totalWorkloadHours }} horas
+                }
+              </span>
               <span class="rl-badge">Acesso vitalício</span>
             </div>
           </div>
@@ -104,10 +130,35 @@ import { SeoService } from '../../core/seo.service';
         }
 
         <section class="block">
-          <h2>Módulos incluídos</h2>
-          <div class="rl-grid rl-grid--3">
-            @for (course of program.courses; track course.id) {
-              <rl-course-card [course]="course" [link]="routes.course(course.slug)" />
+          <p class="rl-eyebrow">Da primeira etapa à conquista</p>
+          <h2>Sua jornada, etapa por etapa</h2>
+          <div class="journey">
+            @for (stage of journeyStages(); track stage.stage) {
+              <article class="journey__stage">
+                <header class="journey__header">
+                  <span class="journey__number">Etapa {{ stage.stage }}</span>
+                  @if (stage.isChoice) {
+                    <span class="rl-badge rl-badge--brand">Escolha uma rota</span>
+                  } @else {
+                    <span class="rl-badge">Parte essencial</span>
+                  }
+                </header>
+                <h3>{{ stage.title }}</h3>
+                <p class="rl-muted">{{ stage.description }}</p>
+
+                <div class="rl-grid rl-grid--3 journey__courses">
+                  @for (course of stage.courses; track course.id) {
+                    <div class="journey__course">
+                      <rl-course-card [course]="course" [link]="routes.course(course.slug)" />
+                      @if (course.portfolioOutcome) {
+                        <p class="journey__evidence">
+                          <strong>Evidência de portfólio:</strong> {{ course.portfolioOutcome }}
+                        </p>
+                      }
+                    </div>
+                  }
+                </div>
+              </article>
             }
           </div>
         </section>
@@ -194,6 +245,56 @@ import { SeoService } from '../../core/seo.service';
           font-weight: var(--rl-weight-bold);
         }
       }
+
+      .journey {
+        display: grid;
+        gap: var(--rl-space-6);
+        margin-top: var(--rl-space-6);
+      }
+
+      .journey__stage {
+        border: 1px solid var(--rl-border);
+        border-radius: var(--rl-radius-lg);
+        padding: var(--rl-space-6);
+        background: var(--rl-surface);
+      }
+
+      .journey__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--rl-space-3);
+      }
+
+      .journey__number {
+        color: var(--rl-accent-text);
+        font-size: var(--rl-text-sm);
+        font-weight: var(--rl-weight-bold);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .journey__stage h3 {
+        margin-block: var(--rl-space-3) var(--rl-space-2);
+      }
+
+      .journey__courses {
+        margin-top: var(--rl-space-5);
+      }
+
+      .journey__course {
+        display: grid;
+        align-content: start;
+        gap: var(--rl-space-3);
+      }
+
+      .journey__evidence {
+        margin: 0;
+        border-left: 3px solid var(--rl-accent-500);
+        padding-left: var(--rl-space-3);
+        color: var(--rl-text-muted);
+        font-size: var(--rl-text-sm);
+      }
     `,
   ],
 })
@@ -210,6 +311,29 @@ export class ProgramPage implements OnInit {
   readonly program = signal<ProgramSummaryDto | null>(null);
   readonly offer = signal<ProductDto['offers'][number] | null>(null);
   readonly formatCurrency = formatCurrency;
+  readonly journeyStages = computed<JourneyStageView[]>(() => {
+    const program = this.program();
+    if (!program) return [];
+
+    const stages = new Map<number, JourneyStageView>();
+
+    for (const course of program.courses) {
+      const stageNumber = course.stage > 0 ? course.stage : course.order + 1;
+      const current = stages.get(stageNumber) ?? {
+        stage: stageNumber,
+        title: course.stageTitle || `Etapa ${stageNumber}`,
+        description: course.stageDescription || course.shortDescription,
+        isChoice: false,
+        courses: [],
+      };
+
+      current.courses.push(course);
+      current.isChoice ||= Boolean(!course.isRequired && course.alternativeGroup);
+      stages.set(stageNumber, current);
+    }
+
+    return [...stages.values()].sort((left, right) => left.stage - right.stage);
+  });
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {

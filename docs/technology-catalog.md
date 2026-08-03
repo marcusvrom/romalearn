@@ -57,7 +57,7 @@ Cada curso possui:
 - conteúdo estruturado com objetivo, explicação, exemplo, prática, erros comuns e checklist;
 - práticas intermediárias;
 - projeto final com rubrica pública;
-- questionário de conclusão;
+- questionário de conclusão com pelo menos seis questões e feedback explicativo;
 - carga horária e pré-requisitos explícitos;
 - progressão orientada a evidências profissionais.
 
@@ -74,11 +74,15 @@ Cada curso possui:
 
 Depois de cadastrar o catálogo, o seed executa uma etapa de estabilização que:
 
-- aplica a política gratuito/pago definida para cada curso;
+- reaplica como invariantes a política gratuito/pago já declarada na fonte do catálogo;
 - cria ou reativa a oferta correta;
 - arquiva a oferta antiga incompatível;
 - normaliza rubricas dos projetos finais conforme o contrato do corretor;
 - mantém a execução idempotente durante a homologação.
+
+A ordem, a carga horária e a política comercial têm sua fonte primária em
+`technology-catalog-data.ts`. A estabilização não redefine esses dados: ela
+protege o banco contra resíduos de seeds anteriores.
 
 ## Antes da venda oficial
 

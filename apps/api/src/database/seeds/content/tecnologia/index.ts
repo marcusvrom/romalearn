@@ -44,7 +44,8 @@ function montarMarkdown(titulo: string, aula: TechLessonContent): string {
     // origem é melhor do que inventar capítulo e página de um PDF que não
     // existe.
     reference: {
-      module: 'Trilha de Tecnologia',
+      sourceType: 'ORIGINAL',
+      module: 'RomaLearn',
       chapter: titulo,
       pages: 'material original',
     },

@@ -58,7 +58,8 @@ function renderBlock(block: ContentBlock): string {
 
     case 'code': {
       const fence = ['```' + block.language, ...block.lines, '```'].join('\n');
-      return block.caption ? `${block.caption}\n\n${fence}` : fence;
+      const caption = block.caption ?? `Exemplo em ${block.language}:`;
+      return `${caption}\n\n${fence}`;
     }
 
     case 'output': {
@@ -70,6 +71,14 @@ function renderBlock(block: ContentBlock): string {
 }
 
 function renderReference(reference: EbookReference): string {
+  if (reference.sourceType === 'ORIGINAL') {
+    return (
+      '## Autoria e referências\n\n' +
+      `Esta aula, **${reference.chapter}**, é material original da ${reference.module}. ` +
+      'Os conceitos técnicos devem ser conferidos nas documentações oficiais indicadas ao longo do curso.'
+    );
+  }
+
   return (
     '## De onde vem este conteúdo\n\n' +
     `Esta aula resume o **${reference.chapter}** do e-book do ${reference.module} ` +

@@ -23,7 +23,8 @@ export const LEARNING_PATHS: readonly LearningPathDefinition[] = [
   {
     id: 'carreira-digital',
     title: 'Carreira e competências digitais',
-    shortDescription: 'Para começar do zero, ganhar confiança e construir evidências profissionais.',
+    shortDescription:
+      'Para começar do zero, ganhar confiança e construir evidências profissionais.',
     icon: '🧭',
     status: 'AVAILABLE',
     recommendedFor: ['Primeiro emprego', 'Transição de carreira', 'Retorno aos estudos'],
@@ -33,7 +34,8 @@ export const LEARNING_PATHS: readonly LearningPathDefinition[] = [
   {
     id: 'produtividade-administrativa',
     title: 'Produtividade e administração',
-    shortDescription: 'Ferramentas digitais aplicadas a documentos, controles, reuniões e processos.',
+    shortDescription:
+      'Ferramentas digitais aplicadas a documentos, controles, reuniões e processos.',
     icon: '📊',
     status: 'AVAILABLE',
     recommendedFor: ['Rotinas administrativas', 'Comércio', 'Atendimento e operações'],
@@ -43,19 +45,21 @@ export const LEARNING_PATHS: readonly LearningPathDefinition[] = [
   {
     id: 'fundamentos-programacao',
     title: 'Fundamentos de programação',
-    shortDescription: 'Uma entrada progressiva no desenvolvimento de software, sem depender de experiência anterior.',
+    shortDescription:
+      'Do primeiro repositório à resolução de problemas, sem depender de experiência anterior.',
     icon: '🧠',
-    status: 'PLANNED',
+    status: 'AVAILABLE',
     recommendedFor: ['Quem nunca programou', 'Estudantes', 'Transição para tecnologia'],
-    courseTopics: ['Lógica de programação', 'Algoritmos', 'Git e GitHub', 'Resolução de problemas'],
-    outcome: 'Projetos simples, raciocínio estruturado e base para escolher uma linguagem.',
+    courseTopics: ['Git e GitHub', 'Lógica de programação', 'Algoritmos', 'Resolução de problemas'],
+    outcome:
+      'Caderno de bordo publicado, raciocínio estruturado e base para escolher uma linguagem.',
   },
   {
     id: 'desenvolvimento-web',
     title: 'Desenvolvimento web',
     shortDescription: 'Da primeira página à construção de aplicações web acessíveis e responsivas.',
     icon: '🌐',
-    status: 'PLANNED',
+    status: 'AVAILABLE',
     recommendedFor: ['Frontend', 'Portfólio', 'Projetos pessoais'],
     courseTopics: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'Angular'],
     outcome: 'Sites e aplicações publicados, com código versionado e projetos para portfólio.',
@@ -65,10 +69,11 @@ export const LEARNING_PATHS: readonly LearningPathDefinition[] = [
     title: 'Backend e engenharia de software',
     shortDescription: 'APIs, bancos de dados, testes e práticas usadas em sistemas profissionais.',
     icon: '⚙️',
-    status: 'PLANNED',
+    status: 'AVAILABLE',
     recommendedFor: ['Backend', 'Full stack', 'Evolução profissional'],
-    courseTopics: ['Java', 'Python', 'APIs REST', 'SQL', 'Testes', 'Docker'],
-    outcome: 'APIs completas e projetos com arquitetura, persistência, testes e documentação.',
+    courseTopics: ['Python', 'Java', 'Orientação a objetos', 'Testes básicos'],
+    outcome:
+      'Uma automação em Python ou um sistema orientado a objetos em Java, com testes e documentação.',
   },
   {
     id: 'dados-inteligencia-artificial',
@@ -77,7 +82,13 @@ export const LEARNING_PATHS: readonly LearningPathDefinition[] = [
     icon: '🤖',
     status: 'PLANNED',
     recommendedFor: ['Análise de dados', 'Automação', 'IA aplicada'],
-    courseTopics: ['Python', 'Análise de dados', 'Prompt engineering', 'Automação', 'Fundamentos de IA'],
+    courseTopics: [
+      'Python',
+      'Análise de dados',
+      'Prompt engineering',
+      'Automação',
+      'Fundamentos de IA',
+    ],
     outcome: 'Análises e automações explicáveis, com validação humana e uso responsável de dados.',
   },
 ] as const;

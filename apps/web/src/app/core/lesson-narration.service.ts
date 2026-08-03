@@ -26,7 +26,12 @@ export const NARRATION_PROFILES: ReadonlyArray<{
   description: string;
   rate: number;
 }> = [
-  { id: 'CALM', label: 'Calmo', description: 'Mais pausado para acompanhar conceitos novos', rate: 1 },
+  {
+    id: 'CALM',
+    label: 'Calmo',
+    description: 'Mais pausado para acompanhar conceitos novos',
+    rate: 1,
+  },
   { id: 'NATURAL', label: 'Natural', description: 'Ritmo intermediário', rate: 1.5 },
   {
     id: 'FOCUSED',
@@ -34,7 +39,12 @@ export const NARRATION_PROFILES: ReadonlyArray<{
     description: 'Ritmo recomendado para uma fala mais fluida',
     rate: 1.75,
   },
-  { id: 'REVIEW', label: 'Revisão', description: 'Mais rápido para conteúdos já conhecidos', rate: 2 },
+  {
+    id: 'REVIEW',
+    label: 'Revisão',
+    description: 'Mais rápido para conteúdos já conhecidos',
+    rate: 2,
+  },
 ];
 
 const PREFERENCES_KEY = 'romalearn:narration:preferences';
@@ -54,6 +64,15 @@ const PRONUNCIATIONS: ReadonlyArray<readonly [RegExp, string]> = [
   [/\bUX\b/gi, 'u xis'],
   [/\bUI\b/gi, 'u i'],
   [/\bJSON\b/gi, 'djêison'],
+  [/\bHTTP\b/gi, 'agá tê tê pê'],
+  [/\bHTTPS\b/gi, 'agá tê tê pê ésse'],
+  [/\bDOM\b/gi, 'dê ó eme'],
+  [/\bJDK\b/gi, 'jota dê cá'],
+  [/\bJVM\b/gi, 'jota vê eme'],
+  [/\bIDE\b/gi, 'i dê é'],
+  [/\bCSV\b/gi, 'cê ésse vê'],
+  [/\bREADME\b/gi, 'ríd mi'],
+  [/\bGit\b/gi, 'gít'],
   [/\bGitHub\b/gi, 'gít rãb'],
   [/\bJavaScript\b/gi, 'djáva script'],
   [/\bTypeScript\b/gi, 'táipe script'],
@@ -246,8 +265,18 @@ export class LessonNarrationService {
     const parsed = parser.parseFromString(html, 'text/html');
 
     parsed
-      .querySelectorAll('script, style, iframe, svg, noscript, [aria-hidden="true"], pre, code')
+      .querySelectorAll('script, style, iframe, svg, noscript, [aria-hidden="true"]')
       .forEach((element) => element.remove());
+
+    // Código em bloco continua visual: narrar símbolos linha a linha seria
+    // incompreensível. A legenda anterior ao bloco informa o exemplo. Já
+    // termos curtos em `code` fazem parte da frase e precisam ser preservados.
+    parsed.querySelectorAll('code').forEach((element) => {
+      if (element.closest('pre')) return;
+      element.replaceWith(parsed.createTextNode(element.textContent ?? ''));
+    });
+    parsed.querySelectorAll('pre').forEach((element) => element.remove());
+    this.replaceTablesWithNarration(parsed);
 
     const candidates = Array.from(
       parsed.body.querySelectorAll('h1, h2, h3, h4, p, li, blockquote, figcaption'),
@@ -255,16 +284,101 @@ export class LessonNarrationService {
 
     const texts = candidates
       .map((element) => this.normalizeNarrationText(element.textContent ?? ''))
-      .filter((text) => text.length >= 2);
+      .filter((text) => text.length >= 2)
+      .flatMap((text) => this.splitNarrationText(text));
 
-    const uniqueTexts = texts.filter((text, index) => text !== texts[index - 1]);
-    const blocks = [this.normalizeNarrationText(title), ...uniqueTexts];
+    const textsWithTitle = [this.normalizeNarrationText(title), ...texts];
+    const blocks = textsWithTitle.filter((text, index) => text !== textsWithTitle[index - 1]);
 
     return blocks.map((text, index) => ({
       id: `narration-${index}`,
       text,
       pauseAfterMs: this.pauseFor(text, index === 0),
     }));
+  }
+
+  private replaceTablesWithNarration(parsed: Document): void {
+    parsed.querySelectorAll('table').forEach((table) => {
+      const rows = Array.from(table.querySelectorAll('tr'));
+      if (rows.length === 0) {
+        table.remove();
+        return;
+      }
+
+      const wrapper = parsed.createElement('div');
+      const caption = table.querySelector('caption')?.textContent?.trim();
+      const headerCells = Array.from(rows[0].querySelectorAll('th'));
+      const headers = headerCells.map((cell) => cell.textContent?.trim() ?? '');
+      const introduction = parsed.createElement('p');
+      introduction.textContent = caption ? `Tabela: ${caption}.` : 'Tabela de comparação.';
+      wrapper.append(introduction);
+
+      const dataRows = headers.length > 0 ? rows.slice(1) : rows;
+      dataRows.forEach((row, rowIndex) => {
+        const values = Array.from(row.querySelectorAll('th, td')).map(
+          (cell) => cell.textContent?.trim() ?? '',
+        );
+        if (values.every((value) => !value)) return;
+
+        const paragraph = parsed.createElement('p');
+        const cells = values.map((value, cellIndex) => {
+          const header = headers[cellIndex];
+          return header ? `${header}: ${value}` : value;
+        });
+        paragraph.textContent = `Linha ${rowIndex + 1}. ${cells.join('. ')}.`;
+        wrapper.append(paragraph);
+      });
+
+      table.replaceWith(wrapper);
+    });
+  }
+
+  /** Mantém cada fala curta o bastante para pausar e retomar sem repetir um parágrafo inteiro. */
+  private splitNarrationText(text: string, maxLength = 420): string[] {
+    if (text.length <= maxLength) return [text];
+
+    const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) ?? [text];
+    const blocks: string[] = [];
+    let current = '';
+
+    for (const sentence of sentences.map((item) => item.trim()).filter(Boolean)) {
+      if (sentence.length > maxLength) {
+        if (current) blocks.push(current);
+        current = '';
+        blocks.push(...this.splitLongSentence(sentence, maxLength));
+        continue;
+      }
+
+      const candidate = current ? `${current} ${sentence}` : sentence;
+      if (candidate.length <= maxLength) {
+        current = candidate;
+      } else {
+        blocks.push(current);
+        current = sentence;
+      }
+    }
+
+    if (current) blocks.push(current);
+    return blocks;
+  }
+
+  private splitLongSentence(text: string, maxLength: number): string[] {
+    const words = text.split(/\s+/);
+    const parts: string[] = [];
+    let current = '';
+
+    for (const word of words) {
+      const candidate = current ? `${current} ${word}` : word;
+      if (candidate.length <= maxLength) {
+        current = candidate;
+      } else {
+        if (current) parts.push(current);
+        current = word;
+      }
+    }
+
+    if (current) parts.push(current);
+    return parts.map((part) => (/[.!?]$/.test(part) ? part : `${part}.`));
   }
 
   private normalizeNarrationText(text: string): string {
@@ -298,7 +412,9 @@ export class LessonNarrationService {
     const available = globalThis.speechSynthesis
       .getVoices()
       .filter((voice) => voice.lang.toLowerCase().startsWith('pt'))
-      .sort((a, b) => this.scoreVoice(b) - this.scoreVoice(a) || a.name.localeCompare(b.name, 'pt-BR'));
+      .sort(
+        (a, b) => this.scoreVoice(b) - this.scoreVoice(a) || a.name.localeCompare(b.name, 'pt-BR'),
+      );
 
     this.voices.set(available);
 

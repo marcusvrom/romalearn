@@ -5,15 +5,6 @@ import { Course } from '../../catalog/entities/course.entity';
 import { Lesson } from '../../catalog/entities/lesson.entity';
 import { TECHNOLOGY_COURSES } from './technology-catalog-data';
 
-const WORKLOAD_BY_COURSE: Record<string, number> = {
-  'logica-de-programacao-e-algoritmos': 28,
-  'git-e-github-na-pratica': 18,
-  'html-e-css-do-zero': 32,
-  'javascript-fundamentos': 36,
-  'python-para-iniciantes': 36,
-  'java-fundamentos-e-orientacao-a-objetos': 44,
-};
-
 function markdown(lines: string[]): string {
   return lines.join('\n');
 }
@@ -348,10 +339,6 @@ export class TechnologyPracticalExamplesService {
 
     for (const courseData of TECHNOLOGY_COURSES) {
       const course = await courseRepository.findOneOrFail({ where: { slug: courseData.slug } });
-      await courseRepository.update(
-        { id: course.id },
-        { workloadHours: WORKLOAD_BY_COURSE[courseData.slug] ?? course.workloadHours },
-      );
 
       for (const sectionData of courseData.sections) {
         for (const lessonData of sectionData.lessons) {
@@ -378,8 +365,6 @@ export class TechnologyPracticalExamplesService {
       }
     }
 
-    this.logger.log(
-      enriched + ' leituras receberam laboratórios específicos; cargas horárias revisadas.',
-    );
+    this.logger.log(enriched + ' leituras receberam laboratórios específicos.');
   }
 }

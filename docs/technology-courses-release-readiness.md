@@ -48,6 +48,7 @@ Exige aprovação por rubrica. Os critérios ficam visíveis antes da entrega e 
 
 Cada curso possui avaliação objetiva com:
 
+- pelo menos seis questões que cobrem os principais núcleos do curso;
 - tentativas ilimitadas;
 - opções embaralhadas;
 - feedback explicativo;
@@ -58,13 +59,15 @@ Cada curso possui avaliação objetiva com:
 
 Ordem principal:
 
-1. Lógica de Programação e Algoritmos;
-2. Git e GitHub na Prática;
+1. Git e GitHub na Prática;
+2. Lógica de Programação e Algoritmos;
 3. HTML e CSS do Zero;
 4. JavaScript — Fundamentos;
 5. especialização inicial em Python ou Java.
 
-A trilha possui produto próprio de homologação. O preço é sandbox e não representa decisão comercial final.
+A trilha possui produto próprio de homologação. Git é a entrada gratuita e
+prepara o repositório usado nas etapas seguintes. Python e Java são escolhas,
+não cursos consecutivos. O preço é sandbox e não representa decisão comercial final.
 
 ## Checklist antes da venda oficial
 

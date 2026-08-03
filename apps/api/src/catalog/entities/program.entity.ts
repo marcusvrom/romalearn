@@ -54,4 +54,25 @@ export class ProgramCourse extends BaseEntity {
 
   @Column({ type: 'int', default: 0 })
   order: number;
+
+  /** Etapa pedagógica; cursos da mesma etapa podem formar uma sequência ou uma escolha. */
+  @Column({ type: 'int', default: 0 })
+  stage: number;
+
+  @Column({ type: 'varchar', length: 200, default: '' })
+  stageTitle: string;
+
+  @Column({ type: 'varchar', length: 500, default: '' })
+  stageDescription: string;
+
+  /** Falso quando basta escolher uma das alternativas da mesma etapa. */
+  @Column({ type: 'boolean', default: true })
+  isRequired: boolean;
+
+  @Column({ type: 'varchar', length: 120, nullable: true })
+  alternativeGroup: string | null;
+
+  /** Evidência concreta adicionada ao portfólio ao concluir este curso. */
+  @Column({ type: 'varchar', length: 400, default: '' })
+  portfolioOutcome: string;
 }
