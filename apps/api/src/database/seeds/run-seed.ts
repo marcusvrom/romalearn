@@ -1,6 +1,7 @@
 import { configuration } from '../../config/configuration';
 import { AppDataSource } from '../data-source';
 import { SeedService } from './seed.service';
+import { TechnologySeedService } from './technology-seed.service';
 
 /**
  * Ponto de entrada do `pnpm seed`.
@@ -30,6 +31,8 @@ async function main(): Promise<void> {
       demoStudentPassword: config.seed.demoStudentPassword,
       isProduction: config.isProduction,
     });
+
+    await new TechnologySeedService(dataSource).run();
   } finally {
     await dataSource.destroy();
   }
