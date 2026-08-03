@@ -398,20 +398,29 @@ export class SeedService {
       ? await programRepository.save(Object.assign(program, payload))
       : await programRepository.save(programRepository.create(payload));
 
-    for (const [index, slug] of SEED_PROGRAM.courseSlugs.entries()) {
-      const course = courses.get(slug);
+    for (const [index, journeyItem] of SEED_PROGRAM.journey.entries()) {
+      const course = courses.get(journeyItem.courseSlug);
       if (!course) continue;
+
+      const itemPayload = {
+        order: index,
+        stage: journeyItem.stage,
+        stageTitle: journeyItem.stageTitle,
+        stageDescription: journeyItem.stageDescription,
+        isRequired: journeyItem.isRequired,
+        alternativeGroup: journeyItem.alternativeGroup,
+        portfolioOutcome: journeyItem.portfolioOutcome,
+      };
 
       const existing = await itemRepository.findOne({
         where: { programId: program.id, courseId: course.id },
       });
 
       if (existing) {
-        existing.order = index;
-        await itemRepository.save(existing);
+        await itemRepository.save(Object.assign(existing, itemPayload));
       } else {
         await itemRepository.save(
-          itemRepository.create({ programId: program.id, courseId: course.id, order: index }),
+          itemRepository.create({ programId: program.id, courseId: course.id, ...itemPayload }),
         );
       }
     }

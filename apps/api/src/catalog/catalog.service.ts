@@ -4,6 +4,7 @@ import {
   CourseAccessDto,
   CourseDetailDto,
   CourseSummaryDto,
+  ProgramCourseSummaryDto,
   ProgramSummaryDto,
   PublicationStatus,
   SectionOutlineDto,
@@ -14,6 +15,7 @@ import { EntitlementService } from '../learning/entitlement.service';
 import { Course } from './entities/course.entity';
 import { Lesson } from './entities/lesson.entity';
 import { Program, ProgramCourse } from './entities/program.entity';
+import { calculateProgramWorkload } from './program-workload';
 import { Section } from './entities/section.entity';
 
 @Injectable()
@@ -193,7 +195,30 @@ export class CatalogService {
       order: { order: 'ASC' },
     });
 
-    const courses = await this.toSummaries(items.map((item) => item.course));
+    // Um curso em rascunho não pode vazar por uma trilha publicada. Isso é
+    // especialmente importante para o módulo de IA, ainda sem conteúdo.
+    const publishedItems = items.filter(
+      (item) => item.course.status === PublicationStatus.PUBLISHED,
+    );
+    const summaries = await this.toSummaries(publishedItems.map((item) => item.course));
+    const summaryById = new Map(summaries.map((course) => [course.id, course]));
+    const courses: ProgramCourseSummaryDto[] = publishedItems.flatMap((item) => {
+      const summary = summaryById.get(item.courseId);
+      if (!summary) return [];
+
+      return [
+        {
+          ...summary,
+          stage: item.stage,
+          stageTitle: item.stageTitle,
+          stageDescription: item.stageDescription,
+          isRequired: item.isRequired,
+          alternativeGroup: item.alternativeGroup,
+          portfolioOutcome: item.portfolioOutcome,
+        },
+      ];
+    });
+    const workload = calculateProgramWorkload(courses);
 
     return {
       id: program.id,
@@ -204,7 +229,8 @@ export class CatalogService {
       coverImageUrl: program.coverImageUrl,
       objectives: program.objectives ?? [],
       status: program.status,
-      totalWorkloadHours: courses.reduce((sum, course) => sum + course.workloadHours, 0),
+      totalWorkloadHours: workload.minimum,
+      maximumWorkloadHours: workload.maximum,
       courses,
     };
   }

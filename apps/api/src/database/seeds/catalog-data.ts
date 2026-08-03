@@ -89,6 +89,16 @@ export interface SeedCourse {
   sections: SeedSection[];
 }
 
+export interface SeedProgramJourneyItem {
+  courseSlug: string;
+  stage: number;
+  stageTitle: string;
+  stageDescription: string;
+  isRequired: boolean;
+  alternativeGroup: string | null;
+  portfolioOutcome: string;
+}
+
 const CONFIRM_ACTIVITY =
   'Faça a prática com dados fictícios, guarde o arquivo na sua pasta de estudos e descreva ' +
   'abaixo o que você fez e o que ainda ficou com dúvida.';
@@ -1043,21 +1053,75 @@ export const SEED_PROGRAM = {
   slug: 'trilha-completa-competencias-digitais',
   title: 'Trilha Completa — Competências Digitais para o Trabalho',
   shortDescription:
-    'Os cinco módulos da trilha, do primeiro contato com o computador ao uso responsável de IA.',
+    'Quatro módulos já publicados, do primeiro contato com o computador à comunicação profissional; IA está em produção.',
   fullDescription:
-    'A trilha reúne os cinco módulos pagos em uma sequência pensada para quem está começando: ' +
+    'A trilha reúne quatro módulos pagos já publicados em uma sequência pensada para quem está começando: ' +
     'primeiro os fundamentos do computador e do Windows, depois Word, Excel e PowerPoint aplicados à ' +
-    'rotina administrativa e, por fim, o uso de inteligência artificial em processos administrativos.\n\n' +
-    'Cada módulo vai do iniciante ao avançado, com atividades práticas e projeto final. O Módulo 5 ' +
-    'está em produção e será liberado para quem já tem acesso à trilha assim que for publicado.',
+    'rotina administrativa. Cada módulo vai do iniciante ao avançado, com atividades práticas e projeto final.\n\n' +
+    'O quinto módulo, sobre inteligência artificial em processos administrativos, está em produção e só ' +
+    'aparecerá no catálogo quando conteúdo, práticas e avaliação estiverem completos.',
   objectives: [
     'Ganhar autonomia no computador e na organização de arquivos.',
     'Produzir documentos, planilhas e apresentações de nível profissional.',
     'Aplicar boas práticas de revisão, acessibilidade e segurança.',
     'Usar inteligência artificial com responsabilidade nas rotinas de trabalho.',
   ],
-  /** Slugs dos cursos, na ordem da trilha. */
-  courseSlugs: [MODULE_01.slug, MODULE_02.slug, MODULE_03.slug, MODULE_04.slug, MODULE_05.slug],
+  /**
+   * A história profissional da trilha. A etapa fica explícita para que a
+   * página não pareça uma grade de produtos sem relação entre si.
+   */
+  journey: [
+    {
+      courseSlug: MODULE_01.slug,
+      stage: 1,
+      stageTitle: 'Ganhe autonomia no escritório digital',
+      stageDescription:
+        'Antes de produzir, aprenda a navegar, organizar, encontrar e proteger o próprio trabalho.',
+      isRequired: true,
+      alternativeGroup: null,
+      portfolioOutcome: 'Um pequeno escritório digital organizado, seguro e reproduzível.',
+    },
+    {
+      courseSlug: MODULE_02.slug,
+      stage: 2,
+      stageTitle: 'Transforme informação em documentos profissionais',
+      stageDescription:
+        'A organização do Windows agora vira comunicação clara, padronizada e acessível no Word.',
+      isRequired: true,
+      alternativeGroup: null,
+      portfolioOutcome: 'Um pacote documental revisado, acessível e pronto para distribuição.',
+    },
+    {
+      courseSlug: MODULE_03.slug,
+      stage: 3,
+      stageTitle: 'Transforme registros em decisões',
+      stageDescription:
+        'Saia do documento estático para controles que calculam, conferem e revelam informações.',
+      isRequired: true,
+      alternativeGroup: null,
+      portfolioOutcome: 'Uma planilha de controle com indicadores e evidências de conferência.',
+    },
+    {
+      courseSlug: MODULE_04.slug,
+      stage: 4,
+      stageTitle: 'Conte a história por trás dos resultados',
+      stageDescription:
+        'Use as informações produzidas nas etapas anteriores para construir uma narrativa convincente.',
+      isRequired: true,
+      alternativeGroup: null,
+      portfolioOutcome: 'Uma apresentação profissional com dados, narrativa e chamada para ação.',
+    },
+    {
+      courseSlug: MODULE_05.slug,
+      stage: 5,
+      stageTitle: 'Amplie sua capacidade com inteligência artificial',
+      stageDescription:
+        'Aplique IA sobre processos que você já compreende, com revisão humana, segurança e rastreabilidade.',
+      isRequired: true,
+      alternativeGroup: null,
+      portfolioOutcome: 'Um fluxo administrativo apoiado por IA e validado por critérios humanos.',
+    },
+  ] satisfies SeedProgramJourneyItem[],
 };
 
 export const SEED_INSTRUCTOR = {

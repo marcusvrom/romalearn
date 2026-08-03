@@ -152,8 +152,21 @@ export interface ProgramSummaryDto {
   coverImageUrl: string | null;
   objectives: string[];
   status: PublicationStatus;
+  /** Menor carga possível quando a trilha contém rotas alternativas. */
   totalWorkloadHours: number;
-  courses: CourseSummaryDto[];
+  /** Maior carga possível; igual ao total quando não existem alternativas. */
+  maximumWorkloadHours: number;
+  courses: ProgramCourseSummaryDto[];
+}
+
+/** Curso dentro de uma trilha, com o papel pedagógico que exerce naquela jornada. */
+export interface ProgramCourseSummaryDto extends CourseSummaryDto {
+  stage: number;
+  stageTitle: string;
+  stageDescription: string;
+  isRequired: boolean;
+  alternativeGroup: string | null;
+  portfolioOutcome: string;
 }
 
 // ---------------------------------------------------------------------------

@@ -35,6 +35,19 @@ disfarçada.
 - **Erros comuns, reflexões e checklist são específicos da aula** — nunca uma
   lista genérica repetida.
 
+### Storytelling da jornada
+
+Os cursos não são episódios isolados. O aluno atravessa quatro capítulos:
+
+1. abre no Git o caderno de bordo que registrará toda a evolução;
+2. aprende lógica para transformar uma situação confusa em regras testáveis;
+3. coloca uma solução na web com HTML, CSS e JavaScript;
+4. escolhe Python para automação e dados ou Java para modelagem de sistemas.
+
+Cada capítulo termina com uma evidência de portfólio. A página da trilha deve
+mostrar a transformação, a evidência e se a etapa é essencial ou uma escolha.
+Python e Java nunca devem aparecer como dependências sequenciais entre si.
+
 ## Princípio central
 
 Na RomaLearn, uma aula de leitura não é um resumo do assunto nem uma lista de tópicos. Ela precisa conduzir o aluno até a compreensão.
@@ -86,6 +99,22 @@ Cada atividade contém:
 - checklist antes do envio.
 
 A entrega deve comprovar que o aluno consegue explicar suas decisões, executar a solução e testar caminhos comuns, limites e inválidos.
+
+## Contrato do áudio-livro
+
+O texto precisa funcionar quando a tela deixa de ser o canal principal:
+
+- títulos, parágrafos, listas, avisos, legendas e tabelas são narráveis;
+- código em bloco é mantido como recurso visual e sempre recebe uma legenda
+  que situa o exemplo;
+- termos curtos em código dentro de uma frase continuam na narração;
+- tabelas viram linhas faladas com o nome de cada coluna;
+- parágrafos longos são divididos em trechos retomáveis;
+- siglas e tecnologias usam o dicionário de pronúncia em português;
+- nenhum código é lido mecanicamente caractere por caractere.
+
+O modo áudio é uma forma completa de acompanhar a explicação, mas o aluno
+pausa para observar e executar exemplos visuais quando a prática exige código.
 
 ## Projetos finais
 
@@ -143,6 +172,7 @@ A senha é definida por `SEED_DEMO_PASSWORD` ou usa o padrão local documentado 
 - validar Markdown, blocos de código e leitor de áudio;
 - entregar pelo menos uma atividade de cada curso;
 - verificar rubricas e questionários;
+- percorrer a aula somente pelo áudio e confirmar que exemplos e tabelas continuam contextualizados;
 - testar navegação em celular;
 - revisar tecnicamente todos os exemplos;
 - conduzir testes com alunos iniciantes.

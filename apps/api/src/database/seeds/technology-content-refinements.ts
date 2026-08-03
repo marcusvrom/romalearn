@@ -1,4 +1,4 @@
-import { QuestionType } from '@romalearn/contracts';
+import { ActivityRubricDto, QuestionType } from '@romalearn/contracts';
 
 export interface TechnologyQuizQuestion {
   statement: string;
@@ -69,6 +69,36 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
         ],
         'Casos limites e inválidos expõem suposições escondidas na solução.',
       ),
+      singleChoice(
+        'Ao decompor um problema, qual é o primeiro resultado esperado?',
+        'Partes menores com entradas, regras e saídas que possam ser analisadas separadamente.',
+        [
+          'Uma linguagem escolhida antes de entender o problema.',
+          'Um único passo que esconda todas as regras.',
+          'Uma tela pronta sem critérios de funcionamento.',
+        ],
+        'Decomposição reduz a complexidade e torna cada regra observável e testável.',
+      ),
+      singleChoice(
+        'Quando uma condição possui mais de um critério, o que precisa ficar explícito?',
+        'Como os operadores lógicos combinam os critérios e quais limites pertencem a cada caminho.',
+        [
+          'Somente o nome da variável principal.',
+          'A velocidade do computador.',
+          'Que toda condição deve produzir o mesmo resultado.',
+        ],
+        'Operadores e limites mal definidos são fontes comuns de caminhos incorretos.',
+      ),
+      singleChoice(
+        'Qual sinal indica que uma função possui responsabilidade clara?',
+        'Seu nome descreve uma ação e suas entradas e saída têm um contrato compreensível.',
+        [
+          'Ela mistura leitura, cálculo, gravação e exibição sem separação.',
+          'Ela depende de variáveis escondidas em todo o programa.',
+          'Ela só funciona quando nenhum teste é executado.',
+        ],
+        'Uma função coesa é mais simples de compreender, reutilizar e testar.',
+      ),
     ],
   },
   {
@@ -111,6 +141,36 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
         ],
         'Um PR é uma unidade de comunicação e revisão, não apenas um botão de merge.',
       ),
+      singleChoice(
+        'Antes do primeiro commit, por que configurar nome e e-mail no Git?',
+        'Para atribuir corretamente a autoria registrada no histórico.',
+        [
+          'Para publicar automaticamente todas as pastas do computador.',
+          'Para substituir a autenticação do GitHub.',
+          'Para impedir o uso de branches.',
+        ],
+        'A identidade do commit e a autenticação do serviço remoto são responsabilidades diferentes.',
+      ),
+      singleChoice(
+        'O que a área de staging permite fazer?',
+        'Escolher exatamente quais mudanças farão parte do próximo commit.',
+        [
+          'Excluir permanentemente o histórico remoto.',
+          'Executar o projeto sem dependências.',
+          'Mesclar qualquer branch sem revisão.',
+        ],
+        'A staging area ajuda a construir commits pequenos, intencionais e coerentes.',
+      ),
+      singleChoice(
+        'Qual conjunto torna um repositório mais verificável por outra pessoa?',
+        'README com contexto e execução, histórico claro e uma versão identificável.',
+        [
+          'Somente uma imagem sem instruções.',
+          'Arquivos gerados e credenciais reais.',
+          'Um único commit chamado alterações.',
+        ],
+        'Portfólio profissional precisa permitir que outra pessoa entenda, execute e acompanhe a evolução.',
+      ),
     ],
   },
   {
@@ -148,6 +208,32 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
         'Associar cada campo a um label claro.',
         ['Usar apenas placeholder.', 'Remover o foco visível.', 'Comunicar erros apenas por cor.'],
         'Labels persistentes ajudam todos os usuários e leitores de tela.',
+      ),
+      singleChoice(
+        'Quando duas regras CSS disputam a mesma propriedade, o que deve ser analisado?',
+        'Origem, importância, especificidade e ordem das regras na cascata.',
+        [
+          'Somente o tamanho do arquivo HTML.',
+          'A velocidade da conexão do usuário.',
+          'A quantidade de imagens da página.',
+        ],
+        'A cascata resolve conflitos de forma previsível; aumentar especificidade sem entender a causa cria dívida.',
+      ),
+      singleChoice(
+        'No box model padrão, o que compõe o espaço ocupado por um elemento?',
+        'Conteúdo, padding, borda e margem.',
+        ['Apenas a cor de fundo.', 'Somente largura e fonte.', 'HTML, JavaScript e servidor.'],
+        'Compreender o box model evita medidas inesperadas e sobreposição no layout.',
+      ),
+      singleChoice(
+        'Qual verificação deve acontecer antes de publicar uma página?',
+        'Testar tamanhos de tela, teclado, contraste, links e carregamento dos recursos.',
+        [
+          'Remover os textos alternativos.',
+          'Converter toda a página em imagem.',
+          'Usar apenas o navegador de quem desenvolveu.',
+        ],
+        'Publicação responsável inclui funcionamento, acessibilidade e desempenho em condições variadas.',
       ),
     ],
   },
@@ -191,6 +277,36 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
         ],
         'Experiências robustas tratam carregamento, sucesso e falha explicitamente.',
       ),
+      singleChoice(
+        'Quando usar const em vez de let?',
+        'Quando a variável não será reatribuída depois da declaração.',
+        [
+          'Quando o valor nunca puder conter um objeto.',
+          'Somente dentro de arquivos HTML.',
+          'Para impedir qualquer alteração interna de arrays e objetos.',
+        ],
+        'const impede reatribuição da variável, mas não congela automaticamente o conteúdo de objetos.',
+      ),
+      singleChoice(
+        'Qual é uma forma segura de tratar o envio de um formulário no navegador?',
+        'Interceptar o evento, validar os dados e comunicar sucesso ou erro na interface.',
+        [
+          'Ignorar o evento e confiar apenas no placeholder.',
+          'Registrar o mesmo listener a cada clique.',
+          'Inserir toda entrada diretamente como HTML.',
+        ],
+        'Eventos, validação e feedback precisam trabalhar juntos para criar uma interação previsível.',
+      ),
+      singleChoice(
+        'O que acontece quando uma função async usa await em uma Promise?',
+        'Aquela função aguarda o resultado sem bloquear toda a interface do navegador.',
+        [
+          'Todo o navegador fica permanentemente bloqueado.',
+          'A Promise deixa de poder falhar.',
+          'A resposta da rede se torna instantânea.',
+        ],
+        'await organiza o fluxo assíncrono, mas erros e estados da interface continuam precisando de tratamento.',
+      ),
     ],
   },
   {
@@ -224,6 +340,32 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
           'Somente em comentários.',
         ],
         'Exceções devem ser tratadas de forma específica e informativa.',
+      ),
+      singleChoice(
+        'Por que criar um ambiente virtual para um projeto Python?',
+        'Para isolar dependências e tornar o ambiente do projeto reproduzível.',
+        [
+          'Para transformar qualquer arquivo em executável.',
+          'Para dispensar a documentação de versões.',
+          'Para armazenar senhas junto do código.',
+        ],
+        'O ambiente virtual reduz conflitos entre projetos e facilita repetir a instalação.',
+      ),
+      singleChoice(
+        'Qual estrutura é adequada quando a ordem importa e valores podem se repetir?',
+        'Lista.',
+        ['Conjunto usado como arquivo.', 'Comentário de módulo.', 'Exceção.'],
+        'Listas preservam ordem e aceitam repetição; a escolha da estrutura deve refletir o problema.',
+      ),
+      singleChoice(
+        'Ao processar um CSV, qual cuidado evita perder o arquivo original?',
+        'Ler a origem e gravar o resultado em outro arquivo antes de substituir qualquer dado.',
+        [
+          'Abrir sempre no modo de sobrescrita.',
+          'Ignorar cabeçalhos e codificação.',
+          'Misturar leitura, transformação e gravação em cada linha.',
+        ],
+        'Separar origem e saída permite conferir o resultado e recuperar-se de uma falha.',
       ),
     ],
   },
@@ -263,6 +405,36 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
         ],
         'Generics ajudam o compilador a detectar incompatibilidades antes da execução.',
       ),
+      singleChoice(
+        'Qual é a relação correta entre JDK, compilador e JVM?',
+        'O JDK fornece ferramentas; javac gera bytecode; a JVM executa esse bytecode.',
+        [
+          'A JVM escreve automaticamente todo o código-fonte.',
+          'O JDK é apenas um editor de texto.',
+          'javac executa HTML no navegador.',
+        ],
+        'Separar compilação de execução ajuda a diagnosticar erros de cada etapa.',
+      ),
+      singleChoice(
+        'Qual responsabilidade importante pode ficar em um construtor?',
+        'Garantir que o objeto seja criado com os dados obrigatórios em estado válido.',
+        [
+          'Expor todos os atributos para alteração irrestrita.',
+          'Executar toda regra do sistema em uma única classe.',
+          'Ignorar valores nulos para evitar mensagens de erro.',
+        ],
+        'Construtores podem proteger invariantes que precisam ser verdadeiras desde a criação.',
+      ),
+      singleChoice(
+        'Quando a composição tende a ser melhor que herança?',
+        'Quando um objeto precisa colaborar com um comportamento substituível sem afirmar uma relação de tipo.',
+        [
+          'Quando todas as classes precisam compartilhar o mesmo estado global.',
+          'Quando se deseja impedir testes com implementações falsas.',
+          'Quando não existe nenhuma responsabilidade separável.',
+        ],
+        'Composição favorece responsabilidades menores e permite trocar colaboradores por contrato.',
+      ),
     ],
   },
 ];
@@ -271,48 +443,20 @@ export function refinementFor(courseSlug: string): TechnologyCourseRefinement | 
   return TECHNOLOGY_REFINEMENTS.find((item) => item.courseSlug === courseSlug);
 }
 
-export function buildDidacticContent(input: {
-  courseTitle: string;
-  lessonTitle: string;
-  summary?: string;
-  topics?: string[];
-}): string {
-  const topics = input.topics ?? [];
-  const conceptualSteps = topics.length
-    ? topics
-        .map(
-          (topic, index) =>
-            `${index + 1}. **${topic}** — identifique o conceito, reproduza um exemplo e altere uma condição para observar o efeito.`,
-        )
-        .join('\n')
-    : '1. Identifique o objetivo.\n2. Reproduza um exemplo pequeno.\n3. Modifique uma entrada.\n4. Compare o resultado.';
-
-  return [
-    `## Objetivo da aula\n\n${input.summary ?? `Compreender e praticar ${input.lessonTitle.toLowerCase()}.`}`,
-    `## Antes de começar\n\nExplique com suas próprias palavras o que você espera que aconteça. Essa previsão transforma a execução em aprendizagem ativa.`,
-    `## Passo a passo\n\n${conceptualSteps}`,
-    `## Exemplo guiado\n\nPense em um problema pequeno relacionado a **${input.lessonTitle}**. Escreva a entrada, o resultado esperado e os passos intermediários. Depois implemente a menor versão possível e execute-a antes de adicionar novas regras.`,
-    `## Experimente\n\n- Altere uma entrada comum.\n- Teste um valor limite.\n- Provoque um erro controlado.\n- Registre o que mudou e por quê.`,
-    `## Erros comuns\n\n- Copiar uma solução sem conseguir explicá-la.\n- Fazer muitas mudanças antes de testar.\n- Ignorar mensagens de erro.\n- Usar dados sensíveis em exemplos ou commits.`,
-    `## Checklist de conclusão\n\n- [ ] Consigo explicar o conceito sem consultar o texto.\n- [ ] Reproduzi um exemplo.\n- [ ] Modifiquei o exemplo e previ o resultado.\n- [ ] Registrei uma dúvida ou descoberta.`,
-    `## Conexão com o projeto\n\nEste conceito será utilizado no projeto do curso **${input.courseTitle}**. Salve seu exemplo no repositório de estudos para reutilizá-lo mais tarde.`,
-  ].join('\n\n');
-}
-
-export function buildProjectRubric(criteria: string[]): Record<string, unknown> {
+export function buildProjectRubric(criteria: string[]): ActivityRubricDto {
   return {
-    version: 1,
     passingScore: 70,
-    criteria: criteria.map((description, index) => ({
-      id: `criterion-${index + 1}`,
+    minWords: 120,
+    criticalFailures: [
+      'O projeto não pode ser executado ou verificado.',
+      'A entrega contém credenciais, tokens ou dados pessoais sensíveis.',
+      'A entrega é apenas uma cópia sem explicação das decisões tomadas.',
+    ],
+    criteria: criteria.map((whatToObserve, index) => ({
+      id: `criterio-${index + 1}`,
       title: `Critério ${index + 1}`,
-      description,
       weight: 20,
-      levels: [
-        { score: 0, label: 'Não demonstrado' },
-        { score: 50, label: 'Parcial' },
-        { score: 100, label: 'Atendido' },
-      ],
+      whatToObserve,
     })),
   };
 }

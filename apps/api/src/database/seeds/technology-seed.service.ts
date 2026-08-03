@@ -26,27 +26,33 @@ import {
   TechnologySeedLesson,
 } from './technology-catalog-data';
 import {
-  buildDidacticContent,
   buildProjectRubric,
   refinementFor,
   TechnologyQuizQuestion,
 } from './technology-content-refinements';
+import { conteudoDaAulaTecnica } from './content/tecnologia';
+import {
+  TECHNOLOGY_JOURNEY,
+  technologyJourneyItem,
+  technologyJourneyOrder,
+} from './technology-learning-journey';
 
 const TECHNOLOGY_PROGRAM = {
   slug: 'trilha-desenvolvimento-de-software',
   title: 'Trilha de Desenvolvimento de Software',
   shortDescription:
-    'Uma jornada prática dos fundamentos de lógica ao desenvolvimento web e backend com projetos de portfólio.',
+    'Uma jornada prática do primeiro repositório à web, com uma escolha consciente entre Python e Java.',
   fullDescription:
-    'Comece aprendendo a resolver problemas com lógica de programação, organize sua evolução com Git e GitHub, ' +
-    'construa interfaces com HTML, CSS e JavaScript e escolha uma especialização inicial em Python ou Java. ' +
-    'Cada etapa produz uma evidência prática que pode ser apresentada no portfólio.',
+    'Sua história começa com um repositório: o caderno de bordo gratuito em que cada conquista ficará registrada. ' +
+    'Em seguida, você aprende lógica para transformar situações reais em soluções testáveis e constrói sua primeira experiência web com HTML, CSS e JavaScript.\n\n' +
+    'Na etapa final, você escolhe uma especialização inicial — Python para automação e dados ou Java para modelagem de sistemas. ' +
+    'As duas rotas são alternativas, não uma fila obrigatória. Cada etapa termina com uma evidência concreta para o portfólio.',
   objectives: [
-    'Construir fundamentos sólidos antes de escolher uma linguagem.',
-    'Versionar e publicar projetos com clareza profissional.',
+    'Criar um caderno de bordo no GitHub e usá-lo durante toda a jornada.',
+    'Construir fundamentos sólidos antes de escolher uma especialização.',
     'Desenvolver experiências web responsivas e acessíveis.',
-    'Criar aplicações introdutórias em Python ou Java.',
-    'Concluir a trilha com projetos demonstráveis no GitHub.',
+    'Escolher Python ou Java de acordo com o tipo de problema que deseja resolver.',
+    'Apresentar projetos demonstráveis, decisões técnicas e aprendizados no portfólio.',
   ],
 };
 
@@ -200,12 +206,15 @@ export class TechnologySeedService {
       );
     }
 
-    return buildDidacticContent({
-      courseTitle: course.title,
-      lessonTitle: lesson.title,
-      summary: lesson.summary,
-      topics: lesson.topics,
-    });
+    const content = conteudoDaAulaTecnica(course.slug, lesson.title);
+    if (!content) {
+      throw new Error(
+        `Aula de leitura sem conteúdo escrito: ${course.slug}/${lesson.title}. ` +
+          'Escreva o conteúdo em src/database/seeds/content/tecnologia/.',
+      );
+    }
+
+    return content;
   }
 
   private async upsertFinalAssessment(course: Course, data: TechnologySeedCourse): Promise<void> {
@@ -328,18 +337,35 @@ export class TechnologySeedService {
       ? await programRepository.save(Object.assign(program, payload))
       : await programRepository.save(programRepository.create(payload));
 
-    for (const [index, course] of courses.entries()) {
+    const orderedCourses = [...courses].sort(
+      (left, right) => technologyJourneyOrder(left.slug) - technologyJourneyOrder(right.slug),
+    );
+
+    for (const [index, course] of orderedCourses.entries()) {
+      const journeyItem = technologyJourneyItem(course.slug);
       const existing = await itemRepository.findOne({
         where: { programId: program.id, courseId: course.id },
       });
+      const itemPayload = {
+        order: index,
+        stage: journeyItem.stage,
+        stageTitle: journeyItem.stageTitle,
+        stageDescription: journeyItem.stageDescription,
+        isRequired: journeyItem.isRequired,
+        alternativeGroup: journeyItem.alternativeGroup,
+        portfolioOutcome: journeyItem.portfolioOutcome,
+      };
       if (existing) {
-        existing.order = index;
-        await itemRepository.save(existing);
+        await itemRepository.save(Object.assign(existing, itemPayload));
       } else {
         await itemRepository.save(
-          itemRepository.create({ programId: program.id, courseId: course.id, order: index }),
+          itemRepository.create({ programId: program.id, courseId: course.id, ...itemPayload }),
         );
       }
+    }
+
+    if (orderedCourses.length !== TECHNOLOGY_JOURNEY.length) {
+      throw new Error('A quantidade de cursos cadastrados diverge da jornada técnica definida.');
     }
 
     const productSlug = 'trilha-desenvolvimento-de-software';

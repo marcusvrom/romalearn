@@ -14,6 +14,8 @@ import type { ActivityRubricDto, RubricCriterionDto } from '@romalearn/contracts
 
 /** De onde o conteúdo da aula foi extraído. */
 export interface EbookReference {
+  /** Distingue e-book oficial de conteúdo autoral da RomaLearn. */
+  sourceType?: 'EBOOK' | 'ORIGINAL';
   /** Identificação curta do e-book, como "Módulo 1". */
   module: string;
   /** Capítulo ou seção de origem, como aparece no sumário. */

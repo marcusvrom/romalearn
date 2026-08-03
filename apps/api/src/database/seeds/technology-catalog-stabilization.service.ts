@@ -5,7 +5,7 @@ import { Course } from '../../catalog/entities/course.entity';
 import { Lesson } from '../../catalog/entities/lesson.entity';
 import { Offer } from '../../commerce/entities/offer.entity';
 import { Product } from '../../commerce/entities/product.entity';
-import { refinementFor } from './technology-content-refinements';
+import { buildProjectRubric, refinementFor } from './technology-content-refinements';
 
 interface CommercialPolicy {
   courseSlug: string;
@@ -18,7 +18,7 @@ const COMMERCIAL_POLICIES: CommercialPolicy[] = [
   { courseSlug: 'git-e-github-na-pratica', isFree: true, priceCents: 0 },
 ];
 
-/** Aplica decisões comerciais e corrige inconsistências após o seed técnico. */
+/** Reaplica invariantes comerciais e editoriais após o seed técnico. */
 export class TechnologyCatalogStabilizationService {
   private readonly logger = new Logger('TechnologyCatalogStabilization');
 
@@ -104,21 +104,7 @@ export class TechnologyCatalogStabilizationService {
       if (!finalProject) continue;
 
       finalProject.completionRule = LessonCompletionRule.ACTIVITY_APPROVED;
-      finalProject.activityRubric = {
-        passingScore: 70,
-        minWords: 80,
-        criticalFailures: [
-          'O projeto não pode ser executado ou verificado.',
-          'A entrega contém credenciais, tokens ou dados pessoais sensíveis.',
-          'A entrega é apenas uma cópia sem explicação das decisões tomadas.',
-        ],
-        criteria: refinement.projectCriteria.map((whatToObserve, index) => ({
-          id: `criterio-${index + 1}`,
-          title: `Critério ${index + 1}`,
-          weight: 20,
-          whatToObserve,
-        })),
-      };
+      finalProject.activityRubric = buildProjectRubric(refinement.projectCriteria);
       await lessonRepository.save(finalProject);
     }
   }

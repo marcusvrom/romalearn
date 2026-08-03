@@ -43,7 +43,7 @@ export class LandingPage implements OnInit {
   readonly loading = signal(true);
   readonly freeCourse = signal<CourseSummaryDto | null>(null);
   readonly paidCourses = signal<CourseSummaryDto[]>([]);
-  readonly program = signal<ProgramSummaryDto | null>(null);
+  readonly programs = signal<ProgramSummaryDto[]>([]);
 
   /** Depoimentos reais entram aqui; enquanto vazio, a seção não é exibida. */
   readonly testimonials = signal<{ name: string; role: string; quote: string }[]>([]);
@@ -98,17 +98,6 @@ export class LandingPage implements OnInit {
         'Narrativa e estrutura',
         'Slide Mestre e padronização',
         'Dados no slide e acessibilidade',
-      ],
-    },
-    {
-      icon: '🤖',
-      source: 'Módulo 5 — Inteligência artificial',
-      title: 'Um jeito responsável de usar IA no trabalho',
-      text: 'Saber o que pode entrar no prompt, o que nunca pode, e como conferir o que a ferramenta devolveu.',
-      parts: [
-        'Onde a IA ajuda e onde atrapalha',
-        'Dados que não podem ser expostos',
-        'Conferência antes de entregar',
       ],
     },
     {
@@ -198,7 +187,6 @@ export class LandingPage implements OnInit {
     { feature: 'Word para rotinas administrativas', free: false, paid: true },
     { feature: 'Excel: fórmulas, gráficos e Tabelas Dinâmicas', free: false, paid: true },
     { feature: 'PowerPoint: narrativa, Slide Mestre e distribuição', free: false, paid: true },
-    { feature: 'IA aplicada a processos administrativos', free: false, paid: true },
   ];
 
   readonly faqs: Faq[] = [
@@ -247,9 +235,8 @@ export class LandingPage implements OnInit {
     this.seo.apply({
       title: `Competências digitais para o trabalho`,
       description:
-        'Trilha de cursos em português para quem está começando: computador e Windows, Word, ' +
-        'Excel, PowerPoint e inteligência artificial aplicados à rotina administrativa. ' +
-        'Comece pelo módulo gratuito.',
+        'Jornadas de cursos em português para quem está começando: competências digitais, ' +
+        'produtividade administrativa e desenvolvimento de software com projetos de portfólio.',
       path: '/',
       structuredData: {
         '@context': 'https://schema.org',
@@ -271,8 +258,8 @@ export class LandingPage implements OnInit {
     });
 
     this.catalog.listPrograms().subscribe({
-      next: (programs) => this.program.set(programs[0] ?? null),
-      error: () => this.program.set(null),
+      next: (programs) => this.programs.set(programs),
+      error: () => this.programs.set([]),
     });
   }
 

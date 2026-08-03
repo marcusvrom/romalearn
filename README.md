@@ -5,6 +5,8 @@ computador ao uso responsável de inteligência artificial na rotina administrat
 
 O conteúdo inicial vem dos e-books oficiais da trilha: um módulo gratuito de carreira digital e
 cinco módulos pagos (Windows, Word, Excel, PowerPoint e IA para processos administrativos).
+O catálogo também inclui uma trilha autoral de Desenvolvimento de Software: Git/GitHub, Lógica,
+HTML/CSS e JavaScript, seguida de uma escolha entre Python e Java.
 
 ## Sumário
 
@@ -200,6 +202,7 @@ Arquivos privados são sempre servidos por URL assinada e temporária.
 
 ## Documentação adicional
 
+- [`docs/auditoria-edu-qa-cursos-2026-08-03.md`](docs/auditoria-edu-qa-cursos-2026-08-03.md) — parecer de qualidade, jornada aprovada e bloqueios de lançamento
 - [`docs/roteiro-de-testes.md`](docs/roteiro-de-testes.md) — **setup em máquina nova e roteiro de testes manuais**
 - [`docs/architecture.md`](docs/architecture.md) — visão geral, módulos e entidades
 - [`docs/decisions/`](docs/decisions/) — decisões técnicas registradas (ADRs)

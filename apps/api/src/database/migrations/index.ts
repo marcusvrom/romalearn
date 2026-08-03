@@ -2,6 +2,7 @@ import { InitialSchema1785620295283 } from './1785620295283-InitialSchema';
 import { ActivityGrading1785899000000 } from './1785899000000-ActivityGrading';
 import { ActivityAttachments1785920000000 } from './1785920000000-ActivityAttachments';
 import { ActivityExamples1785940000000 } from './1785940000000-ActivityExamples';
+import { ProgramJourneyStages1786000000000 } from './1786000000000-ProgramJourneyStages';
 
 /**
  * Registro explícito das migrations, em ordem cronológica.
@@ -17,4 +18,5 @@ export const MIGRATIONS = [
   ActivityGrading1785899000000,
   ActivityAttachments1785920000000,
   ActivityExamples1785940000000,
+  ProgramJourneyStages1786000000000,
 ];

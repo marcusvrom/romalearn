@@ -191,10 +191,10 @@
   <div class="rl-container">
     <div class="section-head" rlReveal>
       <p class="rl-eyebrow">Trilha completa</p>
-      <h2>Cinco módulos, do básico ao avançado</h2>
+      <h2>Cursos práticos e jornadas com começo, meio e conquista</h2>
       <p class="rl-lead">
-        Cada módulo vai do iniciante ao avançado, com projeto final e material oficial em PDF. Você pode estudar na
-        ordem sugerida ou ir direto ao problema que precisa resolver.
+        Escolha uma jornada para seguir a ordem recomendada ou estude um curso avulso para resolver uma necessidade
+        específica. Cada curso termina com uma evidência prática.
       </p>
     </div>
 
@@ -207,14 +207,18 @@
       }
     </div>
 
-    @if (program(); as trilha) {
+    @for (trilha of programs(); track trilha.id) {
     <div class="program rl-card">
       <div>
         <h3>{{ trilha.title }}</h3>
         <p class="rl-muted">{{ trilha.shortDescription }}</p>
-        <p class="rl-small rl-muted">Carga horária total estimada: {{ trilha.totalWorkloadHours }} horas.</p>
+        <p class="rl-small rl-muted">
+          Carga horária estimada: @if (trilha.maximumWorkloadHours > trilha.totalWorkloadHours) { {{
+          trilha.totalWorkloadHours }}–{{ trilha.maximumWorkloadHours }} horas, conforme a rota escolhida. } @else { {{
+          trilha.totalWorkloadHours }} horas. }
+        </p>
       </div>
-      <a class="rl-button rl-button--primary" [routerLink]="routes.program(trilha.slug)"> Ver a trilha completa </a>
+      <a class="rl-button rl-button--primary" [routerLink]="routes.program(trilha.slug)"> Ver a jornada completa </a>
     </div>
     } } @else {
     <p class="rl-muted">Os módulos serão publicados em breve.</p>

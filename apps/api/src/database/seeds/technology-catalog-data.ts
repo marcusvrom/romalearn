@@ -41,7 +41,7 @@ const activity = (title: string, instructions: string): TechnologySeedLesson => 
     'quais decisões tomou e o que ainda ficou com dúvida.',
 });
 
-export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
+const TECHNOLOGY_COURSE_DEFINITIONS: TechnologySeedCourse[] = [
   {
     slug: 'logica-de-programacao-e-algoritmos',
     title: 'Lógica de Programação e Algoritmos',
@@ -49,9 +49,10 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     shortDescription:
       'Variáveis, decisões, repetições, funções e resolução de problemas com exercícios progressivos.',
     fullDescription:
-      'Curso de entrada para a trilha de desenvolvimento de software. O foco está em transformar problemas ' +
-      'em passos claros, testar hipóteses e construir algoritmos sem depender de uma linguagem específica.\n\n' +
-      'Ao final, você terá desenvolvido pequenos algoritmos e um projeto de organização de tarefas.',
+      'Seu repositório de estudos já está pronto. Agora começa o segundo capítulo da jornada: aprender a ' +
+      'transformar situações confusas em passos claros, regras testáveis e resultados previsíveis.\n\n' +
+      'Você acompanhará a evolução de um organizador de tarefas, da primeira ideia ao projeto final. Cada ' +
+      'aula acrescenta uma decisão ao mesmo problema, sem depender de uma linguagem específica.',
     objectives: [
       'Decompor problemas em passos menores.',
       'Usar variáveis, operadores e tipos de dados.',
@@ -63,12 +64,15 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
       'Pessoas sem experiência em programação.',
       'Estudantes iniciando na área de tecnologia.',
     ],
-    prerequisites: ['Não é necessário conhecimento prévio de programação.'],
-    workloadHours: 16,
+    prerequisites: [
+      'Não é necessário conhecimento prévio de programação.',
+      'Recomenda-se concluir Git e GitHub na Prática para registrar os exercícios desde o início.',
+    ],
+    workloadHours: 28,
     level: CourseLevel.BEGINNER,
-    isFree: true,
-    order: 10,
-    priceCents: 0,
+    isFree: false,
+    order: 11,
+    priceCents: 5900,
     sections: [
       {
         title: 'Parte 1 — Pensamento computacional',
@@ -165,8 +169,10 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     shortDescription:
       'Aprenda commits, branches, pull requests e publicação de projetos no GitHub.',
     fullDescription:
-      'Curso prático para organizar a evolução do código, colaborar com outras pessoas e apresentar projetos ' +
-      'de forma profissional. O aluno cria um repositório completo com histórico, documentação e fluxo de revisão.',
+      'Este é o primeiro capítulo gratuito da trilha. Você começa com uma pasta confusa e termina com um ' +
+      'repositório que conta, passo a passo, a história do seu trabalho.\n\n' +
+      'Esse repositório será seu caderno de bordo: nele você registrará os exercícios e projetos dos cursos ' +
+      'seguintes, com histórico, documentação, branches e revisão.',
     objectives: [
       'Criar repositórios.',
       'Registrar mudanças com bons commits.',
@@ -178,11 +184,11 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     prerequisites: [
       'Conhecimentos básicos de arquivos e terminal ajudam, mas não são obrigatórios.',
     ],
-    workloadHours: 10,
+    workloadHours: 18,
     level: CourseLevel.BEGINNER,
-    isFree: false,
-    order: 11,
-    priceCents: 4900,
+    isFree: true,
+    order: 10,
+    priceCents: 0,
     sections: [
       {
         title: 'Parte 1 — Controle de versão',
@@ -279,8 +285,10 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     shortDescription:
       'Estrutura semântica, estilos, layouts responsivos e publicação de uma landing page.',
     fullDescription:
-      'Curso introdutório de desenvolvimento web com foco em boas práticas desde o início. O aluno cria uma ' +
-      'landing page responsiva e acessível, preparada para compor seu portfólio.',
+      'A solução que você planejou em Lógica ganha uma casa visível na web. Primeiro você constrói a estrutura ' +
+      'e o significado; depois cria uma identidade visual que continua funcionando em diferentes telas.\n\n' +
+      'O capítulo termina com uma landing page acessível, responsiva, publicada e registrada no repositório ' +
+      'profissional iniciado no começo da trilha.',
     objectives: [
       'Estruturar páginas com HTML semântico.',
       'Aplicar estilos com CSS.',
@@ -290,7 +298,7 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     ],
     targetAudience: ['Pessoas iniciando no desenvolvimento web.'],
     prerequisites: ['Recomenda-se concluir Lógica e Git/GitHub.'],
-    workloadHours: 18,
+    workloadHours: 32,
     level: CourseLevel.BEGINNER,
     isFree: false,
     order: 12,
@@ -397,7 +405,10 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     subtitle: 'Da lógica à interação no navegador',
     shortDescription: 'Variáveis, funções, arrays, objetos, DOM, eventos e consumo básico de APIs.',
     fullDescription:
-      'Curso para transformar páginas estáticas em experiências interativas e consolidar fundamentos da linguagem JavaScript.',
+      'Sua página já apresenta uma ideia, mas ainda não reage. Neste capítulo ela passa a receber entradas, ' +
+      'guardar estado, responder a eventos e buscar dados externos.\n\n' +
+      'A narrativa acompanha a evolução de uma lista simples até um painel publicável, sempre mostrando os ' +
+      'estados de carregamento, sucesso, vazio e erro que aplicações reais precisam comunicar.',
     objectives: [
       'Dominar fundamentos da linguagem.',
       'Manipular arrays e objetos.',
@@ -407,7 +418,7 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     ],
     targetAudience: ['Alunos que já conhecem HTML e CSS.'],
     prerequisites: ['Lógica de programação', 'HTML e CSS básicos'],
-    workloadHours: 20,
+    workloadHours: 36,
     level: CourseLevel.BEGINNER,
     isFree: false,
     order: 13,
@@ -507,7 +518,10 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     subtitle: 'Automação, dados e desenvolvimento de programas simples',
     shortDescription: 'Sintaxe, estruturas de dados, funções, arquivos e automações úteis.',
     fullDescription:
-      'Curso introdutório para aplicar lógica de programação em Python e criar automações de pequeno porte.',
+      'Na primeira bifurcação da trilha, você escolhe Python para automatizar rotinas e trabalhar com arquivos. ' +
+      'O fio condutor é uma equipe que recebe relatórios repetitivos e precisa transformar trabalho manual em ' +
+      'um processo seguro, reproduzível e explicável.\n\n' +
+      'Esta é uma alternativa inicial ao curso de Java: você não precisa concluir os dois para encerrar a jornada.',
     objectives: [
       'Escrever programas Python.',
       'Manipular coleções.',
@@ -517,7 +531,7 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     ],
     targetAudience: ['Pessoas iniciando em programação ou automação.'],
     prerequisites: ['Recomenda-se concluir Lógica de Programação.'],
-    workloadHours: 20,
+    workloadHours: 36,
     level: CourseLevel.BEGINNER,
     isFree: false,
     order: 14,
@@ -618,7 +632,10 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     shortDescription:
       'Sintaxe, classes, objetos, coleções, exceções e projeto orientado a objetos.',
     fullDescription:
-      'Curso progressivo para aplicar lógica em Java e compreender os fundamentos da orientação a objetos.',
+      'Na primeira bifurcação da trilha, você escolhe Java para modelar sistemas com regras de negócio claras. ' +
+      'O fio condutor é uma biblioteca que precisa controlar livros, usuários e empréstimos sem aceitar estados ' +
+      'contraditórios.\n\n' +
+      'Esta é uma alternativa inicial ao curso de Python: você não precisa concluir os dois para encerrar a jornada.',
     objectives: [
       'Configurar o ambiente Java.',
       'Criar classes e objetos.',
@@ -629,7 +646,7 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     ],
     targetAudience: ['Pessoas que desejam seguir no desenvolvimento backend com Java.'],
     prerequisites: ['Lógica de programação', 'Noções de Git são recomendadas.'],
-    workloadHours: 24,
+    workloadHours: 44,
     level: CourseLevel.BEGINNER,
     isFree: false,
     order: 15,
@@ -724,3 +741,8 @@ export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [
     ],
   },
 ];
+
+/** Catálogo sempre exportado na mesma ordem em que aparece para o aluno. */
+export const TECHNOLOGY_COURSES: TechnologySeedCourse[] = [...TECHNOLOGY_COURSE_DEFINITIONS].sort(
+  (left, right) => left.order - right.order,
+);
