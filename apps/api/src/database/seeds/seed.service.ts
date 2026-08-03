@@ -47,6 +47,8 @@ export interface SeedOptions {
   demoStudentPassword: string;
   /** Bloqueia dados de demonstração fora do ambiente local. */
   isProduction: boolean;
+  /** Permite que o deploy atualize conteúdo sem criar ou promover contas. */
+  includeAccounts?: boolean;
 }
 
 /**
@@ -72,13 +74,19 @@ export class SeedService {
     const program = await this.seedProgram(courses);
     await this.seedCommerce(courses, program);
 
-    this.logger.log('Contas locais…');
-    const admin = await this.seedAdmin(options);
-    await this.seedDemoStudent(options, courses);
+    let accountsSummary = 'Contas preservadas pelo seed de conteúdo.';
+    if (options.includeAccounts !== false) {
+      this.logger.log('Contas locais…');
+      const admin = await this.seedAdmin(options);
+      await this.seedDemoStudent(options, courses);
+      accountsSummary = `Administrador local: ${admin.email}.`;
+    } else {
+      this.logger.log('Contas preservadas: esta execução distribui apenas catálogo e conteúdo.');
+    }
 
     const segundos = Math.round((Date.now() - inicio) / 100) / 10;
     this.logger.log(
-      `Seed concluído em ${segundos}s. Administrador local: ${admin.email} — ` +
+      `Seed concluído em ${segundos}s. ${accountsSummary} ` +
         `${courses.size} cursos e 1 trilha disponíveis.`,
     );
   }

@@ -18,6 +18,7 @@
     "migration:revert": "pnpm typeorm migration:revert",
     "migration:generate": "pnpm typeorm migration:generate",
     "seed": "ts-node -r tsconfig-paths/register src/database/seeds/run-seed.ts",
+    "seed:content:prod": "node dist/database/seeds/run-content-seed.js",
     "seed:demo": "ts-node -r tsconfig-paths/register src/database/seeds/run-demo-users.ts"
   },
   "dependencies": {
