@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../../app.module';
 import { configuration } from '../../config/configuration';
 import { DemoPersona, DemoUsersSeeder } from './demo-users';
+import { TechnologyDemoAccessService } from './technology-demo-access.service';
 
 /**
  * Ponto de entrada do `pnpm seed:demo`.
@@ -31,6 +32,14 @@ async function main(): Promise<void> {
 
     const password = process.env['SEED_DEMO_PASSWORD'] ?? 'Senha@123456';
     const personas = await seeder.run({ password, isProduction: config.isProduction });
+
+    await new TechnologyDemoAccessService(app).run();
+    const fernando = personas.find((persona) => persona.email === 'trilha@romalearn.local');
+    if (fernando) {
+      fernando.name = 'Fernando Trilha';
+      fernando.situation =
+        'Acesso completo às trilhas administrativa e de Desenvolvimento de Software para testes.';
+    }
 
     await seeder.summarize(personas);
     printTable(personas, password, config.seed.adminEmail, config.seed.adminPassword);
