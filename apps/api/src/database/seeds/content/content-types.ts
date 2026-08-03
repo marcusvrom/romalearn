@@ -39,7 +39,18 @@ export type ContentBlock =
   | { kind: 'steps'; items: string[] }
   | { kind: 'table'; headers: string[]; rows: string[][] }
   /** Modelo de texto para o aluno preencher. */
-  | { kind: 'template'; label: string; text: string };
+  | { kind: 'template'; label: string; text: string }
+  /**
+   * Trecho de código ou de terminal.
+   *
+   * Os e-books de Office não precisavam disso, mas um curso de programação
+   * sem código legível não ensina nada. As linhas vêm em array para que o
+   * arquivo de conteúdo não dependa de indentação de template string, que
+   * quebra silenciosamente ao ser reformatada.
+   */
+  | { kind: 'code'; language: string; caption?: string; lines: string[] }
+  /** O que aparece na tela ao executar o trecho anterior. */
+  | { kind: 'output'; caption?: string; lines: string[] };
 
 export interface LessonContent {
   blocks: ContentBlock[];

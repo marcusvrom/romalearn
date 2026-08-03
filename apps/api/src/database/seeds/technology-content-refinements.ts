@@ -42,19 +42,31 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
       singleChoice(
         'Qual é a principal função de um algoritmo?',
         'Descrever uma sequência verificável de passos para resolver um problema.',
-        ['Escolher automaticamente a melhor linguagem.', 'Eliminar todos os erros possíveis.', 'Substituir a necessidade de testes.'],
+        [
+          'Escolher automaticamente a melhor linguagem.',
+          'Eliminar todos os erros possíveis.',
+          'Substituir a necessidade de testes.',
+        ],
         'Um algoritmo organiza entradas, processamento e saídas em passos que podem ser executados e testados.',
       ),
       singleChoice(
         'Quando uma estrutura de repetição deve terminar?',
         'Quando seu critério de parada se torna verdadeiro.',
-        ['Quando o computador fica lento.', 'Depois de uma quantidade indefinida de passos.', 'Somente quando o usuário fecha o programa.'],
+        [
+          'Quando o computador fica lento.',
+          'Depois de uma quantidade indefinida de passos.',
+          'Somente quando o usuário fecha o programa.',
+        ],
         'Toda repetição precisa de uma condição de continuidade ou parada para evitar loops infinitos.',
       ),
       singleChoice(
         'Qual teste tende a revelar erros que o cenário comum não mostra?',
         'Testar valores limites e entradas inválidas.',
-        ['Executar sempre os mesmos dados.', 'Remover as validações.', 'Testar somente quando o projeto estiver pronto.'],
+        [
+          'Executar sempre os mesmos dados.',
+          'Remover as validações.',
+          'Testar somente quando o projeto estiver pronto.',
+        ],
         'Casos limites e inválidos expõem suposições escondidas na solução.',
       ),
     ],
@@ -69,9 +81,36 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
       'O projeto possui uma release ou versão identificável.',
     ],
     quiz: [
-      singleChoice('O que deve representar um bom commit?', 'Uma mudança pequena, coerente e explicada por uma mensagem clara.', ['Um backup completo do computador.', 'Todas as mudanças do mês juntas.', 'Somente arquivos novos.'], 'Commits pequenos facilitam revisão, investigação e reversão.'),
-      singleChoice('Por que usar uma branch de feature?', 'Para isolar uma mudança antes de integrá-la à linha principal.', ['Para duplicar definitivamente o projeto.', 'Para impedir qualquer colaboração.', 'Para substituir o repositório remoto.'], 'Branches permitem trabalhar com segurança e revisar antes do merge.'),
-      singleChoice('O que um pull request deve explicar?', 'O problema, a solução, os riscos e como validar.', ['Somente o nome do autor.', 'A senha do ambiente.', 'Apenas a quantidade de arquivos alterados.'], 'Um PR é uma unidade de comunicação e revisão, não apenas um botão de merge.'),
+      singleChoice(
+        'O que deve representar um bom commit?',
+        'Uma mudança pequena, coerente e explicada por uma mensagem clara.',
+        [
+          'Um backup completo do computador.',
+          'Todas as mudanças do mês juntas.',
+          'Somente arquivos novos.',
+        ],
+        'Commits pequenos facilitam revisão, investigação e reversão.',
+      ),
+      singleChoice(
+        'Por que usar uma branch de feature?',
+        'Para isolar uma mudança antes de integrá-la à linha principal.',
+        [
+          'Para duplicar definitivamente o projeto.',
+          'Para impedir qualquer colaboração.',
+          'Para substituir o repositório remoto.',
+        ],
+        'Branches permitem trabalhar com segurança e revisar antes do merge.',
+      ),
+      singleChoice(
+        'O que um pull request deve explicar?',
+        'O problema, a solução, os riscos e como validar.',
+        [
+          'Somente o nome do autor.',
+          'A senha do ambiente.',
+          'Apenas a quantidade de arquivos alterados.',
+        ],
+        'Um PR é uma unidade de comunicação e revisão, não apenas um botão de merge.',
+      ),
     ],
   },
   {
@@ -84,9 +123,32 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
       'O projeto está publicado e possui README com evidências visuais.',
     ],
     quiz: [
-      singleChoice('Por que usar elementos HTML semânticos?', 'Para comunicar a função do conteúdo a pessoas, navegadores e tecnologias assistivas.', ['Para deixar o CSS desnecessário.', 'Para reduzir todo arquivo a uma única tag.', 'Para impedir indexação.'], 'Semântica melhora estrutura, acessibilidade e manutenção.'),
-      singleChoice('O que significa desenvolver mobile first?', 'Começar pela experiência em telas pequenas e ampliar progressivamente.', ['Criar apenas aplicativo móvel.', 'Usar tamanhos fixos em pixels.', 'Esconder todo conteúdo no celular.'], 'Mobile first força priorização e ajuda a construir layouts fluidos.'),
-      singleChoice('Qual prática melhora a acessibilidade de formulários?', 'Associar cada campo a um label claro.', ['Usar apenas placeholder.', 'Remover o foco visível.', 'Comunicar erros apenas por cor.'], 'Labels persistentes ajudam todos os usuários e leitores de tela.'),
+      singleChoice(
+        'Por que usar elementos HTML semânticos?',
+        'Para comunicar a função do conteúdo a pessoas, navegadores e tecnologias assistivas.',
+        [
+          'Para deixar o CSS desnecessário.',
+          'Para reduzir todo arquivo a uma única tag.',
+          'Para impedir indexação.',
+        ],
+        'Semântica melhora estrutura, acessibilidade e manutenção.',
+      ),
+      singleChoice(
+        'O que significa desenvolver mobile first?',
+        'Começar pela experiência em telas pequenas e ampliar progressivamente.',
+        [
+          'Criar apenas aplicativo móvel.',
+          'Usar tamanhos fixos em pixels.',
+          'Esconder todo conteúdo no celular.',
+        ],
+        'Mobile first força priorização e ajuda a construir layouts fluidos.',
+      ),
+      singleChoice(
+        'Qual prática melhora a acessibilidade de formulários?',
+        'Associar cada campo a um label claro.',
+        ['Usar apenas placeholder.', 'Remover o foco visível.', 'Comunicar erros apenas por cor.'],
+        'Labels persistentes ajudam todos os usuários e leitores de tela.',
+      ),
     ],
   },
   {
@@ -99,9 +161,36 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
       'O projeto possui funções pequenas, nomes claros e instruções de execução.',
     ],
     quiz: [
-      singleChoice('Qual é a vantagem de usar map em um array?', 'Criar um novo array transformando cada item sem alterar o original.', ['Encerrar o navegador.', 'Modificar automaticamente o HTML.', 'Eliminar a necessidade de funções.'], 'map expressa transformação e retorna uma nova coleção.'),
-      singleChoice('O que é o DOM?', 'Uma representação estruturada do documento que o JavaScript pode consultar e alterar.', ['Um banco de dados remoto.', 'Um gerenciador de pacotes.', 'Uma linguagem substituta do HTML.'], 'O DOM conecta a estrutura da página ao código JavaScript.'),
-      singleChoice('Por que tratar erros em requisições?', 'Porque rede, servidor e dados podem falhar e o usuário precisa receber retorno claro.', ['Para esconder todos os problemas.', 'Para tornar a API sempre síncrona.', 'Para evitar qualquer validação.'], 'Experiências robustas tratam carregamento, sucesso e falha explicitamente.'),
+      singleChoice(
+        'Qual é a vantagem de usar map em um array?',
+        'Criar um novo array transformando cada item sem alterar o original.',
+        [
+          'Encerrar o navegador.',
+          'Modificar automaticamente o HTML.',
+          'Eliminar a necessidade de funções.',
+        ],
+        'map expressa transformação e retorna uma nova coleção.',
+      ),
+      singleChoice(
+        'O que é o DOM?',
+        'Uma representação estruturada do documento que o JavaScript pode consultar e alterar.',
+        [
+          'Um banco de dados remoto.',
+          'Um gerenciador de pacotes.',
+          'Uma linguagem substituta do HTML.',
+        ],
+        'O DOM conecta a estrutura da página ao código JavaScript.',
+      ),
+      singleChoice(
+        'Por que tratar erros em requisições?',
+        'Porque rede, servidor e dados podem falhar e o usuário precisa receber retorno claro.',
+        [
+          'Para esconder todos os problemas.',
+          'Para tornar a API sempre síncrona.',
+          'Para evitar qualquer validação.',
+        ],
+        'Experiências robustas tratam carregamento, sucesso e falha explicitamente.',
+      ),
     ],
   },
   {
@@ -114,9 +203,28 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
       'O projeto inclui dependências, instruções e exemplos de execução.',
     ],
     quiz: [
-      singleChoice('Qual estrutura associa chaves a valores em Python?', 'Dicionário.', ['Tupla sem elementos.', 'Comentário.', 'Importação.'], 'Dicionários representam pares chave-valor e são úteis para registros e agrupamentos.'),
-      singleChoice('Por que usar funções?', 'Para separar responsabilidades e reutilizar comportamento.', ['Para aumentar duplicação.', 'Para evitar nomes claros.', 'Para impedir testes.'], 'Funções pequenas tornam o código mais compreensível e testável.'),
-      singleChoice('Quando usar try e except?', 'Quando uma operação esperada pode falhar e existe uma resposta apropriada.', ['Em toda linha do programa.', 'Para ignorar qualquer erro silenciosamente.', 'Somente em comentários.'], 'Exceções devem ser tratadas de forma específica e informativa.'),
+      singleChoice(
+        'Qual estrutura associa chaves a valores em Python?',
+        'Dicionário.',
+        ['Tupla sem elementos.', 'Comentário.', 'Importação.'],
+        'Dicionários representam pares chave-valor e são úteis para registros e agrupamentos.',
+      ),
+      singleChoice(
+        'Por que usar funções?',
+        'Para separar responsabilidades e reutilizar comportamento.',
+        ['Para aumentar duplicação.', 'Para evitar nomes claros.', 'Para impedir testes.'],
+        'Funções pequenas tornam o código mais compreensível e testável.',
+      ),
+      singleChoice(
+        'Quando usar try e except?',
+        'Quando uma operação esperada pode falhar e existe uma resposta apropriada.',
+        [
+          'Em toda linha do programa.',
+          'Para ignorar qualquer erro silenciosamente.',
+          'Somente em comentários.',
+        ],
+        'Exceções devem ser tratadas de forma específica e informativa.',
+      ),
     ],
   },
   {
@@ -129,9 +237,32 @@ export const TECHNOLOGY_REFINEMENTS: TechnologyCourseRefinement[] = [
       'O projeto possui testes essenciais e instruções para compilar e executar.',
     ],
     quiz: [
-      singleChoice('O que encapsulamento busca proteger?', 'O estado interno e as regras de alteração de um objeto.', ['O nome do projeto no GitHub.', 'Somente arquivos de imagem.', 'A instalação da JVM.'], 'Encapsulamento reduz estados inválidos e concentra regras no objeto responsável.'),
-      singleChoice('Para que serve uma interface em Java?', 'Definir um contrato que diferentes implementações podem cumprir.', ['Armazenar senhas.', 'Substituir qualquer classe automaticamente.', 'Criar somente variáveis globais.'], 'Interfaces favorecem abstração, substituição e testes.'),
-      singleChoice('Qual benefício dos tipos genéricos em coleções?', 'Aumentar segurança de tipos e reduzir conversões manuais.', ['Executar sem JVM.', 'Eliminar todos os objetos.', 'Transformar Java em linguagem dinâmica.'], 'Generics ajudam o compilador a detectar incompatibilidades antes da execução.'),
+      singleChoice(
+        'O que encapsulamento busca proteger?',
+        'O estado interno e as regras de alteração de um objeto.',
+        ['O nome do projeto no GitHub.', 'Somente arquivos de imagem.', 'A instalação da JVM.'],
+        'Encapsulamento reduz estados inválidos e concentra regras no objeto responsável.',
+      ),
+      singleChoice(
+        'Para que serve uma interface em Java?',
+        'Definir um contrato que diferentes implementações podem cumprir.',
+        [
+          'Armazenar senhas.',
+          'Substituir qualquer classe automaticamente.',
+          'Criar somente variáveis globais.',
+        ],
+        'Interfaces favorecem abstração, substituição e testes.',
+      ),
+      singleChoice(
+        'Qual benefício dos tipos genéricos em coleções?',
+        'Aumentar segurança de tipos e reduzir conversões manuais.',
+        [
+          'Executar sem JVM.',
+          'Eliminar todos os objetos.',
+          'Transformar Java em linguagem dinâmica.',
+        ],
+        'Generics ajudam o compilador a detectar incompatibilidades antes da execução.',
+      ),
     ],
   },
 ];
@@ -148,7 +279,12 @@ export function buildDidacticContent(input: {
 }): string {
   const topics = input.topics ?? [];
   const conceptualSteps = topics.length
-    ? topics.map((topic, index) => `${index + 1}. **${topic}** — identifique o conceito, reproduza um exemplo e altere uma condição para observar o efeito.`).join('\n')
+    ? topics
+        .map(
+          (topic, index) =>
+            `${index + 1}. **${topic}** — identifique o conceito, reproduza um exemplo e altere uma condição para observar o efeito.`,
+        )
+        .join('\n')
     : '1. Identifique o objetivo.\n2. Reproduza um exemplo pequeno.\n3. Modifique uma entrada.\n4. Compare o resultado.';
 
   return [

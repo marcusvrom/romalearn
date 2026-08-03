@@ -48,7 +48,9 @@ export class TechnologyDemoAccessService {
 
     const program = await programRepository.findOne({ where: { slug: TECHNOLOGY_PROGRAM_SLUG } });
     if (!program) {
-      throw new Error(`Trilha técnica não encontrada: ${TECHNOLOGY_PROGRAM_SLUG}. Rode pnpm seed primeiro.`);
+      throw new Error(
+        `Trilha técnica não encontrada: ${TECHNOLOGY_PROGRAM_SLUG}. Rode pnpm seed primeiro.`,
+      );
     }
 
     let entitlement = await entitlementRepository.findOne({

@@ -129,7 +129,9 @@ export class TechnologySeedService {
       });
 
       section = section
-        ? await sectionRepository.save(Object.assign(section, { summary: sectionData.summary, order: sectionIndex }))
+        ? await sectionRepository.save(
+            Object.assign(section, { summary: sectionData.summary, order: sectionIndex }),
+          )
         : await sectionRepository.save(
             sectionRepository.create({
               courseId: course.id,
@@ -142,7 +144,8 @@ export class TechnologySeedService {
       for (const [lessonIndex, lessonData] of sectionData.lessons.entries()) {
         const slug = slugify(lessonData.title);
         let lesson = await lessonRepository.findOne({ where: { courseId: course.id, slug } });
-        const isFinalProject = lessonData.type === LessonType.PRACTICAL_ACTIVITY &&
+        const isFinalProject =
+          lessonData.type === LessonType.PRACTICAL_ACTIVITY &&
           lessonData.title.toLowerCase().includes('projeto final');
 
         const payload = {
@@ -183,9 +186,10 @@ export class TechnologySeedService {
     if (lesson.type === LessonType.PRACTICAL_ACTIVITY) {
       const refinement = refinementFor(course.slug);
       const isFinalProject = lesson.title.toLowerCase().includes('projeto final');
-      const criteria = isFinalProject && refinement
-        ? `\n\n## Critérios de entrega\n\n${refinement.projectCriteria.map((item) => `- ${item}`).join('\n')}`
-        : '';
+      const criteria =
+        isFinalProject && refinement
+          ? `\n\n## Critérios de entrega\n\n${refinement.projectCriteria.map((item) => `- ${item}`).join('\n')}`
+          : '';
 
       return (
         `## Atividade prática\n\n${lesson.activityInstructions ?? ''}${criteria}\n\n` +
@@ -212,19 +216,27 @@ export class TechnologySeedService {
     const lessonRepository = this.dataSource.getRepository(Lesson);
 
     const sectionTitle = 'Avaliação e próximos passos';
-    let section = await sectionRepository.findOne({ where: { courseId: course.id, title: sectionTitle } });
+    let section = await sectionRepository.findOne({
+      where: { courseId: course.id, title: sectionTitle },
+    });
     const sectionOrder = data.sections.length;
     section = section
-      ? await sectionRepository.save(Object.assign(section, {
-          summary: 'Revise os fundamentos, valide a compreensão e planeje a continuidade da trilha.',
-          order: sectionOrder,
-        }))
-      : await sectionRepository.save(sectionRepository.create({
-          courseId: course.id,
-          title: sectionTitle,
-          summary: 'Revise os fundamentos, valide a compreensão e planeje a continuidade da trilha.',
-          order: sectionOrder,
-        }));
+      ? await sectionRepository.save(
+          Object.assign(section, {
+            summary:
+              'Revise os fundamentos, valide a compreensão e planeje a continuidade da trilha.',
+            order: sectionOrder,
+          }),
+        )
+      : await sectionRepository.save(
+          sectionRepository.create({
+            courseId: course.id,
+            title: sectionTitle,
+            summary:
+              'Revise os fundamentos, valide a compreensão e planeje a continuidade da trilha.',
+            order: sectionOrder,
+          }),
+        );
 
     const title = 'Questionário de conclusão';
     const slug = slugify(title);
@@ -264,7 +276,8 @@ export class TechnologySeedService {
     const payload = {
       lessonId: lesson.id,
       title: lesson.title,
-      description: 'Responda para revisar os fundamentos. Você pode tentar novamente quantas vezes precisar.',
+      description:
+        'Responda para revisar os fundamentos. Você pode tentar novamente quantas vezes precisar.',
       passingScore: 70,
       maxAttempts: null,
       shuffleQuestions: false,
@@ -277,21 +290,25 @@ export class TechnologySeedService {
 
     await questionRepository.delete({ quizId: quiz.id });
     for (const [index, questionData] of questions.entries()) {
-      const question = await questionRepository.save(questionRepository.create({
-        quizId: quiz.id,
-        statement: questionData.statement,
-        type: questionData.type,
-        order: index,
-        explanation: questionData.explanation,
-      }));
-      await optionRepository.save(questionData.options.map((option, optionIndex) =>
-        optionRepository.create({
-          questionId: question.id,
-          text: option.text,
-          isCorrect: option.isCorrect,
-          order: optionIndex,
+      const question = await questionRepository.save(
+        questionRepository.create({
+          quizId: quiz.id,
+          statement: questionData.statement,
+          type: questionData.type,
+          order: index,
+          explanation: questionData.explanation,
         }),
-      ));
+      );
+      await optionRepository.save(
+        questionData.options.map((option, optionIndex) =>
+          optionRepository.create({
+            questionId: question.id,
+            text: option.text,
+            isCorrect: option.isCorrect,
+            order: optionIndex,
+          }),
+        ),
+      );
     }
   }
 
@@ -312,12 +329,16 @@ export class TechnologySeedService {
       : await programRepository.save(programRepository.create(payload));
 
     for (const [index, course] of courses.entries()) {
-      const existing = await itemRepository.findOne({ where: { programId: program.id, courseId: course.id } });
+      const existing = await itemRepository.findOne({
+        where: { programId: program.id, courseId: course.id },
+      });
       if (existing) {
         existing.order = index;
         await itemRepository.save(existing);
       } else {
-        await itemRepository.save(itemRepository.create({ programId: program.id, courseId: course.id, order: index }));
+        await itemRepository.save(
+          itemRepository.create({ programId: program.id, courseId: course.id, order: index }),
+        );
       }
     }
 
@@ -337,7 +358,7 @@ export class TechnologySeedService {
       : await productRepository.save(productRepository.create(productPayload));
 
     const offerSlug = 'beta-trilha-desenvolvimento-de-software';
-    let offer = await offerRepository.findOne({ where: { slug: offerSlug } });
+    const offer = await offerRepository.findOne({ where: { slug: offerSlug } });
     const offerPayload = {
       slug: offerSlug,
       productId: product.id,
@@ -353,9 +374,11 @@ export class TechnologySeedService {
       availableFrom: null,
       availableUntil: null,
     };
-    offer
-      ? await offerRepository.save(Object.assign(offer, offerPayload))
-      : await offerRepository.save(offerRepository.create(offerPayload));
+    if (offer) {
+      await offerRepository.save(Object.assign(offer, offerPayload));
+    } else {
+      await offerRepository.save(offerRepository.create(offerPayload));
+    }
   }
 
   private async upsertCommerce(course: Course, data: TechnologySeedCourse): Promise<void> {
@@ -379,7 +402,7 @@ export class TechnologySeedService {
       : await productRepository.save(productRepository.create(productPayload));
 
     const offerSlug = data.isFree ? `gratuito-${data.slug}` : `beta-${data.slug}`;
-    let offer = await offerRepository.findOne({ where: { slug: offerSlug } });
+    const offer = await offerRepository.findOne({ where: { slug: offerSlug } });
     const offerPayload = {
       slug: offerSlug,
       productId: product.id,
@@ -396,8 +419,10 @@ export class TechnologySeedService {
       availableUntil: null,
     };
 
-    offer
-      ? await offerRepository.save(Object.assign(offer, offerPayload))
-      : await offerRepository.save(offerRepository.create(offerPayload));
+    if (offer) {
+      await offerRepository.save(Object.assign(offer, offerPayload));
+    } else {
+      await offerRepository.save(offerRepository.create(offerPayload));
+    }
   }
 }

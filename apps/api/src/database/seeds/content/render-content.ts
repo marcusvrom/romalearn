@@ -55,6 +55,17 @@ function renderBlock(block: ContentBlock): string {
 
     case 'template':
       return `**${block.label}**\n\n> ${block.text}`;
+
+    case 'code': {
+      const fence = ['```' + block.language, ...block.lines, '```'].join('\n');
+      return block.caption ? `${block.caption}\n\n${fence}` : fence;
+    }
+
+    case 'output': {
+      // Sem linguagem: é o que a tela mostrou, não código para copiar.
+      const fence = ['```text', ...block.lines, '```'].join('\n');
+      return `${block.caption ?? 'O que aparece na tela:'}\n\n${fence}`;
+    }
   }
 }
 

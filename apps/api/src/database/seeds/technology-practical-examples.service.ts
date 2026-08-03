@@ -23,27 +23,19 @@ function codeFence(language: string, lines: string[]): string {
 }
 
 function section(title: string, paragraphs: string[], code?: string): string {
-  return markdown([
-    '## ' + title,
-    '',
-    ...paragraphs,
-    ...(code ? ['', code] : []),
-  ]);
+  return markdown(['## ' + title, '', ...paragraphs, ...(code ? ['', code] : [])]);
 }
 
 const LABS: Record<string, string> = {
-  'Como a web funciona': section(
-    'Laboratório: acompanhe uma requisição',
-    [
-      '1. Abra as ferramentas do desenvolvedor.',
-      '2. Acesse uma página e selecione a aba **Network**.',
-      '3. Recarregue a página.',
-      '4. Localize o documento HTML e observe URL, método, status e tamanho.',
-      '5. Compare uma resposta 200 com um recurso inexistente.',
-      '',
-      'O navegador resolve o endereço, envia uma requisição HTTP, recebe uma resposta e interpreta HTML, CSS e JavaScript. O servidor entrega recursos; o navegador combina esses recursos para formar a experiência.',
-    ],
-  ),
+  'Como a web funciona': section('Laboratório: acompanhe uma requisição', [
+    '1. Abra as ferramentas do desenvolvedor.',
+    '2. Acesse uma página e selecione a aba **Network**.',
+    '3. Recarregue a página.',
+    '4. Localize o documento HTML e observe URL, método, status e tamanho.',
+    '5. Compare uma resposta 200 com um recurso inexistente.',
+    '',
+    'O navegador resolve o endereço, envia uma requisição HTTP, recebe uma resposta e interpreta HTML, CSS e JavaScript. O servidor entrega recursos; o navegador combina esses recursos para formar a experiência.',
+  ]),
 
   'Estrutura de um documento HTML': section(
     'Exemplo completo',
@@ -156,19 +148,14 @@ const LABS: Record<string, string> = {
     ]),
   ),
 
-  'Fetch e APIs REST': section(
-    'Leia a resposta antes de usar os dados',
-    [
-      'Uma requisição pode completar tecnicamente e ainda retornar 404 ou 500. Verifique response.ok, valide o formato recebido e trate repetição ou cancelamento quando o usuário muda a busca rapidamente.',
-      'No DevTools, compare método, URL, headers, payload, status e tempo. Nunca coloque chave secreta no JavaScript enviado ao navegador.',
-    ],
-  ),
+  'Fetch e APIs REST': section('Leia a resposta antes de usar os dados', [
+    'Uma requisição pode completar tecnicamente e ainda retornar 404 ou 500. Verifique response.ok, valide o formato recebido e trate repetição ou cancelamento quando o usuário muda a busca rapidamente.',
+    'No DevTools, compare método, URL, headers, payload, status e tempo. Nunca coloque chave secreta no JavaScript enviado ao navegador.',
+  ]),
 
   'Ambiente e primeiro programa': section(
     'Primeiro programa Python',
-    [
-      'O ambiente virtual isola dependências do projeto e facilita a reprodução por outra pessoa.',
-    ],
+    ['O ambiente virtual isola dependências do projeto e facilita a reprodução por outra pessoa.'],
     markdown([
       codeFence('bash', [
         'python --version',
@@ -189,9 +176,7 @@ const LABS: Record<string, string> = {
 
   'Variáveis, tipos e entrada de dados': section(
     'Exemplo Python: entrada validada',
-    [
-      'Separar leitura e validação evita repetir regras em todo o programa.',
-    ],
+    ['Separar leitura e validação evita repetir regras em todo o programa.'],
     codeFence('python', [
       'def read_positive_amount(prompt: str) -> float:',
       '    while True:',
@@ -259,18 +244,13 @@ const LABS: Record<string, string> = {
     ]),
   ),
 
-  'Métodos e organização do código': section(
-    'Método com contrato claro',
-    [
-      'Um método deve ter nome orientado à ação, parâmetros suficientes e retorno previsível. Evite um método que leia o teclado, calcule, salve e imprima. Separe readInput, calculate e displayResult para facilitar testes.',
-    ],
-  ),
+  'Métodos e organização do código': section('Método com contrato claro', [
+    'Um método deve ter nome orientado à ação, parâmetros suficientes e retorno previsível. Evite um método que leia o teclado, calcule, salve e imprima. Separe readInput, calculate e displayResult para facilitar testes.',
+  ]),
 
   'Classes, objetos e construtores': section(
     'Exemplo Java: entidade válida desde a criação',
-    [
-      'O construtor impede objetos incompletos e concentra as regras obrigatórias de criação.',
-    ],
+    ['O construtor impede objetos incompletos e concentra as regras obrigatórias de criação.'],
     codeFence('java', [
       'public final class Book {',
       '    private final String isbn;',
@@ -290,12 +270,9 @@ const LABS: Record<string, string> = {
     ]),
   ),
 
-  'Encapsulamento e validação': section(
-    'Proteja a regra, não apenas o campo',
-    [
-      'Em vez de um setter genérico para disponibilidade, exponha operações como borrow() e returnBook(). Assim o objeto controla transições válidas e não pode ficar em estado contraditório.',
-    ],
-  ),
+  'Encapsulamento e validação': section('Proteja a regra, não apenas o campo', [
+    'Em vez de um setter genérico para disponibilidade, exponha operações como borrow() e returnBook(). Assim o objeto controla transições válidas e não pode ficar em estado contraditório.',
+  ]),
 
   'Herança, interfaces e composição': section(
     'Prefira contratos e composição quando possível',
@@ -317,19 +294,13 @@ const LABS: Record<string, string> = {
     ]),
   ),
 
-  'Coleções e generics': section(
-    'Escolhendo a coleção',
-    [
-      'Use List<Book> para ordem e repetição, Set<String> para valores únicos e Map<String, Book> para busca por ISBN. Generics fazem o compilador rejeitar tipos incompatíveis antes da execução.',
-    ],
-  ),
+  'Coleções e generics': section('Escolhendo a coleção', [
+    'Use List<Book> para ordem e repetição, Set<String> para valores únicos e Map<String, Book> para busca por ISBN. Generics fazem o compilador rejeitar tipos incompatíveis antes da execução.',
+  ]),
 
-  'Exceções e testes básicos': section(
-    'Exceção de domínio e teste',
-    [
-      'Crie uma exceção específica para livro indisponível e teste tanto o caminho válido quanto a falha. A mensagem deve explicar o problema sem vazar detalhes internos. Teste a regra observável, não a implementação privada.',
-    ],
-  ),
+  'Exceções e testes básicos': section('Exceção de domínio e teste', [
+    'Crie uma exceção específica para livro indisponível e teste tanto o caminho válido quanto a falha. A mensagem deve explicar o problema sem vazar detalhes internos. Teste a regra observável, não a implementação privada.',
+  ]),
 };
 
 function genericLab(courseSlug: string, title: string, topics: string[]): string {
@@ -345,24 +316,24 @@ function genericLab(courseSlug: string, title: string, topics: string[]): string
             ? 'Git e GitHub'
             : 'pseudocódigo';
 
-  return section(
-    'Laboratório aplicado em ' + technology,
-    [
-      'Crie um exemplo mínimo relacionado a **' + title + '** usando ' +
-        (topics.join(', ') || 'os conceitos da aula') + '.',
-      '',
-      'Antes de executar, escreva o comportamento esperado. Depois:',
-      '',
-      '1. execute o cenário comum;',
-      '2. altere uma entrada;',
-      '3. teste um limite;',
-      '4. provoque uma falha controlada;',
-      '5. explique por que o resultado mudou;',
-      '6. registre a evolução no repositório de estudos.',
-      '',
-      'O objetivo não é produzir muito código, mas comprovar que você compreendeu a relação entre entrada, regra e resultado.',
-    ],
-  );
+  return section('Laboratório aplicado em ' + technology, [
+    'Crie um exemplo mínimo relacionado a **' +
+      title +
+      '** usando ' +
+      (topics.join(', ') || 'os conceitos da aula') +
+      '.',
+    '',
+    'Antes de executar, escreva o comportamento esperado. Depois:',
+    '',
+    '1. execute o cenário comum;',
+    '2. altere uma entrada;',
+    '3. teste um limite;',
+    '4. provoque uma falha controlada;',
+    '5. explique por que o resultado mudou;',
+    '6. registre a evolução no repositório de estudos.',
+    '',
+    'O objetivo não é produzir muito código, mas comprovar que você compreendeu a relação entre entrada, regra e resultado.',
+  ]);
 }
 
 export class TechnologyPracticalExamplesService {
@@ -390,11 +361,9 @@ export class TechnologyPracticalExamplesService {
             where: { courseId: course.id, title: lessonData.title },
           });
 
-          const lab = LABS[lessonData.title] ?? genericLab(
-            courseData.slug,
-            lessonData.title,
-            lessonData.topics ?? [],
-          );
+          const lab =
+            LABS[lessonData.title] ??
+            genericLab(courseData.slug, lessonData.title, lessonData.topics ?? []);
           const marker = '\n\n---\n\n## Laboratório específico da aula';
           const base = (lesson.contentMarkdown ?? '').split(marker)[0];
 

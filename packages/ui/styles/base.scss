@@ -498,6 +498,37 @@ img {
     background-color: var(--rl-surface-muted);
     border-radius: var(--rl-radius-sm);
   }
+
+  // Bloco de código dos cursos de programação.
+  //
+  // Sem esta regra o trecho herdava o estilo de código *inline*: cada linha
+  // ganhava seu próprio fundo arredondado e o conjunto não parecia um bloco.
+  // A rolagem própria evita que uma linha longa estique a página inteira —
+  // código não quebra em qualquer lugar como texto corrido.
+  pre {
+    margin: var(--rl-space-6) 0;
+    padding: var(--rl-space-4) var(--rl-space-5);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: var(--rl-surface-sunken);
+    border: 1px solid var(--rl-border);
+    border-radius: var(--rl-radius-md);
+    // O tamanho do código não acompanha o corpo do texto da aula, que é
+    // maior: em monoespaçada, o mesmo corpo fica grande demais.
+    font-size: var(--rl-text-sm);
+    line-height: var(--rl-leading-normal);
+    tab-size: 4;
+
+    code {
+      display: block;
+      padding: 0;
+      font-size: inherit;
+      background: none;
+      border-radius: 0;
+      // Preserva a indentação, que em Python é o próprio significado.
+      white-space: pre;
+    }
+  }
 }
 
 // Tabelas largas rolam sozinhas em vez de estourar a página no celular.

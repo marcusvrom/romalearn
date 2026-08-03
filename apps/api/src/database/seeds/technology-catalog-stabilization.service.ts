@@ -41,13 +41,19 @@ export class TechnologyCatalogStabilizationService {
     course.isFree = policy.isFree;
     await courseRepository.save(course);
 
-    const product = await productRepository.findOne({ where: { slug: `curso-${policy.courseSlug}` } });
+    const product = await productRepository.findOne({
+      where: { slug: `curso-${policy.courseSlug}` },
+    });
     if (!product) throw new Error(`Produto técnico não encontrado: curso-${policy.courseSlug}`);
 
-    const desiredSlug = policy.isFree ? `gratuito-${policy.courseSlug}` : `beta-${policy.courseSlug}`;
-    const obsoleteSlug = policy.isFree ? `beta-${policy.courseSlug}` : `gratuito-${policy.courseSlug}`;
+    const desiredSlug = policy.isFree
+      ? `gratuito-${policy.courseSlug}`
+      : `beta-${policy.courseSlug}`;
+    const obsoleteSlug = policy.isFree
+      ? `beta-${policy.courseSlug}`
+      : `gratuito-${policy.courseSlug}`;
 
-    let desired = await offerRepository.findOne({ where: { slug: desiredSlug } });
+    const desired = await offerRepository.findOne({ where: { slug: desiredSlug } });
     const payload = {
       slug: desiredSlug,
       productId: product.id,
@@ -62,9 +68,11 @@ export class TechnologyCatalogStabilizationService {
       availableFrom: null,
       availableUntil: null,
     };
-    desired = desired
-      ? await offerRepository.save(Object.assign(desired, payload))
-      : await offerRepository.save(offerRepository.create(payload));
+    if (desired) {
+      await offerRepository.save(Object.assign(desired, payload));
+    } else {
+      await offerRepository.save(offerRepository.create(payload));
+    }
 
     const obsolete = await offerRepository.findOne({ where: { slug: obsoleteSlug } });
     if (obsolete && obsolete.status !== OfferStatus.ARCHIVED) {
@@ -90,7 +98,9 @@ export class TechnologyCatalogStabilizationService {
       const refinement = refinementFor(course.slug);
       if (!refinement) continue;
       const lessons = await lessonRepository.find({ where: { courseId: course.id } });
-      const finalProject = lessons.find((lesson) => lesson.title.toLowerCase().includes('projeto final'));
+      const finalProject = lessons.find((lesson) =>
+        lesson.title.toLowerCase().includes('projeto final'),
+      );
       if (!finalProject) continue;
 
       finalProject.completionRule = LessonCompletionRule.ACTIVITY_APPROVED;

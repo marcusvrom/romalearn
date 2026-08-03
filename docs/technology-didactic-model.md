@@ -1,5 +1,40 @@
 # Modelo didático dos cursos de tecnologia
 
+## Como o conteúdo é escrito
+
+As 49 leituras dos seis cursos técnicos são **escritas uma a uma**, em
+`apps/api/src/database/seeds/content/tecnologia/`, um arquivo por curso. Elas
+usam o mesmo modelo de blocos dos módulos de Office (`ContentBlock`), acrescido
+de blocos `code` e `output` — um curso de programação sem código legível não
+ensina nada.
+
+Houve antes um gerador que montava a leitura a partir de um molde com o título
+da aula. Ele produzia texto em que **78% das linhas eram idênticas em todas as
+aulas**, e o "exemplo trabalhado" de 6 em cada 8 leituras era a frase
+"Considere uma funcionalidade real relacionada a X" — que não é um exemplo. O
+gerador foi removido.
+
+Hoje o seed **falha** quando encontra uma aula de leitura sem conteúdo escrito,
+em vez de preencher com molde. Uma aula sem conteúdo precisa aparecer, não ser
+disfarçada.
+
+### Regras que valem para toda leitura
+
+- **Abre com um problema concreto**, antes de qualquer termo técnico. O aluno
+  precisa reconhecer a situação para querer a explicação.
+- **Um único registro de linguagem.** O material fala igual com quem tem
+  dezesseis e com quem tem cinquenta e cinco anos: sem gíria, sem referência
+  que dependa de época ou de cultura de nicho, e sem "é fácil" — que
+  envergonha quem está com dificuldade.
+- **Exemplos de contextos compartilhados**: contas de casa, lista de compras,
+  estoque, prazos, notas escolares. Nunca exemplos que pressuponham videogame
+  ou rede social.
+- **Todo exemplo é executável e foi verificado.** Os 54 blocos de Python e
+  JavaScript passam pelos parsers reais das duas linguagens; um exemplo com
+  erro de sintaxe ensina errado.
+- **Erros comuns, reflexões e checklist são específicos da aula** — nunca uma
+  lista genérica repetida.
+
 ## Princípio central
 
 Na RomaLearn, uma aula de leitura não é um resumo do assunto nem uma lista de tópicos. Ela precisa conduzir o aluno até a compreensão.
@@ -70,14 +105,14 @@ Cada projeto deve incluir:
 
 Cargas revisadas para homologação:
 
-| Curso | Carga |
-|---|---:|
-| Git e GitHub na Prática | 18 h |
-| Lógica de Programação e Algoritmos | 28 h |
-| HTML e CSS do Zero | 32 h |
-| JavaScript — Fundamentos | 36 h |
-| Python para Iniciantes | 36 h |
-| Java — Fundamentos e Orientação a Objetos | 44 h |
+| Curso                                     | Carga |
+| ----------------------------------------- | ----: |
+| Git e GitHub na Prática                   |  18 h |
+| Lógica de Programação e Algoritmos        |  28 h |
+| HTML e CSS do Zero                        |  32 h |
+| JavaScript — Fundamentos                  |  36 h |
+| Python para Iniciantes                    |  36 h |
+| Java — Fundamentos e Orientação a Objetos |  44 h |
 
 Essas cargas ainda devem ser validadas com alunos reais, medindo tempo de leitura, prática e projeto.
 

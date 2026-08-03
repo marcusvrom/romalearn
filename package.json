@@ -29,7 +29,8 @@
     "seed:all": "pnpm seed && pnpm seed:demo",
     "infra:up": "docker compose -f infra/docker-compose.yml up -d",
     "infra:down": "docker compose -f infra/docker-compose.yml down",
-    "infra:reset": "docker compose -f infra/docker-compose.yml down -v"
+    "infra:reset": "docker compose -f infra/docker-compose.yml down -v",
+    "verificar:exemplos": "node infra/scripts/verificar-exemplos.mjs"
   },
   "devDependencies": {
     "@eslint/js": "9.20.0",
