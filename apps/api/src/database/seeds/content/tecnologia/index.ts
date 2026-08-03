@@ -1,4 +1,5 @@
 import { renderLessonContent } from '../render-content';
+import { getCourseIntroduction, technologyIntroductionContent } from '../course-introductions';
 import type { ContentBlock } from '../content-types';
 import { GIT } from './git';
 import { HTML_CSS } from './html-css';
@@ -8,14 +9,28 @@ import { LOGICA } from './logica';
 import { PYTHON } from './python';
 import type { TechCourseContent, TechLessonContent } from './tech-types';
 
+function withIntroduction(courseSlug: string, content: TechCourseContent): TechCourseContent {
+  const introduction = getCourseIntroduction(courseSlug);
+  return {
+    [introduction.lessonTitle]: technologyIntroductionContent(courseSlug),
+    ...content,
+  };
+}
+
 /** Conteúdo autoral das leituras, por curso. */
 const POR_CURSO: Record<string, TechCourseContent> = {
-  'logica-de-programacao-e-algoritmos': LOGICA,
-  'git-e-github-na-pratica': GIT,
-  'html-e-css-do-zero': HTML_CSS,
-  'javascript-fundamentos': JAVASCRIPT,
-  'python-para-iniciantes': PYTHON,
-  'java-fundamentos-e-orientacao-a-objetos': JAVA,
+  'logica-de-programacao-e-algoritmos': withIntroduction(
+    'logica-de-programacao-e-algoritmos',
+    LOGICA,
+  ),
+  'git-e-github-na-pratica': withIntroduction('git-e-github-na-pratica', GIT),
+  'html-e-css-do-zero': withIntroduction('html-e-css-do-zero', HTML_CSS),
+  'javascript-fundamentos': withIntroduction('javascript-fundamentos', JAVASCRIPT),
+  'python-para-iniciantes': withIntroduction('python-para-iniciantes', PYTHON),
+  'java-fundamentos-e-orientacao-a-objetos': withIntroduction(
+    'java-fundamentos-e-orientacao-a-objetos',
+    JAVA,
+  ),
 };
 
 /**
