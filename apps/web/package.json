@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "ng serve --port 4200",
+    "prebuild": "node ../../scripts/link-ui-peer-dependencies.mjs",
     "build": "ng build",
     "serve:ssr": "node dist/web/server/server.mjs",
     "lint": "eslint \"src/**/*.{ts,html}\" --max-warnings 0",
