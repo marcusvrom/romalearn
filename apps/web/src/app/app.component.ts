@@ -4,17 +4,20 @@ import { filter } from 'rxjs/operators';
 import { AuthService } from './core/auth.service';
 import { SiteFooterComponent } from './shared/site-footer.component';
 import { SiteHeaderComponent } from './shared/site-header.component';
+import { SupportAssistantComponent } from './shared/support-assistant.component';
 
 /**
  * Casca da aplicação.
  *
  * O cabeçalho e o rodapé do site somem no player e no painel administrativo,
- * que têm layout próprio e precisam da tela inteira.
+ * que têm layout próprio e precisam da tela inteira. O assistente de suporte
+ * permanece disponível em toda a jornada pública e do aluno, mas não aparece
+ * no backoffice para não competir com as ferramentas operacionais.
  */
 @Component({
   selector: 'rl-root',
   standalone: true,
-  imports: [RouterOutlet, SiteHeaderComponent, SiteFooterComponent],
+  imports: [RouterOutlet, SiteHeaderComponent, SiteFooterComponent, SupportAssistantComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <a class="rl-skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
@@ -29,6 +32,10 @@ import { SiteHeaderComponent } from './shared/site-header.component';
 
     @if (showChrome) {
       <rl-site-footer />
+    }
+
+    @if (showSupport) {
+      <rl-support-assistant />
     }
   `,
   styles: [
@@ -54,9 +61,9 @@ export class AppComponent implements OnInit {
   private readonly auth = inject(AuthService);
 
   showChrome = true;
+  showSupport = true;
 
   ngOnInit(): void {
-    // Restaura a sessão a partir do cookie ao abrir o site.
     this.auth.loadSession().subscribe();
 
     this.updateChrome(this.router.url);
@@ -69,5 +76,6 @@ export class AppComponent implements OnInit {
     const isPlayer = /^\/painel\/cursos\//.test(url);
     const isAdmin = url.startsWith('/admin');
     this.showChrome = !isPlayer && !isAdmin;
+    this.showSupport = !isAdmin;
   }
 }
