@@ -2,6 +2,7 @@ import { configuration } from '../../config/configuration';
 import { AppDataSource } from '../data-source';
 import { SeedService } from './seed.service';
 import { TechnologyCatalogStabilizationService } from './technology-catalog-stabilization.service';
+import { TechnologyContentExpansionService } from './technology-content-expansion.service';
 import { TechnologySeedService } from './technology-seed.service';
 
 /**
@@ -12,7 +13,6 @@ import { TechnologySeedService } from './technology-seed.service';
  */
 async function main(): Promise<void> {
   const config = configuration();
-
   const dataSource = await AppDataSource.initialize();
 
   try {
@@ -34,6 +34,7 @@ async function main(): Promise<void> {
     });
 
     await new TechnologySeedService(dataSource).run();
+    await new TechnologyContentExpansionService(dataSource).run();
     await new TechnologyCatalogStabilizationService(dataSource).run();
   } finally {
     await dataSource.destroy();
