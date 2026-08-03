@@ -1,6 +1,7 @@
 import { LessonType } from '@romalearn/contracts';
 import { SEED_COURSES, SEED_PROGRAM } from './catalog-data';
 import { getCourseIntroduction } from './content/course-introductions';
+import { renderActivityContent, renderLessonContent } from './content/render-content';
 
 describe('qualidade editorial da trilha administrativa', () => {
   const publishedCourses = SEED_COURSES.filter((course) => course.sections.length > 0);
@@ -33,6 +34,20 @@ describe('qualidade editorial da trilha administrativa', () => {
         expect(lesson.content.reference.module).toBe('RomaLearn');
       } else {
         expect(lesson.content?.reference.sourceType).not.toBe('ORIGINAL');
+      }
+
+      const markdown = renderLessonContent(lesson.content!);
+      expect(markdown).toContain('class="rl-learning-flow"');
+
+      const asksForThought = lesson.content?.blocks.some(
+        (block) =>
+          block.kind === 'heading' &&
+          ['pare e pense', 'pratique agora'].includes(block.text.toLowerCase()),
+      );
+      if (asksForThought) {
+        expect(markdown).toContain('class="rl-guided-thinking"');
+        expect(markdown).toContain('Caso para analisar:');
+        expect(markdown).toContain('Modelo para começar:');
       }
     }
   });
@@ -80,6 +95,16 @@ describe('qualidade editorial da trilha administrativa', () => {
         ).toBe(100);
         expect(practice.rubric?.criticalFailures.length ?? 0).toBeGreaterThanOrEqual(1);
         expect(practice.example).toBeDefined();
+
+        const markdown = renderActivityContent(
+          practice.activityInstructions ?? '',
+          practice.rubric!,
+          practice.rubricReference!,
+          practice.example,
+        );
+        expect(markdown).toContain('class="rl-learning-flow"');
+        expect(markdown).toContain('class="rl-guided-thinking"');
+        expect(markdown).toContain('## Exemplo comentado');
       }
     }
   });

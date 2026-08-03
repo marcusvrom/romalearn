@@ -35,6 +35,29 @@ disfarçada.
 - **Erros comuns, reflexões e checklist são específicos da aula** — nunca uma
   lista genérica repetida.
 
+### Momentos guiados e mapas visuais
+
+Nenhuma aula pode pedir apenas “pense”, “explique com suas palavras” ou
+“reflita” e deixar o aluno decidir sozinho qual formato de resposta seria
+adequado. Todo pedido de pensamento precisa aparecer com quatro apoios:
+
+1. **caso para analisar**, retirado da situação concreta da própria aula;
+2. **exemplo já trabalhado**, como analogia, linha de uma comparação ou
+   decisão explicada no conteúdo;
+3. **roteiro de raciocínio** em três movimentos: observar, explicar e aplicar;
+4. **modelo de início de resposta**, com lacunas que orientam sem entregar a
+   conclusão.
+
+As leituras também exibem o infográfico “Mapa visual desta aula”, organizado
+em observar, entender, experimentar e conferir. Ele usa somente informações
+já escritas no capítulo, evitando inventar fatos ou repetir um diagrama
+genérico sem ligação com o assunto.
+
+O infográfico é uma lista ordenada semântica: no celular aparece na vertical,
+em telas maiores vira um fluxo horizontal e no modo audiolivro continua sendo
+narrado na ordem correta. Setas são apenas decoração visual; nenhum significado
+depende delas.
+
 ### Contrato da aula “Antes de começar”
 
 Cada curso publicado abre com uma aula introdutória autoral de aproximadamente
@@ -119,6 +142,11 @@ Cada atividade contém:
 - sequência sugerida de desenvolvimento;
 - reflexão obrigatória;
 - checklist antes do envio.
+
+Antes do campo de entrega, o aluno vê ainda um roteiro fixo para organizar o
+relato: situação, ação, teste e evidência. O placeholder repete essa estrutura,
+e a atividade mostra um exemplo de início diferente da resposta solicitada.
+Assim, avaliar clareza deixa de depender de o aluno adivinhar como escrever.
 
 A entrega deve comprovar que o aluno consegue explicar suas decisões, executar a solução e testar caminhos comuns, limites e inválidos.
 

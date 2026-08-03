@@ -34,6 +34,11 @@ As aulas conceituais seguem o mesmo roteiro:
 
 O aluno não deve avançar somente por leitura. Cada capítulo pede reprodução, alteração, previsão e registro da descoberta.
 
+Todo pedido de reflexão deve trazer um caso reconhecível, um exemplo já
+trabalhado e o roteiro observar → explicar → aplicar. As leituras exibem um
+mapa visual responsivo da aula; as práticas mostram o fluxo regra → previsão →
+teste → evidência. Os dois continuam compreensíveis no modo audiolivro.
+
 ## Avaliação
 
 ### Práticas intermediárias

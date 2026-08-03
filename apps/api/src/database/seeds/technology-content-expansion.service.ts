@@ -3,6 +3,7 @@ import { LessonType } from '@romalearn/contracts';
 import { DataSource } from 'typeorm';
 import { Course } from '../../catalog/entities/course.entity';
 import { Lesson } from '../../catalog/entities/lesson.entity';
+import { renderGuidedThinking, renderLearningFlow } from './content/render-content';
 import { conteudoDaAulaTecnica } from './content/tecnologia';
 import { TECHNOLOGY_COURSES } from './technology-catalog-data';
 
@@ -365,6 +366,57 @@ const ACTIVITY_GUIDES: Record<string, ActivityGuide> = {
   },
 };
 
+/** Conteúdo completo e testável das práticas da trilha técnica. */
+export function buildTechnologyActivityContent(
+  title: string,
+  originalInstructions: string,
+): string {
+  const guide = ACTIVITY_GUIDES[title];
+  const learningFlow = renderLearningFlow('Roteiro visual da prática', [
+    { label: 'Regra', text: 'Releia o conteúdo anterior e destaque as regras do problema.' },
+    { label: 'Previsão', text: 'Escreva o resultado esperado antes de implementar.' },
+    { label: 'Teste', text: 'Execute o caso comum, o limite e a entrada inválida.' },
+    { label: 'Evidência', text: 'Registre o resultado e explique por que ele aconteceu.' },
+  ]);
+
+  if (!guide) {
+    return [
+      `# ${title}`,
+      `## Objetivo\n\n${originalInstructions}`,
+      learningFlow,
+      '## Evidências esperadas\n\n- solução executável ou verificável;\n- explicação das decisões;\n- testes de cenário comum e de erro;\n- registro das dúvidas e aprendizados.',
+      '## Como desenvolver\n\n1. Releia a aula anterior e destaque as regras.\n2. Escreva o resultado esperado antes do código.\n3. Implemente a menor versão funcional.\n4. Teste um cenário comum, um limite e uma entrada inválida.\n5. Compare resultado esperado e resultado obtido.\n6. Registre a evidência e explique uma melhoria.',
+      '## Reflexão obrigatória',
+      renderGuidedThinking({
+        caseStudy: originalInstructions,
+        example:
+          'Em um teste com entrada inválida, a solução recusou o dado antes do processamento. A evidência foi a mensagem esperada e a ausência de alteração no resultado.',
+      }),
+      '1. O que mudou entre o resultado esperado e o resultado obtido?\n2. Qual evidência mostra que a regra foi realmente aplicada?',
+      '## Antes de enviar\n\n- [ ] Consigo executar ou demonstrar a solução.\n- [ ] Testei um cenário comum e um cenário de erro.\n- [ ] Expliquei o que fiz e por quê.\n- [ ] Não incluí senha, token ou dado pessoal.',
+    ].join('\n\n');
+  }
+
+  return [
+    `# ${title}`,
+    `## Situação-problema\n\n${guide.context}`,
+    learningFlow,
+    `## O que esta atividade exercita\n\n${guide.objective}`,
+    `## Enunciado\n\n${originalInstructions}`,
+    `## Entregáveis\n\n${guide.deliverables.map((item) => `- ${item}`).join('\n')}`,
+    `## Cenários mínimos de teste\n\n${guide.minimumScenarios.map((item) => `- ${item}`).join('\n')}`,
+    `## Como desenvolver\n\n1. Releia a aula anterior e destaque as regras.\n2. Escreva o resultado esperado antes do código.\n3. Implemente a menor versão funcional.\n4. Execute cada cenário mínimo.\n5. Corrija uma falha por vez.\n6. Registre a solução e explique suas decisões.`,
+    '## Reflexão obrigatória',
+    renderGuidedThinking({
+      caseStudy: guide.context,
+      example:
+        'Em um teste com entrada inválida, a solução recusou o dado antes do processamento. A evidência foi a mensagem esperada e a ausência de alteração no resultado.',
+    }),
+    guide.reflection.map((item, index) => `${index + 1}. ${item}`).join('\n'),
+    '## Antes de enviar\n\n- [ ] Consigo executar ou demonstrar a solução.\n- [ ] Testei entradas comuns, limites e inválidas.\n- [ ] Expliquei o que fiz e por quê.\n- [ ] Não incluí senha, token ou dado pessoal.\n- [ ] Minha entrega é autoral e posso explicar cada parte.',
+  ].join('\n\n');
+}
+
 export class TechnologyContentExpansionService {
   private readonly logger = new Logger('TechnologyContentExpansion');
 
@@ -405,7 +457,7 @@ export class TechnologyContentExpansionService {
 
             contentMarkdown = escrito;
           } else {
-            contentMarkdown = this.buildActivityContent(
+            contentMarkdown = buildTechnologyActivityContent(
               lessonData.title,
               lessonData.activityInstructions ?? '',
             );
@@ -425,29 +477,5 @@ export class TechnologyContentExpansionService {
     }
 
     this.logger.log(`${updated} aulas técnicas receberam conteúdo didático expandido.`);
-  }
-
-  private buildActivityContent(title: string, originalInstructions: string): string {
-    const guide = ACTIVITY_GUIDES[title];
-    if (!guide) {
-      return [
-        `# ${title}`,
-        `## Objetivo\n\n${originalInstructions}`,
-        '## Evidências esperadas\n\n- solução executável ou verificável;\n- explicação das decisões;\n- testes de cenário comum e de erro;\n- registro das dúvidas e aprendizados.',
-        '## Critério de qualidade\n\nA entrega deve demonstrar compreensão do conteúdo anterior. Copiar uma solução sem conseguir explicá-la não demonstra aprendizagem.',
-      ].join('\n\n');
-    }
-
-    return [
-      `# ${title}`,
-      `## Situação-problema\n\n${guide.context}`,
-      `## O que esta atividade exercita\n\n${guide.objective}`,
-      `## Enunciado\n\n${originalInstructions}`,
-      `## Entregáveis\n\n${guide.deliverables.map((item) => `- ${item}`).join('\n')}`,
-      `## Cenários mínimos de teste\n\n${guide.minimumScenarios.map((item) => `- ${item}`).join('\n')}`,
-      `## Como desenvolver\n\n1. Releia a aula anterior e destaque as regras.\n2. Escreva o resultado esperado antes do código.\n3. Implemente a menor versão funcional.\n4. Execute cada cenário mínimo.\n5. Corrija uma falha por vez.\n6. Registre a solução e explique suas decisões.`,
-      `## Reflexão obrigatória\n\n${guide.reflection.map((item) => `- ${item}`).join('\n')}`,
-      '## Antes de enviar\n\n- [ ] Consigo executar ou demonstrar a solução.\n- [ ] Testei entradas comuns, limites e inválidas.\n- [ ] Expliquei o que fiz e por quê.\n- [ ] Não incluí senha, token ou dado pessoal.\n- [ ] Minha entrega é autoral e posso explicar cada parte.',
-    ].join('\n\n');
   }
 }

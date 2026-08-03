@@ -39,6 +39,17 @@ describe('Sanitização de conteúdo', () => {
     expect(sanitizeContentHtml('<img src="data:image/png;base64,AAA" />')).not.toContain('data:');
   });
 
+  it('preserva a estrutura segura dos infográficos e remove eventos', () => {
+    const html = renderMarkdown(
+      '<figure class="rl-learning-flow" onclick="roubar()"><figcaption class="rl-learning-flow__title">Fluxo</figcaption><ol class="rl-learning-flow__steps"><li class="rl-learning-flow__step"><strong class="rl-learning-flow__label">Etapa</strong></li></ol></figure>',
+    );
+
+    expect(html).toContain('class="rl-learning-flow"');
+    expect(html).toContain('class="rl-learning-flow__step"');
+    expect(html).toContain('class="rl-learning-flow__label"');
+    expect(html).not.toContain('onclick');
+  });
+
   it('gera texto simples truncado para prévias', () => {
     const text = toPlainText('# Um título bem longo\n\nCom bastante conteúdo depois dele.', 20);
     expect(text.length).toBeLessThanOrEqual(20);
