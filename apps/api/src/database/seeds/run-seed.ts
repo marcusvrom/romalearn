@@ -1,6 +1,7 @@
 import { configuration } from '../../config/configuration';
 import { AppDataSource } from '../data-source';
 import { SeedService } from './seed.service';
+import { TechnologyCatalogStabilizationService } from './technology-catalog-stabilization.service';
 import { TechnologySeedService } from './technology-seed.service';
 
 /**
@@ -33,14 +34,13 @@ async function main(): Promise<void> {
     });
 
     await new TechnologySeedService(dataSource).run();
+    await new TechnologyCatalogStabilizationService(dataSource).run();
   } finally {
     await dataSource.destroy();
   }
 }
 
 main().catch((error: unknown) => {
-  // A falha mais comum em máquina nova é o banco não estar no ar. Dizer isso
-  // em português poupa uma busca pelo significado de ECONNREFUSED.
   if (error instanceof Error && 'code' in error && error.code === 'ECONNREFUSED') {
     console.error(
       '\nNão foi possível conectar ao PostgreSQL.\n\n' +
