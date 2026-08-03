@@ -30,6 +30,13 @@ export const adminRoutes: Routes = [
           import('./pages/content-analytics.page').then((m) => m.AdminContentAnalyticsPage),
       },
       {
+        path: 'insights',
+        canActivate: [staffGuard],
+        data: { roles: [UserRole.ADMIN, UserRole.CONTENT_MANAGER, UserRole.SUPPORT] },
+        loadComponent: () =>
+          import('./pages/insights-center.page').then((m) => m.AdminInsightsCenterPage),
+      },
+      {
         path: 'atendimento',
         canActivate: [staffGuard],
         data: { roles: [UserRole.ADMIN, UserRole.SUPPORT] },
